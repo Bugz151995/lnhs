@@ -30,7 +30,7 @@ class CourseManagement extends BaseController{
 	}
 
   public function deleteSubject() {
-    
+    $TEST = 'commit test';
   }
 
   public function updateCourse() {

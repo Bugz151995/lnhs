@@ -45,6 +45,7 @@ $routes->get('r/auth/(:segment)', 'Registrar::auth/$1');
 $routes->get('a/auth/signin', 'Admin::index');
 
 $routes->get('r/(:any)', 'Registrar::view/$1');
+$routes->get('(:any)', 'Student::view/$1');
 
 /*
  * --------------------------------------------------------------------

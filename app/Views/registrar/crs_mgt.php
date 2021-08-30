@@ -141,14 +141,16 @@
         <tr>
           <th>Track</th>
           <th>Strand</th>
+          <th>Semester</th>
           <th>Action</th>
         </tr>
       </thead>
-      <tbody class="align-middle text-uppercase">
+      <tbody class="align-middle text-center text-uppercase">
         <?php for ($i=0; $i < count($course); $i++) :?>
           <tr>
             <td><?= $course[$i]->track_name?></td>
             <td><?= $course[$i]->strand_name?></td>
+            <td><?= $course[$i]->semester?></td>
             <td class="align-middle text-center">
               <?= form_open('r/crs_mgt/edit_course') ?>
                 <?= csrf_field() ?>

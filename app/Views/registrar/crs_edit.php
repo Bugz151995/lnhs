@@ -58,6 +58,7 @@
                 <?php for ($i=0; $i < $row_count; $i++) :?>
                   <tr>
                     <?php $row = $i  + 1 ?>
+                    <input type="hidden" name="subjectid_<?= $row?>" value="<?= $subjects[$i]->subject_id?>">
                     <td class="align-middle"><?= $row ?></td>
                     <td>
                       <select name="category_<?= $row ?>" class="form-select form-select-sm">
@@ -70,20 +71,14 @@
                     <td><input type="text" name="code_<?= $row ?>" value="<?= set_value('code_'.$i, $subjects[$i]->subject_code) ?>" class="form-control form-control-sm" placeholder="Subject Code Here..."></td>
                     <td><input type="text" name="name_<?= $row ?>" value="<?= set_value('name_'.$i, $subjects[$i]->subject_name) ?>" class="form-control form-control-sm" placeholder="Subject Name Here..."></td>
                     <td id="e_remove_<?= $row?>" class="text-center align-middle">
-                      <?php if($i == 0) :?>
-                        <div class="remove-row">
-                          <i class="far fa-times-circle text-secondary fa-fw fa-lg"></i>
-                        </div>
-                      <?php else :?>
-                        <?= form_open('r/crs_mgt/delete_subject') ?>
-                          <?= csrf_field() ?>
-                          <input type="hidden" name="subjectid_<?= $row?>" value="<?= $subjects[$i]->subject_id?>">
-                          <input type="hidden" name="coursesubjectid_<?= $row?>" value="<?= $subjects[$i]->course_subject_id?>">
-                          <button type="submit" class="remove-row btn btn-transparent">
-                            <i class="far fa-times-circle text-danger fa-fw fa-lg"></i>
-                          </button>
-                        <?= form_close() ?>
-                      <?php endif ?>
+                      <?= form_open('r/crs_mgt/delete_subject') ?>
+                        <?= csrf_field() ?>
+                        <input type="hidden" name="subject" value="<?= $subjects[$i]->subject_id?>">
+                        <input type="hidden" name="coursesubject" value="<?= $subjects[$i]->course_subject_id?>">
+                        <button type="submit" class="remove-row btn btn-transparent">
+                          <i class="far fa-times-circle text-danger fa-fw fa-lg"></i>
+                        </button>
+                      <?= form_close() ?>
                     </td>
                   </tr>
                 <?php endfor ?>
@@ -91,7 +86,7 @@
             </table>
 
             <div class="mb-3">
-              <div id="e_saveBtn" class="p-2 btn btn-light form-control">
+              <div id="e_saveBtn" class="p-2 btn btn-light form-control disabled">
                 <i class="far fa-plus-square text-success fa-fw fa-lg"></i> <span>Add Row</span>
               </div>
             </div>

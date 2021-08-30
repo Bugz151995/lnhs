@@ -31,6 +31,17 @@ class CourseManagement extends BaseController{
 
   public function deleteSubject() {
     
+    $subject_model       = new SubjectModel();
+    $coursesubject_model = new CourseSubjectModel();
+
+    $subject =  ['subject_id' => $this->request->getPost('subject')];
+    $course_subject = ['course_subject_id' => $this->request->getPost('coursesubject')];
+
+    $coursesubject_model->delete($course_subject);
+    $subject_model->delete($subject);
+
+    session()->setFlashData('info', 'The subject has been deleted successfully!');
+    return redirect()->to('r/crs_mgt');
   }
 
   public function updateCourse() {
@@ -93,28 +104,20 @@ class CourseManagement extends BaseController{
       } else {
         // get subjects data
         $row_count = $this->request->getPost('row_count');
-        $subject_id = array();
         $a = 1;
+        $subjects = array();
         while ($a <= $row_count) {
-          $subjects = [
+          $temp = [
+            'subject_id'       => esc($this->request->getPost('subjectid_'.$a)),
             'subject_category' => esc($this->request->getPost('category_'.$a)),
             'subject_code'     => esc($this->request->getPost('code_'.$a)),
             'subject_name'     => esc($this->request->getPost('name_'.$a)),
           ];
-          $subject_model->replace($subjects);
-          array_push($subject_id, $subject_model->insertID());
+          array_push($subjects, $temp);
           $a++;
         }
-        
-        for ($j=0; $j < count($subject_id); $j++) { 
-          $courses_subjects = [
-            'course_id'  => esc($this->request->getPost('course')),
-            'subject_id' => esc($subject_id[$j]),
-            'semester'   => esc($this->request->getPost('semester'))
-          ];
-          $coursesubject_model->replace($courses_subjects);
-        }
 
+        $subject_model->updateBatch($subjects, 'subject_id');
         session()->setFlashData('success', 'The Course has been successfully saved!');
 
         return redirect()->to('r/crs_mgt');
@@ -129,9 +132,13 @@ class CourseManagement extends BaseController{
     $course_model        = new CoursesModel();
     $coursesubject_model = new CourseSubjectModel();
     
+    $course_id = $this->request->getPost('course');
+    $sem = $this->request->getPost('semester');
 
-    $course_id = $this->request->getPost('crs');
-    $sem = $this->request->getPost('sem');
+    if ($course_id === NULL && $sem === NULL) {
+      $course_id = $this->request->getPost('crs');
+      $sem = $this->request->getPost('sem');
+    }
 
     $data = [
       'track'         => $track_model->findAll(),

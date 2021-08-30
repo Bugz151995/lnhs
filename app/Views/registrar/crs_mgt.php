@@ -136,6 +136,7 @@
 <section class="border bg-white m-4 mt-5 p-0">
   <h5 for="" class="w-100 bg-secondary text-light p-3 text-center">View Courses</h5>
   <div class="px-4 py-2 pb-4">
+    
     <table class="table table-light table-borderless table-striped border">
       <thead class="text-center">
         <tr>

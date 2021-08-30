@@ -33,10 +33,18 @@ $routes->setAutoRoute(true);
 // We get a performance increase by specifying the default
 // route since we don't have to scan directories.
 $routes->get('/', 'Home::index');
-$routes->get('r/(:segment)', 'Registrar::auth/$1');
-$routes->get('a/signin', 'Admin::index');
-$routes->get('registrar/(:any)', 'Registrar::view/$1');
-$routes->get('(:any)', 'Student::view/$1');
+$routes->get('r/crs_mgt', 'CourseManagement::index');
+$routes->post('r/crs_mgt/delete_subject', 'CourseManagement::deleteSubject');
+$routes->post('r/crs_mgt/update_course', 'CourseManagement::updateCourse');
+$routes->post('r/crs_mgt/edit_course', 'CourseManagement::editCourse');
+$routes->post('r/crs_mgt/set_course', 'CourseManagement::setCourse');
+$routes->post('r/crs_mgt/new_course', 'CourseManagement::createCourse');
+
+$routes->get('/', 'Registrar::index');
+$routes->get('r/auth/(:segment)', 'Registrar::auth/$1');
+$routes->get('a/auth/signin', 'Admin::index');
+
+$routes->get('r/(:any)', 'Registrar::view/$1');
 
 /*
  * --------------------------------------------------------------------

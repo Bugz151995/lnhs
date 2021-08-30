@@ -17,7 +17,7 @@
 				<div class="row shadow" style="border-radius: 1rem">
 					<!-- school logo -->
 					<div class="col-4 text-center d-none d-sm-block py-5" style="background-image: url(<?= site_url()?>assets/images/background.png); background-size: cover">
-						<img class="" src="<?= site_url()?>assets/images/logoSchool.png" height="150" alt="School Logo">
+						<img class="" src="<?= site_url()?>assets/images/school_logo.png" height="150" alt="School Logo">
 						<label class="mb-5 p-1 rounded" style="background: #fff">
 							Lagonoy Senior High School Online Enrollment System
 						</label>
@@ -28,10 +28,10 @@
 						<form class="bg-white rounded p-4">
 							<ul class="nav nav-tabs">
 								<li class="nav-item">
-									<a class="nav-link active" aria-current="page" href="<?= site_url()?>r/signin">Registrar</a>
+									<a class="nav-link active" aria-current="page" href="<?= site_url()?>r/auth/signin">Registrar</a>
 								</li>
 								<li class="nav-item">
-									<a class="nav-link" href="<?= site_url()?>a/signin">Admin</a>
+									<a class="nav-link" href="<?= site_url()?>a/auth/signin">Admin</a>
 								</li>
 							</ul>
 
@@ -46,7 +46,7 @@
 							</div>
 							
 							<div class="form-group mt-3 d-flex justify-content-between">
-								<a href="<?= site_url()?>r/signup" class="text-decoration-none">Don't have an Account? Sign-up</a>
+								<a href="<?= site_url()?>r/auth/signup" class="text-decoration-none">Don't have an Account? Sign-up</a>
 								<button type="submit" class="btn btn-primary">Sign in</button>
 							</div>
 						</form>

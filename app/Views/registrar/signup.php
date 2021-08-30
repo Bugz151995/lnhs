@@ -17,7 +17,7 @@
 				<div class="row shadow-lg" style="border-radius: 1rem">
 					<!-- school logo -->
 					<div class="col-12 text-center d-none d-sm-block py-5" style=" background-image: url('<?= site_url()?>assets/images/lagonoybg.jpg'); background-size: cover">
-						<img class="" src="<?= site_url()?>assets/images/logoSchool.png" height="150" alt="School Logo">
+						<img class="" src="<?= site_url()?>assets/images/school_logo.png" height="150" alt="School Logo">
 						<label class="h3 bg-light text-dark rounded p-2 ">
 							Lagonoy Senior High School Online Enrollment System
 						</label>
@@ -26,6 +26,7 @@
 					<!-- form -->
 					<div class="col-12 col-sm-12 p-3 bg-light">
 						<h4 class="text-center bg-light shadow-sm rounded p-3">Registrar Sign-up</h4>
+            
 						<form class="bg-light px-4 pb-4">
               <div class="form-group row mt-3">
                 <div class="col-sm-4 mt-1">
@@ -69,7 +70,7 @@
               </div>
 							
 							<div class="d-flex justify-content-between mt-3">
-                <a href="<?= site_url()?>r/signin">Already have Account? Sign-in</a>
+                <a href="<?= site_url()?>r/auth/signin">Already have Account? Sign-in</a>
 								<button type="submit" class="btn btn-primary">Sign up</button>
 							</div>
 						</form>

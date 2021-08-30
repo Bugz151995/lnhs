@@ -102,6 +102,10 @@
 
               redraw(chart, data, options);
             }
+
+            document.addEventListener("DOMContentLoaded", function() {
+              setChart(enrolledChart);
+            });
           </script>
         </div>
 
@@ -129,6 +133,10 @@
 
               redraw(chart, data, options);
             }
+
+            document.addEventListener("DOMContentLoaded", function() {
+              setChart(strandsChart);
+            });
           </script>
         </div>
       </div>

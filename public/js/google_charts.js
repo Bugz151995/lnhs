@@ -1,8 +1,8 @@
 google.charts.load('current', {'packages':['corechart', 'bar']});
 
-
-google.charts.setOnLoadCallback(enrolledChart);
-google.charts.setOnLoadCallback(strandsChart);
+function setChart(chart) {
+  google.charts.setOnLoadCallback(chart);
+}
 
 function redraw(chart, data) {
   window.addEventListener('resize', () => {

@@ -17,7 +17,7 @@
 				<div class="row shadow" style="border-radius: 1rem">
 					<!-- school logo -->
 					<div class="col-4 text-center d-none d-sm-block py-5" style="background-image: url(<?= site_url()?>assets/images/background.png); background-size: cover">
-						<img class="" src="<?= site_url()?>assets/images/logoSchool.png" height="150" alt="School Logo">
+						<img class="" src="<?= site_url()?>assets/images/school_logo.png" height="150" alt="School Logo">
 						<label class="mb-5 p-1 rounded" style="background: #fff">
 							Lagonoy Senior High School Online Enrollment System
 						</label>

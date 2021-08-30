@@ -6,7 +6,7 @@
     <div class="sidebar-content">
       <!-- sidebar-brand -->
       <div class="sidebar-brand">
-        <img src="<?= site_url()?>assets/images/logoSchool.png" alt="" class="img-fluid" style="width: 40px">
+        <img src="<?= site_url()?>assets/images/school_logo.png" alt="" class="img-fluid" style="width: 40px">
         <a href="#" class="px-2 text-dark">LNHS-ES</a>
         <div id="close-sidebar">
           <i class="fas fa-times"></i>
@@ -52,7 +52,7 @@
         <ul>
           <!-- dashboard nav link -->
           <li class="sidebar-dropdown <?= ($page == 'dashboard') ? 'active' : ''?>">
-            <a href="<?= site_url()?>registrar/dashboard">
+            <a href="<?= site_url()?>r/dashboard">
               <i class="fa fa-tachometer-alt fa-fw"></i>
               <span class="ps-1">Dashboard</span>
             </a>
@@ -64,14 +64,14 @@
               <i class="far fa-list-alt fa-fw"></i>
               <span class="ps-1">Course Management</span>
             </a>
-            <div class="sidebar-submenu <?= ($page == 'crs_tracks_strands' || $page == 'crs_schedule') ? 'd-block' : ''?>">
+            <div class="sidebar-submenu <?= ($page == 'crs_mgt' || $page == 'crs_schedule') ? 'd-block' : ''?>">
               <ul>
                 <li>
-                  <a href="<?= site_url()?>registrar/crs_tracks_strands" class="<?= ($page == 'crs_tracks_strands') ? 'active' : ''?>">Tracks and Strands
+                  <a href="<?= site_url()?>r/crs_mgt" class="<?= ($page == 'crs_mgt') ? 'active' : ''?>">Tracks and Strands
                   </a>
                 </li>
                 <li>
-                  <a href="<?= site_url()?>registrar/crs_schedule" class="<?= ($page == 'crs_schedule') ? 'active' : ''?>">Schedule</a>
+                  <a href="<?= site_url()?>r/crs_schedule" class="<?= ($page == 'crs_schedule') ? 'active' : ''?>">Schedule</a>
                 </li>
               </ul>
             </div>
@@ -86,14 +86,14 @@
             <div class="sidebar-submenu <?= ($page == 'enroll_request' || $page == 'validation' || $page == 'payment') ? 'd-block' : ''?>">
               <ul>
                 <li>
-                  <a href="<?= site_url()?>registrar/enroll_request" class="<?= ($page == 'enroll_request') ? 'active' : ''?>">Pending
+                  <a href="<?= site_url()?>r/enroll_request" class="<?= ($page == 'enroll_request') ? 'active' : ''?>">Pending
                   </a>
                 </li>
                 <li>
-                  <a href="<?= site_url()?>registrar/validation" class="<?= ($page == 'validation') ? 'active' : ''?>">Admission</a>
+                  <a href="<?= site_url()?>r/validation" class="<?= ($page == 'validation') ? 'active' : ''?>">Admission</a>
                 </li>
                 <li>
-                  <a href="<?= site_url()?>registrar/payment" class="<?= ($page == 'validation') ? 'active' : ''?>">Payment</a>
+                  <a href="<?= site_url()?>r/payment" class="<?= ($page == 'validation') ? 'active' : ''?>">Payment</a>
                 </li>
               </ul>
             </div>
@@ -108,13 +108,13 @@
             <div class="sidebar-submenu <?= ($page == 'esc_request' || $page == 'esc_approved' || $page == 'esc_denied') ? 'd-block' : ''?>">
               <ul>
                 <li>
-                  <a href="<?= site_url()?>registrar/esc_request">Verification</a>
+                  <a href="<?= site_url()?>r/esc_request">Verification</a>
                 </li>
                 <li>
-                  <a href="<?= site_url()?>registrar/esc_approved">Approved</a>
+                  <a href="<?= site_url()?>r/esc_approved">Approved</a>
                 </li>
                 <li>
-                  <a href="<?= site_url()?>registrar/esc_denied">Denied</a>
+                  <a href="<?= site_url()?>r/esc_denied">Denied</a>
                 </li>
               </ul>
             </div>
@@ -129,13 +129,13 @@
             <div class="sidebar-submenu <?= ($page == 'rep_masterlist' || $page == 'rep_escvoucher' || $page == 'rep_payment') ? 'd-block' : ''?>">
               <ul>
                 <li>
-                  <a href="<?= site_url()?>registrar/rep_masterlist">Masterlist</a>
+                  <a href="<?= site_url()?>r/rep_masterlist">Masterlist</a>
                 </li>
                 <li>
-                  <a href="<?= site_url()?>registrar/rep_escvoucher">ESC Voucher</a>
+                  <a href="<?= site_url()?>r/rep_escvoucher">ESC Voucher</a>
                 </li>
                 <li>
-                  <a href="<?= site_url()?>registrar/rep_payment">Payment</a>
+                  <a href="<?= site_url()?>r/rep_payment">Payment</a>
                 </li>
               </ul>
             </div>
@@ -150,10 +150,10 @@
             <div class="sidebar-submenu <?= ($page == 'acc_request' || $page == 'acc_activated') ? 'd-block' : ''?>">
               <ul>
                 <li>
-                  <a href="<?= site_url()?>registrar/acc_request">Request</a>
+                  <a href="<?= site_url()?>r/acc_request">Request</a>
                 </li>
                 <li>
-                  <a href="<?= site_url()?>registrar/acc_activated">Activated Account</a>
+                  <a href="<?= site_url()?>r/acc_activated">Activated Account</a>
                 </li>
               </ul>
             </div>

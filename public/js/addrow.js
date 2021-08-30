@@ -1,11 +1,13 @@
-function setAddRow(body, btn){
+function setAddRow(body, btn, rows){
   const tbody = document.getElementById(body);
   const addTierBtn = document.getElementById(btn);
+  const rowCount = document.getElementById(rows);
 
   addTierBtn.addEventListener('click', () => {
     let rows = tbody.childElementCount;
     let tierNumber = rows + 1;
-    
+    rowCount.setAttribute('value', tierNumber);
+
     if(rows < 10) {
       let tr = document.createElement('tr');
       for (let index = 0; index < 5; index++) {
@@ -17,11 +19,10 @@ function setAddRow(body, btn){
         switch (index) {
           case 0:
             td.setAttribute('class', 'align-middle');
-            td.innerHTML = (rows + 1) + ".)";
+            td.innerHTML = (tierNumber);
             break;
           case 1:
             let i = 0;
-            let options = [];
             while(i < 4) {
               option = document.createElement('option');
               switch (i) {
@@ -49,19 +50,19 @@ function setAddRow(body, btn){
               i++;
             }
             select.setAttribute('class', 'form-select');
-            select.setAttribute('name', 'sc_' + rows);
+            select.setAttribute('name', 'category_' + tierNumber);
             td.appendChild(select);
             break;
           case 2:
             input.setAttribute('type', 'text');
-            input.setAttribute('name', 'sn_' + tierNumber);
+            input.setAttribute('name', 'code_' + tierNumber);
             input.setAttribute('class', 'form-control');
             input.setAttribute('placeholder', 'Subject Code here...');
             td.appendChild(input);
             break;
           case 3:
             input.setAttribute('type', 'text');
-            input.setAttribute('name', 'dsc_' + tierNumber);
+            input.setAttribute('name', 'name_' + tierNumber);
             input.setAttribute('class', 'form-control');
             input.setAttribute('placeholder', 'Subject Name here...');
             td.appendChild(input);
@@ -74,6 +75,7 @@ function setAddRow(body, btn){
             td.addEventListener('click', () => {
               addTierBtn.classList.replace('d-none', 'd-block');
               td.parentElement.remove();
+              rowCount.setAttribute('value', tierNumber - 1);
             });
             break;
           default:

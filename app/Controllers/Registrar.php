@@ -9,11 +9,21 @@ class Registrar extends BaseController
 		return view('registrar/signin');
 	}
 
+	public function auth($page = NULL) {
+		helper('form');
+		if($page === NULL) {
+			echo view('registrar/dashboard');
+		}
+
+		echo view('registrar/'.$page);
+	}
+
 	public function view($page = NULL) {
 		helper('form');
 		if($page === NULL) {
 			echo view('registrar/dashboard');
 		}
+		
 
     echo view('registrar/templates/header');
     echo view('registrar/templates/sidebar');

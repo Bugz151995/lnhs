@@ -5,10 +5,10 @@ namespace App\Controllers;
 class Student extends BaseController
 {
 	public function index() {
-		echo view('templates/header');
-		echo view('templates/topbar');
-		echo view('home');
-		echo view('templates/footer');
+		echo view('student/templates/header');
+		echo view('student/templates/topbar');
+		echo view('student/home');
+		echo view('student/templates/footer');
 	}
 
 	public function view($page = NULL) {
@@ -17,9 +17,9 @@ class Student extends BaseController
 			echo view('home');
 		}
 
-		echo view('templates/header');
-		echo view('templates/topbar');
-		echo view(''.$page);
-		echo view('templates/footer');
+		echo view('student/templates/header');
+		echo view('student/templates/topbar');
+		echo view('student/'.$page);
+		echo view('student/templates/footer');
 	}
 }

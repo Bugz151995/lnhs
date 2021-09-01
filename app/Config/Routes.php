@@ -37,13 +37,22 @@ $routes->get('/', 'Home::index');
 // course managment group
 $routes->group('r/crs_mgt', function($routes) {
 	$routes->get('/', 'CourseManagement::index');
-	$routes->post('delete_subject', 'CourseManagement::deleteSubject');
+	$routes->get('delete_subject/(:any)/(:any)', 'CourseManagement::deleteSubject/$1/$2');
 	$routes->post('update_course', 'CourseManagement::updateCourse');
 	$routes->post('edit_course', 'CourseManagement::editCourse');
 	$routes->post('set_course', 'CourseManagement::setCourse');
 	$routes->post('new_course', 'CourseManagement::createCourse');
 });
 
+// schedule managment group
+$routes->group('r/crs_schedule', function($routes) {
+	$routes->get('/', 'ScheduleManagement::index');
+	$routes->post('new_schedule', 'ScheduleManagement::setSched');
+	$routes->post('edit_schedule', 'ScheduleManagement::editSched');
+	$routes->post('update_schedule', 'ScheduleManagement::updateSched');
+	$routes->post('view_schedule', 'ScheduleManagement::viewSched');
+	$routes->post('new_section', 'ScheduleManagement::addSection');
+});
 
 $routes->get('/', 'Registrar::index');
 $routes->get('r/auth/(:segment)', 'Registrar::auth/$1');

@@ -71,14 +71,9 @@
                     <td><input type="text" name="code_<?= $row ?>" value="<?= set_value('code_'.$i, $subjects[$i]->subject_code) ?>" class="form-control form-control-sm" placeholder="Subject Code Here..."></td>
                     <td><input type="text" name="name_<?= $row ?>" value="<?= set_value('name_'.$i, $subjects[$i]->subject_name) ?>" class="form-control form-control-sm" placeholder="Subject Name Here..."></td>
                     <td id="e_remove_<?= $row?>" class="text-center align-middle">
-                      <?= form_open('r/crs_mgt/delete_subject') ?>
-                        <?= csrf_field() ?>
-                        <input type="hidden" name="subject" value="<?= $subjects[$i]->subject_id?>">
-                        <input type="hidden" name="coursesubject" value="<?= $subjects[$i]->course_subject_id?>">
-                        <button type="submit" class="remove-row btn btn-transparent">
-                          <i class="far fa-times-circle text-danger fa-fw fa-lg"></i>
-                        </button>
-                      <?= form_close() ?>
+                      <a href="r/crs_mgt/delete_subject/<?= $subjects[$i]->subject_id?>/<?= $subjects[$i]->course_subject_id?>" type="submit" class="remove-row btn btn-transparent">
+                        <i class="far fa-times-circle text-danger fa-fw fa-lg"></i>
+                      </a>
                     </td>
                   </tr>
                 <?php endfor ?>

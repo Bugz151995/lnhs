@@ -17,9 +17,9 @@ class CourseManagement extends BaseController{
     $coursesubject_model = new CourseSubjectModel();
     
     $data = [
-      'track' => $track_model->findAll(),
+      'track'         => $track_model->findAll(),
       'track_strands' => $course_model->getTrackStrands(),
-      'course' => $coursesubject_model->getCourses(),
+      'course'        => $coursesubject_model->getCourses(),
     ];
 
 		echo view('registrar/templates/header');
@@ -29,13 +29,10 @@ class CourseManagement extends BaseController{
     echo view('registrar/templates/footer');
 	}
 
-  public function deleteSubject() {
-    
+  public function deleteSubject($subject, $course_subject) {
+
     $subject_model       = new SubjectModel();
     $coursesubject_model = new CourseSubjectModel();
-
-    $subject =  ['subject_id' => $this->request->getPost('subject')];
-    $course_subject = ['course_subject_id' => $this->request->getPost('coursesubject')];
 
     $coursesubject_model->delete($course_subject);
     $subject_model->delete($subject);
@@ -99,7 +96,7 @@ class CourseManagement extends BaseController{
         echo view('registrar/templates/sidebar');
         echo view('registrar/templates/topbar');
         echo view('registrar/crs_mgt', $data);
-        echo view('registrar/crs_edit');
+        echo view('registrar/crs_edit_course');
         echo view('registrar/templates/footer');
       } else {
         // get subjects data
@@ -153,7 +150,7 @@ class CourseManagement extends BaseController{
     echo view('registrar/templates/sidebar');
 		echo view('registrar/templates/topbar');
 		echo view('registrar/crs_mgt', $data);
-		echo view('registrar/crs_edit');
+		echo view('registrar/crs_edit_course');
     echo view('registrar/templates/footer');
 	}
 

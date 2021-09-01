@@ -18,8 +18,10 @@
     $modal_open = 'modal-open';
     $backdrop = '<div class="modal-backdrop fade show"></div>';
     $page_wrapper = 'style="overflow: hidden; padding-right: 0px" data-bs-overflow="hidden" data-bs-padding-right="0px"';
+    $is_in_crs_mgt_page = ($page == 'crs_mgt' && $segment == 'edit_course' || $segment == 'update_course');
+    $is_in_crs_sched_page = ($page == 'crs_schedule' && $segment == 'edit_schedule' || $segment == 'update_schedule');
   ?>
 
-  <body class="bg-light <?= ($page == 'crs_mgt' && $segment == 'edit_course' || $segment == 'update_course') ? $modal_open : '' ?>" <?= ($page == 'crs_mgt' && $segment == 'edit_course' || $segment == 'update_course') ? $page_wrapper : '' ?>>
-  <?= ($page == 'crs_mgt' && $segment == 'edit_course' || $segment == 'update_course') ? $backdrop : '' ?>
+  <body class="bg-light <?= ($is_in_crs_mgt_page || $is_in_crs_sched_page) ? $modal_open : '' ?>" <?= ($is_in_crs_mgt_page || $is_in_crs_sched_page) ? $page_wrapper : '' ?>>
+  <?= ($is_in_crs_mgt_page || $is_in_crs_sched_page) ? $backdrop : '' ?>
   

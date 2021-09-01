@@ -2,7 +2,7 @@
   <div class="bg-white mt-4">
     <?= form_open_multipart('enrollment/submit')?>
       <!-- header -->
-      <div class="bg-light p-3 text-center h5">Enrollment Form</div>
+      <div class="bg-primary p-3 text-light text-center h5">Enrollment Form</div>
       <!-- learners information -->
       <div class="row">
         <!-- 2x2 -->
@@ -55,10 +55,6 @@
             <div class="col">
               <label for="religion" class="form-label">Religious Affiliation</label>
               <input type="text" id="religion" name="religion" class="form-control form-control-sm" placeholder="Religious Affiliation here...">
-            </div>
-            <div class="col">
-              <label for="gradeLevel" class="form-label">Grade Level</label>
-              <input type="text" class="form-control form-control-sm " id="gradeLevel" name="grade" placeholder="Grade Level here...">
             </div>
             <div class="col">
               <label for="modality" class="form-label">Learning Modality</label>
@@ -151,85 +147,144 @@
       </div>
 
       <!-- guardian -->
-      <div for="guardian" class="fst-italic ps-3 mt-4 text-danger">Specify Guardian if you are not living with your parent.</div>
-      <div class="row px-3 g-2 g-lg-4 pt-4" id="guardian">
+      <div class="fst-italic ps-3 mt-4 text-danger">Specify Guardian if you are not living with your parent.</div>
+
+      <div class="col-12 col-4 px-3 mb-2">
+        <label for="liveswithguardianorparent" class="form-label">Are you living with your parent?</label>
+        <div class="form-control form-control-sm ps-4">
+          <div class="row">
+            <div class="form-check col-auto mb-0">
+              <input class="form-check-input" type="radio" name="liveswithguardianorparent" checked id="liveswithparent">
+              <label class="form-check-label" for="liveswithparent">
+                Yes
+              </label>
+            </div>
+            <div class="form-check col-auto mb-0">
+              <input class="form-check-input" type="radio" name="liveswithguardianorparent" checked id="liveswithguardian">
+              <label class="form-check-label" for="liveswithguardian">
+                No
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row px-3 g-2 g-lg-4" id="guardian">
         <div class="col-12 col-md-6">
           <label for="guardian" class="form-label">Guardian </label>
           <div class="row row-cols-1 row-cols-md-3 px-1 g-2 g-lg-3" id="guardian">
             <div class="col">
-              <input type="text" name="firstname_2" id="firstname_2" class="form-control form-control-sm" placeholder="First Name here...">
+              <input type="text" name="firstname_2" id="firstname_2" class="form-control form-control-sm" disabled placeholder="First Name here...">
             </div>
             <div class="col">
-              <input type="text" name="middlename_2" id="middlename_2" class="form-control form-control-sm" placeholder="Middle Name here...">
+              <input type="text" name="middlename_2" id="middlename_2" class="form-control form-control-sm" disabled placeholder="Middle Name here...">
             </div>
             <div class="col">
-              <input type="text" name="lastname_2" id="lastname_2" class="form-control form-control-sm" placeholder="Last Name here...">
+              <input type="text" name="lastname_2" id="lastname_2" class="form-control form-control-sm" disabled placeholder="Last Name here...">
             </div>
           </div>
         </div>
         <div class="col-12 col-md-3">
           <label for="relationship" class="form-label">Relationship</label>
-          <input type="text" name="relationship_2" id="relationship" class="form-control form-control-sm" placeholder="Relationship here...">
+          <input type="text" name="relationship_2" id="relationship_2" class="form-control form-control-sm" disabled placeholder="Relationship here...">
         </div>
         <div class="col-12 col-md-3">
           <label for="contact_number" class="form-label">Contact Number</label>
-          <input type="text" class="form-control form-control-sm " name="contact_number_2" id="contact_number_2" placeholder="Guardian's Contact Number here...">
+          <input type="text" class="form-control form-control-sm " name="contact_number_2" id="contact_number_2" disabled placeholder="Guardian's Contact Number here...">
         </div>
       </div>
 
       <!-- For Returning Learners(Balik-Aral) and Those Who Shall Transfer/Move in -->
       <label for="returneeTransferee" class="h6 text-center bg-light w-100 mt-4 text-decoration-underline">For Returning Learners(Balik-Aral) and Those Who Shall Transfer/Move in</label>
-      <div class="row g-2 g-lg-4 px-3 row-cols-1 row-cols-md-2">
-        <div class="col">
-          <label for="hea" class="form-label">Last Grade Level Completed</label>
-          <input type="number" name="hea" id="hea" class="form-control" placeholder="Last Grade Level Completed here...">
-        </div>
-        <div class="col">
-          <label for="hea_ay" class="form-label">Last School Year Completed</label>
-          <input type="number" name="hea_ay" id="hea_ay" class="form-control" placeholder="Last School Year Completed here...">
-        </div>
-        <div class="col">
-          <label for="prev_school" class="form-label">School Name</label>
-          <input type="text" name="prev_school" id="prev_school" class="form-control" placeholder="School Name here...">
-        </div>
-        <div class="col">
-          <label for="prev_school_address" class="form-label">School Address</label>
-          <input type="text" name="prev_school_address" id="prev_school_address" class="form-control" placeholder="School Address here...">
-        </div>
-      </div>
-      
-      <!-- For SHS -->
-      <label for="returneeTransferee" class="h6 text-center bg-light w-100 mt-4 text-decoration-underline">For Learners in Senior High School</label>
-      <div class="row g-2 g-lg-4 px-3 row-cols-1 row-cols-md-2">
-        <div class="col">
-          <label for="semester" class="form-label">Semester</label>
+
+      <div class="fst-italic ps-3 my-2 text-danger">If you are not a returnee or transferee please proceed to fill up the For Learners in Senior High School Section.</div>
+
+      <div class="col-12 col-4 px-3 mb-2">
+        <label for="returneeortransferee" class="form-label">Are you a transferee or Returnee?</label>
+        <div class="form-control form-control-sm ps-4">
           <div class="row">
-            <div class="form-check col">
-              <input class="form-check-input" type="radio" name="semester" id="firstsem">
-              <label class="form-check-label" for="firstsem">
-                1st Sem
+            <div class="form-check col-auto mb-0">
+              <input class="form-check-input" type="radio" name="returneeortransferee" id="isreturneeortransferee">
+              <label class="form-check-label" for="isreturneeortransferee">
+                Yes
               </label>
             </div>
-            <div class="form-check col">
-              <input class="form-check-input" type="radio" name="semester" id="secondsem">
-              <label class="form-check-label" for="secondsem">
-                2nd Sem
+            <div class="form-check col-auto mb-0">
+              <input class="form-check-input" type="radio" name="returneeortransferee" checked id="isnotreturneeortransferee">
+              <label class="form-check-label" for="isnotreturneeortransferee">
+                No
               </label>
             </div>
           </div>
         </div>
+      </div>
+      <div id="returneeTransferee" class="row g-2 g-lg-4 px-3 row-cols-1 row-cols-md-2">
         <div class="col">
-          <label for="course" class="form-label">Track and Strands</label>
-          <select name="course" id="course" class="form-select">
-            <option value="" selected disabled>Select Track and Strands...</option>
+          <label for="hea" class="form-label">Last Grade Level Completed</label>
+          <input type="number" name="hea" id="hea" class="form-control form-control-sm" disabled placeholder="Last Grade Level Completed here...">
+        </div>
+        <div class="col">
+          <label for="hea_ay" class="form-label">Last School Year Completed</label>
+          <input type="number" name="hea_ay" id="hea_ay" class="form-control form-control-sm" disabled placeholder="Last School Year Completed here...">
+        </div>
+        <div class="col">
+          <label for="prev_school" class="form-label">School Name</label>
+          <input type="text" name="prev_school" id="prev_school" class="form-control form-control-sm" disabled placeholder="School Name here...">
+        </div>
+        <div class="col">
+          <label for="prev_school_address" class="form-label">School Address</label>
+          <input type="text" name="prev_school_address" id="prev_school_address" class="form-control form-control-sm" disabled placeholder="School Address here...">
+        </div>
+      </div>
+      
+      <!-- For SHS -->
+      <label for="seniorhighstudent" class="h6 text-center bg-light w-100 mt-4 text-decoration-underline">For Learners in Senior High School</label>
+      <div id="seniorhighstudent" class="row g-2 g-lg-4 px-3 row-cols-1 align-items-center">
+        <div class="col-sm-3">
+          <label for="semester" class="form-label">Semester</label>
+          <div class="form-control form-control-sm ps-4">
+            <div class="row">
+              <div class="form-check col-auto mb-0">
+                <input class="form-check-input" type="radio" name="semester" id="firstsem">
+                <label class="form-check-label" for="firstsem">
+                  1st Sem
+                </label>
+              </div>
+              <div class="form-check col-auto mb-0">
+                <input class="form-check-input" type="radio" name="semester" id="secondsem">
+                <label class="form-check-label" for="secondsem">
+                  2nd Sem
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-3">
+          <label for="semester" class="form-label">Grade Level</label>
+          <input type="text" name="gradelevel" class="form-control form-control-sm" placeholder="Grade Level here...">
+        </div>
+        <div class="col-sm-3">
+          <label for="section" class="form-label">Section</label>
+          <select name="section" id="" class="form-select form-select-sm">
+            <option value="" selected disabled>Select a Section...</option>
           </select>
         </div>
       </div>
+        <div class="row px-3 py-2 py-lg-4">
+          <div class="col-12">
+            <label for="course" class="form-label">Track and Strands</label>
+            <select name="course" id="course" class="form-select form-select-sm">
+              <option value="" selected disabled>Select Track and Strands...</option>
+            </select>
+          </div>
+        </div>
 
-      
       <div class="gap-2 d-sm-flex justify-content-end mt-3 mb-3 px-3 pb-3">
         <button type="button" class="btn btn-primary">Submit</button>
       </div>
     <?= form_close()?>
   </div>
 </main>
+
+<script src="<?= site_url()?>js/returneeform_toggle.js"></script>
+<script src="<?= site_url()?>js/guardianfield_toggle.js"></script>

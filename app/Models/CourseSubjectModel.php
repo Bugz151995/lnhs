@@ -21,7 +21,6 @@ class CourseSubjectModel extends Model {
     $builder = $db->table('courses_subjects');
 
     return $builder->select('*')
-                   ->distinct()
                    ->join('subjects', 'subjects.subject_id = courses_subjects.subject_id')
                    ->join('courses', 'courses.course_id = courses_subjects.course_id')
                    ->join('tracks', 'tracks.track_id = courses.track_id')

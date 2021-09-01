@@ -35,7 +35,6 @@ class CourseManagement extends BaseController{
     $coursesubject_model = new CourseSubjectModel();
 
     $coursesubject_model->delete($course_subject);
-    $subject_model->delete($subject);
 
     session()->setFlashData('info', 'The subject has been deleted successfully!');
     return redirect()->to('r/crs_mgt');

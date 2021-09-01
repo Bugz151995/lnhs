@@ -37,7 +37,7 @@ $routes->get('/', 'Home::index');
 // course managment group
 $routes->group('r/crs_mgt', function($routes) {
 	$routes->get('/', 'CourseManagement::index');
-	$routes->get('delete_subject/(:any)/(:any)', 'CourseManagement::deleteSubject/$1/$2');
+	$routes->get('delete_subject/(:num)/(:num)', 'CourseManagement::deleteSubject/$1/$2');
 	$routes->post('update_course', 'CourseManagement::updateCourse');
 	$routes->post('edit_course', 'CourseManagement::editCourse');
 	$routes->post('set_course', 'CourseManagement::setCourse');

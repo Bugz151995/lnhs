@@ -122,8 +122,22 @@ class Enrollment extends BaseController {
         'religion'   => esc($this->request->getPost('religion')),
       ];
 
-      $student_model->save($student);
-      $student_id = $student_model->insertID();
+      $student_name = [
+        'firstname'   => esc($this->request->getPost('firstname')),
+        'middlename'  => esc($this->request->getPost('middlename')),
+        'lastname'    => esc($this->request->getPost('lastname')),
+        'suffix'      => esc($this->request->getPost('suffix'))
+      ];
+
+      $student_record = $student_model->isDuplicate($student_name);
+
+      if(count($student_record) > 0) {
+        $student['student_id'] = $student_record[0]->student_id;
+        $student_model->save($student);
+      } else {
+        $student_model->save($student);
+        $student_id = $student_model->insertID();
+      }
 
       // GET RETURNEE OR TRANSFEREE DATA AND SAVE
       $last_gradelevel = $this->request->getPost('hea');

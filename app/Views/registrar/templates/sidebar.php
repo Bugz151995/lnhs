@@ -78,22 +78,22 @@
           </li>
 
           <!-- enrollment nav link -->
-          <li class="sidebar-dropdown <?= ($page == 'enroll_request' || $page == 'validation' || $page == 'payment') ? 'active' : ''?>">
+          <li class="sidebar-dropdown <?= ($page == 'enrollments' || $page == 'assessment' || $page == 'payment') ? 'active' : ''?>">
             <a href="#">
               <i class="far fa-address-card fa-fw"></i>
               <span class="ps-1">Enrollment</span>
             </a>
-            <div class="sidebar-submenu <?= ($page == 'enroll_request' || $page == 'validation' || $page == 'payment') ? 'd-block' : ''?>">
+            <div class="sidebar-submenu <?= ($page == 'enrollments' || $page == 'assessment' || $page == 'payment') ? 'd-block' : ''?>">
               <ul>
                 <li>
-                  <a href="<?= site_url()?>r/enroll_request" class="<?= ($page == 'enroll_request') ? 'active' : ''?>">Pending
+                  <a href="<?= site_url()?>r/enrollments" class="<?= ($page == 'enrollments') ? 'active' : ''?>">For Verification
                   </a>
                 </li>
                 <li>
-                  <a href="<?= site_url()?>r/validation" class="<?= ($page == 'validation') ? 'active' : ''?>">Admission</a>
+                  <a href="<?= site_url()?>r/assessment" class="<?= ($page == 'assessment') ? 'active' : ''?>">Assessment</a>
                 </li>
                 <li>
-                  <a href="<?= site_url()?>r/payment" class="<?= ($page == 'validation') ? 'active' : ''?>">Payment</a>
+                  <a href="<?= site_url()?>r/payment" class="<?= ($page == 'payment') ? 'active' : ''?>">Payment</a>
                 </li>
               </ul>
             </div>

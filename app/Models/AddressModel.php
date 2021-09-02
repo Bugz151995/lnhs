@@ -24,8 +24,6 @@ class AddressModel extends Model {
                      ->where($data)
                      ->get();
 
-    if($query !== NULL) {
-      return $query->getResult();
-    } else return true;
+    return $query->getResult();
   }
 }

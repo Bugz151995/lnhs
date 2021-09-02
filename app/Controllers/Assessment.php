@@ -12,7 +12,7 @@ use \App\Models\SectionModel;
 use \App\Models\StudentSectionModel;
 use \App\Models\CoursesModel;
 
-class Enrollment extends BaseController {
+class Assessment extends BaseController {
   public function index() {
     helper(['form', 'url']);
     $section_model = new SectionModel();
@@ -33,21 +33,31 @@ class Enrollment extends BaseController {
     echo view('student/success');
   }
 
-  public function viewEnrollments() {
+  public function viewEnrollment($student_id) {
+    helper(['form', 'url']);
+    $section_model = new SectionModel();
+    $course_model = new CoursesModel();
     $enrollment_model = new EnrollmentModel();
+    $person_model     = new PersonModel();
 
     $data = [
-      'enrollments' => $enrollment_model->getEnrollments()
+      'sections'    => $section_model->findAll(),
+      'courses'     => $course_model->getCourses(),
+      'enrollments' => $enrollment_model->getStudentEnrollment($student_id),
+      'relatives'   => $person_model->select('*')
+                                    ->join('relations', 'relations.person_id = persons.person_id')
+                                    ->where('relations.student_id', $student_id)
+                                    ->get()->getResult()
     ];
 
     echo view('registrar/templates/header');
     echo view('registrar/templates/sidebar');
 		echo view('registrar/templates/topbar');
-		echo view('registrar/enrollments', $data);
+		echo view('registrar/assessment', $data);
     echo view('registrar/templates/footer');
   }
 
-  public function create() {
+  public function updateEnrollment() {
     helper(['form', 'url']);
 
     $student_model         = new StudentModel();
@@ -189,8 +199,7 @@ class Enrollment extends BaseController {
           
           $relationship = [
             'student_id' => esc($student_id),
-            'person_id'  => esc($person_id),
-            'relationship' => esc($this->request->getPost('relationship_'.$i))
+            'person_id'  => esc($person_id)
           ];
 
           $relation_model->save($relationship);

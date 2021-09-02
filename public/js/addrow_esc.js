@@ -60,7 +60,7 @@ function setAddRow(body, btn){
       }
       tbody.appendChild(tr);
 
-      if(rows === 5) {
+      if(rows === 11) {
         addTierBtn.classList.toggle('d-none');
       }
     } else addTierBtn.classList.toggle('d-none');

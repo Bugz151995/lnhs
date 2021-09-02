@@ -14,4 +14,16 @@ class PersonModel extends Model {
   protected $allowedFields = [
     'person_id', 'lastname', 'firstname', 'middlename', 'contact_number'
   ];
+
+  public function isDuplicate($data) {
+    $db = db_connect();
+
+    $builder = $db->table('persons');
+    
+    $query = $builder->select('person_id')
+                     ->where($data)
+                     ->get();
+
+    return $query->getResult();
+  }
 }

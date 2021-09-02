@@ -7,6 +7,8 @@ use App\Models\StrandModel;
 use App\Models\SubjectModel;
 use App\Models\CoursesModel;
 use App\Models\CourseSubjectModel;
+use App\Models\ScheduleModel;
+use App\Models\StudentScheduleModel;
 
 class CourseManagement extends BaseController{
 	public function index() {
@@ -18,8 +20,8 @@ class CourseManagement extends BaseController{
     
     $data = [
       'track'         => $track_model->findAll(),
-      'track_strands' => $course_model->getTrackStrands(),
-      'course'        => $coursesubject_model->getCourses(),
+      'track_strands' => $course_model->getCourses(),
+      'course'        => $coursesubject_model->getCoursesPerSemester(),
     ];
 
 		echo view('registrar/templates/header');
@@ -30,11 +32,20 @@ class CourseManagement extends BaseController{
 	}
 
   public function deleteSubject($subject, $course_subject) {
-
     $subject_model       = new SubjectModel();
     $coursesubject_model = new CourseSubjectModel();
+    $schedule_model      = new ScheduleModel();
 
+    $schedule_id = $schedule_model->select('schedule_id')
+                                  ->where('course_subject_id', $course_subject)
+                                  ->get()
+                                  ->getResult();
+                                 
+    if (count($schedule_id) != 0) {
+      $schedule_model->delete($schedule_id[0]->schedule_id);
+    }
     $coursesubject_model->delete($course_subject);
+    $subject_model->delete($subject);
 
     session()->setFlashData('info', 'The subject has been deleted successfully!');
     return redirect()->to('r/crs_mgt');
@@ -83,8 +94,8 @@ class CourseManagement extends BaseController{
 
         $data = [
           'track'         => $track_model->findAll(),
-          'track_strands' => $course_model->getTrackStrands(),
-          'course'        => $coursesubject_model->getCourses(),
+          'track_strands' => $course_model->getCourses(),
+          'course'        => $coursesubject_model->getCoursesPerSemester(),
           'subjects'      => $coursesubject_model->getSubjects($course_id, $sem),
           'sel_courseid'  => $course_id,
           'sel_sem'       => $sem,
@@ -138,8 +149,8 @@ class CourseManagement extends BaseController{
 
     $data = [
       'track'         => $track_model->findAll(),
-      'track_strands' => $course_model->getTrackStrands(),
-      'course'        => $coursesubject_model->getCourses(),
+      'track_strands' => $course_model->getCourses(),
+      'course'        => $coursesubject_model->getCoursesPerSemester(),
       'subjects'      => $coursesubject_model->getSubjects($course_id, $sem),
       'sel_courseid'  => $course_id,
       'sel_sem'       => $sem,
@@ -193,8 +204,8 @@ class CourseManagement extends BaseController{
 
         $data = [
           'track' => $track_model->findAll(),
-          'track_strands' => $course_model->getTrackStrands(),
-          'course' => $coursesubject_model->getCourses(),
+          'track_strands' => $course_model->getCourses(),
+          'course' => $coursesubject_model->getCoursesPerSemester(),
           'validation' => $this->validator
         ];
     
@@ -259,8 +270,8 @@ class CourseManagement extends BaseController{
       $data = [
         'track' => $track_model->findAll(),
         'strand' => $strand_model->findAll(),
-        'track_strands' => $course_model->getTrackStrands(),
-        'course' => $coursesubject_model->getCourses(),
+        'track_strands' => $course_model->getCourses(),
+        'course' => $coursesubject_model->getCoursesPerSemester(),
         'validation' => $this->validator
       ];
   

@@ -15,7 +15,7 @@ class CoursesModel extends Model {
     'track_id', 'strand_id'
   ];
 
-  public function getTrackStrands() {
+  public function getCourses() {
     $db = db_connect();
 
     $builder = $db->table('courses');

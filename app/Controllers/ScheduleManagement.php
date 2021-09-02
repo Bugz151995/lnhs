@@ -24,8 +24,8 @@ class ScheduleManagement extends BaseController{
 
     $data = [
       'track'         => $track_model->findAll(),
-      'track_strands' => $course_model->getTrackStrands(),
-      'courses'       => $coursesubject_model->getCourses(),
+      'track_strands' => $course_model->getCourses(),
+      'courses'       => $coursesubject_model->getCoursesPerSemester(),
       'teachers'      => $teacher_model->findAll(),
       'sections'      => $section_model->findAll(),
       'schedules'     => $schedule_model->getSchedules()
@@ -71,8 +71,8 @@ class ScheduleManagement extends BaseController{
       
       $data = [
         'track'          => $track_model->findAll(),
-        'track_strands'  => $course_model->getTrackStrands(),
-        'courses'        => $coursesubject_model->getCourses(),
+        'track_strands'  => $course_model->getCourses(),
+        'courses'        => $coursesubject_model->getCoursesPerSemester(),
         'teachers'       => $teacher_model->findAll(),
         'sections'       => $section_model->findAll(),
         'schedules'      => $schedule_model->getSchedules(),
@@ -130,8 +130,8 @@ class ScheduleManagement extends BaseController{
 
     $data = [
       'track'          => $track_model->findAll(),
-      'track_strands'  => $course_model->getTrackStrands(),
-      'courses'        => $coursesubject_model->getCourses(),
+      'track_strands'  => $course_model->getCourses(),
+      'courses'        => $coursesubject_model->getCoursesPerSemester(),
       'teachers'       => $teacher_model->findAll(),
       'sections'       => $section_model->findAll(),
       'schedules'      => $schedule_model->getSchedules(),
@@ -182,8 +182,8 @@ class ScheduleManagement extends BaseController{
       
       $data = [
         'track'           => $track_model->findAll(),
-        'track_strands'   => $course_model->getTrackStrands(),
-        'courses'         => $coursesubject_model->getCourses(),
+        'track_strands'   => $course_model->getCourses(),
+        'courses'         => $coursesubject_model->getCoursesPerSemester(),
         'subjects'        => $coursesubject_model->getSubjects($course_id, $sem),
         'teachers'        => $teacher_model->findAll(),
         'sections'        => $section_model->findAll(),
@@ -236,8 +236,8 @@ class ScheduleManagement extends BaseController{
     
     $data = [
       'track'           => $track_model->findAll(),
-      'track_strands'   => $course_model->getTrackStrands(),
-      'courses'         => $coursesubject_model->getCourses(),
+      'track_strands'   => $course_model->getCourses(),
+      'courses'         => $coursesubject_model->getCoursesPerSemester(),
       'subjects'        => $coursesubject_model->getSubjects($course_id, $sem),
       'teachers'        => $teacher_model->findAll(),
       'sections'        => $section_model->findAll(),
@@ -282,8 +282,8 @@ class ScheduleManagement extends BaseController{
 
       $data = [
         'track'         => $track_model->findAll(),
-        'track_strands' => $course_model->getTrackStrands(),
-        'courses'       => $coursesubject_model->getCourses(),
+        'track_strands' => $course_model->getCourses(),
+        'courses'       => $coursesubject_model->getCoursesPerSemester(),
         'teachers'      => $teacher_model->findAll(),
         'sections'      => $section_model->findAll(),
         'validation'    => $this->validator

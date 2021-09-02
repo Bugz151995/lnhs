@@ -1,7 +1,7 @@
 <main class="container">
-  <div class="bg-white my-4 py-3">
+  <div class="bg-white my-4 pb-3">
     <!-- form label -->
-    <div class="text-center">
+    <div class="text-center bg-primary text-light py-3">
       <h5>Education Service Contracting</h5>
       <div>Application Form</div>
       <div>ESC Form 1</div>
@@ -54,21 +54,7 @@
           </div>
           <div class="col">
             <label for="nationality" class="form-label">Nationality</label>
-            <div class="form-control form-control-sm d-flex align-items-center justify-content-center">
-              <div class="form-check form-check-inline mb-0">
-                <input class="form-check-input" type="radio" name="nationality" id="filipino" value="filipino">
-                <label class="form-check-label align-middle" for="male">Filipino</label>
-              </div>
-              <div class="form-check form-check-inline mb-0">
-                <div class="input-group">
-                  <div class="input-group-text">
-                    <input class="form-check-input" type="radio" name="nationality" id="female" value="others">
-                    <label class="form-check-label align-middle" for="others">Others</label>
-                  </div>
-                  <input type="text" name="" class="form-control">
-                </div>
-              </div>
-            </div>
+            <input class="form-control form-control-sm" type="text" name="nationality" id="filipino" placeholder="Nationality here...">
           </div>
         </div> 
       </div>
@@ -381,25 +367,10 @@
         I consent that the Information herein may be used for reports both internally and to the Department of Education.
       </p>
     </div>
-    <div class="row">
-			<div class="col-md-12">
-		 		<canvas id="sig-canvas" width="620" height="160">
-		 			Get a better browser, bro.
-		 		</canvas>
-		 	</div>
-		</div>
-		<div class="row">
-			<div class="col-md-12">
-				<button class="btn btn-primary" id="sig-submitBtn">Submit Signature</button>
-				<button class="btn btn-default" id="sig-clearBtn">Clear Signature</button>
-			</div>
-		</div>
-    <input type="hidden" name="signature_student" id="sig-dataUrl">
   </div>
 </main>
 
 <script src="<?= site_url()?>js/addrow_esc.js"></script>
-<script src="<?= site_url()?>js/signature_draw.js"></script>
 <!-- setup add row functionality -->
 <script>
   setAddRow('tierTable', 'addTierBtn');

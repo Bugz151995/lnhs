@@ -5,61 +5,62 @@
         echo $validation->listErrors();
       }
     ?>
-    <?= form_open_multipart('enrollment/submit')?>
+    <?= form_open('enrollment/submit')?>
       <!-- header -->
-      <div class="bg-primary p-3 text-light text-center h5">Enrollment Form</div>
+      <div class="bg-primary p-3 text-light text-center h5">Learners Information</div>
       <!-- learners information -->
       <div class="row">
         <!-- 2x2 -->
         <div class="col-lg-3 text-center align-self-center justify-self-center">
-          <img src="<?= site_url()?>assets/images/user.jpg" alt="hugenerd" style="width: 200px; height: 200px; background-color: rgba(0,0,255,.1);" class="img-fluid img-thumbnail mx-4 rounded-circle" alt="">
-          <div class="px-3 pt-2">
-            <input type="file" name="user_img" value="<?= set_value('user_img')?>" id="user_img" class="form-control form-control-sm">
-          </div>
+          <img src="<?= (isset($enrollments)) ? site_url().$enrollments[0]->user_img : site_url().'assets/images/user.jpg'?>" alt="hugenerd" style="width: 200px; height: 200px; background-color: rgba(0,0,255,.1);" class="img-fluid img-thumbnail mx-4 rounded-circle" alt="">
         </div>
         <!-- learners information -->
         <div class="col-lg-9">
           <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-3 g-lg-4 g-2 px-3">
             <div class="col">
+              <label for="lrn" class="form-label">LRN</label>
+              <input type="text" class="form-control form-control-sm" name="lrn" value="<?= set_value('firstname')?>" id="lrn" placeholder="LRN here...">
+            </div>
+            <div class="col">
               <label for="firstname" class="form-label"><span class="text-danger">*</span> First name</label>
-              <input type="text" class="form-control form-control-sm" name="firstname" value="<?= set_value('firstname')?>" id="firstname" placeholder="First Name here...">
+              <input type="text" class="form-control form-control-sm" name="firstname" value="<?= (isset($enrollments)) ? $enrollments[0]->firstname : set_value('firstname')?>" id="firstname" placeholder="First Name here...">
             </div>
             <div class="col">
               <label for="middlename" class="form-label"><span class="text-danger">*</span> Middle name</label>
-              <input type="text" id="middlename" name="middlename" value="<?= set_value('middlename')?>" class="form-control form-control-sm" placeholder="Middle Name here..."> 
+              <input type="text" id="middlename" name="middlename" value="<?= (isset($enrollments)) ? $enrollments[0]->middlename : set_value('middlename')?>" class="form-control form-control-sm" placeholder="Middle Name here..."> 
             </div>
             <div class="col">
               <label for="lastname" class="form-label"><span class="text-danger">*</span> Last Name</label>
-              <input type="text" class="form-control form-control-sm " id="lastname" name="lastname" value="<?= set_value('lastname')?>" placeholder="Last Name here...">
+              <input type="text" class="form-control form-control-sm " id="lastname" name="lastname" value="<?= (isset($enrollments)) ? $enrollments[0]->lastname : set_value('lastname')?>" placeholder="Last Name here...">
             </div>
             <div class="col">
               <label for="nameextension" class="form-label"><span class="text-danger">*</span> Name Extension</label>
-              <input type="text" class="form-control form-control-sm " id="nameextension" name="suffix" value="<?= set_value('suffix')?>" placeholder="Name Extendsion here...">
+              <input type="text" class="form-control form-control-sm " id="nameextension" name="suffix" value="<?= (isset($enrollments)) ? $enrollments[0]->suffix : set_value('suffix')?>" placeholder="Name Extendsion here...">
             </div>
             <div class="col">
               <label for="bday" class="form-label"><span class="text-danger">*</span> Birth Date</label>
-              <input type="date" id="bday" name="bday" value="<?= set_value('bday')?>" class="form-control form-control-sm">
+              <input type="date" id="bday" name="bday" value="<?= (isset($enrollments)) ? $enrollments[0]->birthdate : set_value('bday')?>" class="form-control form-control-sm">
             </div>
             <div class="col">
               <label for="age" class="form-label"><span class="text-danger">*</span> Age</label>
-              <input type="number" min="6" max="130" id="age" name="age" value="<?= set_value('age')?>" class="form-control form-control-sm" placeholder="Age here...">
+              <input type="number" min="6" max="130" id="age" name="age" value="<?= (isset($enrollments)) ? $enrollments[0]->age : set_value('age')?>" class="form-control form-control-sm" placeholder="Age here...">
             </div>
             <div class="col">
               <label for="religiosAffilication" class="form-label"><span class="text-danger">*</span> Sex</label>
               <div class="form-control form-control-sm d-flex align-items-center justify-content-center">
                 <div class="form-check form-check-inline mb-0">
-                  <input class="form-check-input" type="radio" name="sex" id="male" value="male" <?= set_radio('sex', 'male')?>>
+                  <input class="form-check-input" type="radio" name="sex" id="male" value="male" <?= (isset($enrollments)) ? set_radio('sex', $enrollments[0]->sex) : set_radio('sex', 'male')?>>
                   <label class="form-check-label align-middle" for="male">Male</label>
                 </div>
                 <div class="form-check form-check-inline mb-0">
-                  <input class="form-check-input" type="radio" name="sex" id="female" value="female" <?= set_radio('sex', 'female')?>>
+                  <input class="form-check-input" type="radio" name="sex" id="female" value="female" <?= (isset($enrollments)) ? set_radio('sex', $enrollments[0]->sex) : set_radio('sex', 'female')?>>
                   <label class="form-check-label align-middle" for="female">Female</label>
                 </div>
               </div>
             </div>
             <div class="col">
               <label for="religion" class="form-label"><span class="text-danger">*</span> Religious Affiliation</label>
-              <input type="text" id="religion" name="religion" value="<?= set_value('religion')?>" class="form-control form-control-sm" placeholder="Religious Affiliation here...">
+              <input type="text" id="religion" name="religion" value="<?= (isset($enrollments)) ? $enrollments[0]->religion : set_value('religion')?>" class="form-control form-control-sm" placeholder="Religious Affiliation here...">
             </div>
             <div class="col">
               <label for="modality" class="form-label"><span class="text-danger">*</span> Learning Modality</label>
@@ -78,22 +79,22 @@
       <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 px-3 g-2 g-lg-4"> 
         <div class="col">
           <label for="street" class="form-label"><span class="text-danger">*</span> House #/Street/Sitio/Purok</label>
-          <input type="text" id="street" name="street" value="<?= set_value('street')?>" class="form-control form-control-sm " placeholder="House #/Street/Sitio/Purok here...">
+          <input type="text" id="street" name="street" value="<?= (isset($enrollments)) ? $enrollments[0]->street : set_value('street')?>" class="form-control form-control-sm " placeholder="House #/Street/Sitio/Purok here...">
         </div>
 
         <div class="col">
           <label for="barangay" class="form-label"><span class="text-danger">*</span> Barangay</label>
-          <input type="text" id="barangay" name="barangay" value="<?= set_value('barangay')?>" class="form-control form-control-sm" placeholder="Barangay here...">
+          <input type="text" id="barangay" name="barangay" value="<?= (isset($enrollments)) ? $enrollments[0]->barangay : set_value('barangay')?>" class="form-control form-control-sm" placeholder="Barangay here...">
         </div>
 
         <div class="col">
           <label for="mun_city" class="form-label"><span class="text-danger">*</span> Municipality/City</label>
-          <input type="text" id="mun_city" name="mun_city" value="<?= set_value('mun_city')?>" class="form-control form-control-sm" placeholder="Municipality/City here...">
+          <input type="text" id="mun_city" name="mun_city" value="<?= (isset($enrollments)) ? $enrollments[0]->city_municipality : set_value('mun_city')?>" class="form-control form-control-sm" placeholder="Municipality/City here...">
         </div>
 
         <div class="col">
           <label for="province" class="form-label"><span class="text-danger">*</span> Province</label>
-          <input type="text" id="province" name="province" value="<?= set_value('province')?>" class="form-control form-control-sm " placeholder="Province here...">
+          <input type="text" id="province" name="province" value="<?= (isset($enrollments)) ? $enrollments[0]->province : set_value('province')?>" class="form-control form-control-sm " placeholder="Province here...">
         </div>
       </div>
       
@@ -106,7 +107,7 @@
               <label for="fathersname" class="form-label"><span class="text-danger">*</span> Fathers name</label>
               <div class="row row-cols-1 row-cols-md-3 px-1 g-2 g-lg-3" id="fathersname">
                 <div class="col">
-                  <input type="text" name="firstname_0" value="<?= set_value('firstname_0')?>" id="firstname_0" class="form-control form-control-sm" placeholder="First Name here...">
+                  <input type="text" name="firstname_0" value="<?= (isset($enrollments)) ? $enrollments[0]->age : set_value('firstname_0')?>" id="firstname_0" class="form-control form-control-sm" placeholder="First Name here...">
                 </div>
                 <div class="col">
                   <input type="text" name="middlename_0" value="<?= set_value('middlename_0')?>" id="middlename_0" class="form-control form-control-sm" placeholder="Middle Name here...">
@@ -114,7 +115,7 @@
                 <div class="col">
                   <input type="text" name="lastname_0" value="<?= set_value('lastname_0')?>" id="lastname_0" class="form-control form-control-sm" placeholder="Last Name here...">
                 </div>
-                <input type="hidden" name="relationship_0" value="father">
+                <input type="hidden" name="relationship_0" value="<?= set_value('relationship_0')?>" value="father">
               </div>
             </div>
             <div class="col-sm-3">

@@ -15,7 +15,7 @@ class CourseSubjectModel extends Model {
     'course_id', 'subject_id', 'semester'
   ];
 
-  public function getCourses() {
+  public function getCoursesPerSemester() {
     $db = db_connect();
 
     $builder = $db->table('courses_subjects');

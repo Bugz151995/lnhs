@@ -11,15 +11,17 @@ class Student extends BaseController
 		echo view('student/templates/footer');
 	}
 
-	public function view($page = NULL) {
-		helper('form');
-		if($page === NULL) {
-			echo view('home');
-		}
-
+	public function home() {		
 		echo view('student/templates/header');
 		echo view('student/templates/topbar');
-		echo view('student/'.$page);
+		echo view('student/home');
+		echo view('student/templates/footer');
+	}
+
+	public function about() {		
+		echo view('student/templates/header');
+		echo view('student/templates/topbar');
+		echo view('student/about');
 		echo view('student/templates/footer');
 	}
 }

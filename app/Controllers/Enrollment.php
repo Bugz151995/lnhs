@@ -11,6 +11,7 @@ use \App\Models\EnrollmentModel;
 use \App\Models\SectionModel;
 use \App\Models\StudentSectionModel;
 use \App\Models\CoursesModel;
+use \App\Models\TransfereeReturneeModel;
 
 class Enrollment extends BaseController {
   public function index() {
@@ -50,15 +51,17 @@ class Enrollment extends BaseController {
   public function create() {
     helper(['form', 'url']);
 
-    $student_model         = new StudentModel();
-    $person_model          = new PersonModel();
-    $relation_model        = new RelationModel();
-    $enrollment_model      = new EnrollmentModel();
-    $address_model         = new AddressModel();
-    $student_add_model     = new StudentAddressModel();
-    $student_section_model = new StudentSectionModel();
-    $section_model         = new SectionModel();
-    $course_model          = new CoursesModel();
+    $student_model            = new StudentModel();
+    $person_model             = new PersonModel();
+    $relation_model           = new RelationModel();
+    $enrollment_model         = new EnrollmentModel();
+    $address_model            = new AddressModel();
+    $student_add_model        = new StudentAddressModel();
+    $student_section_model    = new StudentSectionModel();
+    $section_model            = new SectionModel();
+    $course_model             = new CoursesModel();
+    $transfereereturnee_model = new TransfereeReturneeModel();
+    
     
     $rules = [
       'user_img'   => 'uploaded[user_img]|is_image[user_img]',
@@ -82,7 +85,7 @@ class Enrollment extends BaseController {
       'course'     => 'required',
     ];
 
-    for ($i=0; $i < 2; $i++) { 
+    for ($i=0; $i < 2; $i++) {
       $rules['firstname_'.$i]      = 'required';
       $rules['lastname_'.$i]       = 'required';
       $rules['middlename_'.$i]     = 'required';
@@ -121,6 +124,23 @@ class Enrollment extends BaseController {
 
       $student_model->save($student);
       $student_id = $student_model->insertID();
+
+      // GET RETURNEE OR TRANSFEREE DATA AND SAVE
+      $last_gradelevel = $this->request->getPost('hea');
+      $year_completed  = $this->request->getPost('hea_ay');
+      $school_name     = $this->request->getPost('prev_school');
+      $school_address  = $this->request->getPost('prev_school_address');
+      if(isset($last_gradelevel, $year_completed, $school_name, $school_address)){
+        $returnee_transferee = [
+          'student_id'      => esc($student_id),
+          'last_gradelevel' => esc($this->request->getPost('hea')),
+          'year_completed'  => esc($this->request->getPost('hea_ay')),
+          'school_name'     => esc($this->request->getPost('prev_school')),
+          'school_address'  => esc($this->request->getPost('prev_school_address')),
+        ];
+  
+        $transfereereturnee_model->save($returnee_transferee);
+      }
 
       // GET ENROLLMENT AND SAVE
       $enrollment = [
@@ -208,5 +228,42 @@ class Enrollment extends BaseController {
       // display success message
       return redirect()->to('enrollment/success');
     }
+  }
+
+  public function request() {
+    $student_model = new StudentModel();
+
+    $file = $this->request->getFile('user_img');
+    $rand_name = $file->getRandomName();
+    $path = 'assets/students/'.$rand_name;
+    $file->move('assets/students/', $rand_name);
+
+    $student = [
+      'id_picture'  => esc($path),
+      'firstname'   => esc($this->request->getPost('firstname')),
+      'middlename'  => esc($this->request->getPost('middlename')),
+      'lastname'    => esc($this->request->getPost('lastname')),
+      'suffix'      => esc($this->request->getPost('suffix')),
+      'contact_num' => esc($this->request->getPost('contact_num')),
+      'email'       => esc($this->request->getPost('email')),
+      'token'       => ''
+    ];
+
+    $student_name = [
+      'firstname'   => esc($this->request->getPost('firstname')),
+      'middlename'  => esc($this->request->getPost('middlename')),
+      'lastname'    => esc($this->request->getPost('lastname')),
+      'suffix'      => esc($this->request->getPost('suffix'))
+    ];
+    
+    $student_record = $student_model->isDuplicate($student_name);
+
+    if(count($student_record) > 0) {
+      $student['student_id'] = $student_record[0]->student_id;
+    }
+
+    $student_model->save($student);
+    session()->setFlashData('success', 'Request Successful!');
+    return redirect()->to('enrollment');
   }
 }

@@ -1,22 +1,43 @@
-<main class="container">
+<main class="container px-4">
   <div class="bg-white mt-4">
     <?php
       if(isset($validation)) {
         echo $validation->listErrors();
       }
     ?>
-    <?= form_open('enrollment/submit')?>
+    <ul class="nav nav-pills nav-fill">
+      <li class="nav-item">
+        <a class="nav-link active text-decoration-underline" aria-current="page" href="#">Requirements Assessment</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="<?= site_url()?>r/assessment/evaluation">Evaluation</a>
+      </li>
+    </ul>
+
+    <?= form_open('r/assessment/update/'.$enrollments[0]->student_id)?>
       <!-- header -->
-      <div class="bg-primary p-3 text-light text-center h5">Learners Information</div>
+      <div class="bg-primary p-3 text-light text-center border-top border-white h5">Learners Information</div>
       <!-- learners information -->
       <div class="row">
+        <input type="hidden" name="student_id" value="<?= $enrollments[0]->student_id?>">
+        <input type="hidden" name="enrollment_id" value="<?= $enrollments[0]->student_id?>">
+        <input type="hidden" name="returnee_transferee_id" value="<?= (count($returnee_transferee) > 0) ? $returnee_transferee[0]->transferees_returnee_id : '' ?>">
+        <input type="hidden" name="address_id" value="<?= $enrollments[0]->address_id?>">
+        <input type="hidden" name="student_address_id" value="<?= $enrollments[0]->student_address_id?>">
+        <input type="hidden" name="father_id" value="<?= (isset($relatives[0])) ? $relatives[0]->person_id : ''?>">
+        <input type="hidden" name="mother_id" value="<?= (isset($relatives[1])) ? $relatives[1]->person_id : ''?>">
+        <input type="hidden" name="guardian_id" value="<?= (isset($relatives[2])) ? $relatives[2]->person_id : ''?>">
+        <input type="hidden" name="father_r_id" value="<?= (isset($relatives[0])) ? $relatives[0]->relation_id : ''?>">
+        <input type="hidden" name="mother_r_id" value="<?= (isset($relatives[1])) ? $relatives[1]->relation_id : ''?>">
+        <input type="hidden" name="guardian_r_id" value="<?= (isset($relatives[2])) ? $relatives[2]->relation_id : ''?>">
+        <input type="hidden" name="student_section_id" value="<?= $enrollments[0]->student_section_id?>">
         <!-- 2x2 -->
-        <div class="col-lg-3 text-center align-self-center justify-self-center">
-          <img src="<?= (isset($enrollments)) ? site_url().$enrollments[0]->user_img : site_url().'assets/images/user.jpg'?>" alt="hugenerd" style="width: 200px; height: 200px; background-color: rgba(0,0,255,.1);" class="img-fluid img-thumbnail mx-4 rounded-circle" alt="">
+        <div class="col-lg-3 text-center d-flex align-items-center justify-content-end">
+          <img src="<?= (isset($enrollments)) ? site_url().$enrollments[0]->user_img : site_url().'assets/images/user.jpg'?>" alt="hugenerd" style="width: 200px; height: 200px; background-color: rgba(0,0,255,.1);" class="img-fluid img-thumbnail rounded" alt="">
         </div>
         <!-- learners information -->
         <div class="col-lg-9">
-          <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-3 g-lg-4 g-2 px-3">
+          <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-3 g-lg-4 g-2 px-3 pt-3">
             <div class="col">
               <label for="lrn" class="form-label">LRN</label>
               <input type="text" class="form-control form-control-sm" name="lrn" value="<?= set_value('firstname')?>" id="lrn" placeholder="LRN here...">
@@ -49,11 +70,11 @@
               <label for="religiosAffilication" class="form-label"><span class="text-danger">*</span> Sex</label>
               <div class="form-control form-control-sm d-flex align-items-center justify-content-center">
                 <div class="form-check form-check-inline mb-0">
-                  <input class="form-check-input" type="radio" name="sex" id="male" value="male" <?= (isset($enrollments)) ? set_radio('sex', $enrollments[0]->sex) : set_radio('sex', 'male')?>>
+                  <input class="form-check-input" type="radio" name="sex" id="male" value="male" <?= (isset($enrollments) && $enrollments[0]->sex == 'male') ? set_radio('sex', $enrollments[0]->sex, TRUE) : set_radio('sex', 'male')?>>
                   <label class="form-check-label align-middle" for="male">Male</label>
                 </div>
                 <div class="form-check form-check-inline mb-0">
-                  <input class="form-check-input" type="radio" name="sex" id="female" value="female" <?= (isset($enrollments)) ? set_radio('sex', $enrollments[0]->sex) : set_radio('sex', 'female')?>>
+                  <input class="form-check-input" type="radio" name="sex" id="female" value="female" <?= (isset($enrollments) && $enrollments[0]->sex == 'female') ? set_radio('sex', $enrollments[0]->sex, TRUE) : set_radio('sex', 'female')?>>
                   <label class="form-check-label align-middle" for="female">Female</label>
                 </div>
               </div>
@@ -66,8 +87,8 @@
               <label for="modality" class="form-label"><span class="text-danger">*</span> Learning Modality</label>
               <select name="modality" id="learningmodality" class="form-select form-select-sm">
                 <option value="" disabled selected>Select Learning Modality</option>
-                <option value="Modular(print)" <?= set_select('modality', 'Modular(print)')?>>Modular(print)</option>
-                <option value="Modular(digital)" <?= set_select('modality', 'Modular(digital)') ?>>Modular(digital)</option>
+                <option value="Modular(print)" <?= (isset($enrollments) && $enrollments[0]->learning_modality == 'Modular(print)') ? set_select('modality', $enrollments[0]->learning_modality, TRUE) : set_select('modality', 'Modular(print)')?>>Modular(print)</option>
+                <option value="Modular(digital)" <?= (isset($enrollments) && $enrollments[0]->learning_modality == 'Modular(digital)') ? set_select('modality', $enrollments[0]->learning_modality, TRUE) : set_select('modality', 'Modular(digital)') ?>>Modular(digital)</option>
               </select>
             </div>
           </div> 
@@ -107,21 +128,21 @@
               <label for="fathersname" class="form-label"><span class="text-danger">*</span> Fathers name</label>
               <div class="row row-cols-1 row-cols-md-3 px-1 g-2 g-lg-3" id="fathersname">
                 <div class="col">
-                  <input type="text" name="firstname_0" value="<?= (isset($enrollments)) ? $enrollments[0]->age : set_value('firstname_0')?>" id="firstname_0" class="form-control form-control-sm" placeholder="First Name here...">
+                  <input type="text" name="firstname_0" value="<?= (isset($relatives[0])) ? $relatives[0]->firstname : set_value('firstname_0')?>" id="firstname_0" class="form-control form-control-sm" placeholder="First Name here...">
                 </div>
                 <div class="col">
-                  <input type="text" name="middlename_0" value="<?= set_value('middlename_0')?>" id="middlename_0" class="form-control form-control-sm" placeholder="Middle Name here...">
+                  <input type="text" name="middlename_0" value="<?= (isset($relatives[0])) ? $relatives[0]->middlename : set_value('middlename_0')?>" id="middlename_0" class="form-control form-control-sm" placeholder="Middle Name here...">
                 </div>
                 <div class="col">
-                  <input type="text" name="lastname_0" value="<?= set_value('lastname_0')?>" id="lastname_0" class="form-control form-control-sm" placeholder="Last Name here...">
+                  <input type="text" name="lastname_0" value="<?= (isset($relatives[0])) ? $relatives[0]->lastname : set_value('lastname_0')?>" id="lastname_0" class="form-control form-control-sm" placeholder="Last Name here...">
                 </div>
-                <input type="hidden" name="relationship_0" value="<?= set_value('relationship_0')?>" value="father">
+                <input type="hidden" name="relationship_0" value="father">
               </div>
             </div>
             <div class="col-sm-3">
               <label for="contact_number" class="form-label"><span class="text-danger">*</span> Contact Number</label>
               <div class="col">
-                <input type="text" class="form-control form-control-sm " name="contact_number_0" value="<?= set_value('contact_number_0')?>" id="contact_number_0" placeholder="Father's Contact Number here...">
+                <input type="text" class="form-control form-control-sm " name="contact_number_0" value="<?= (isset($relatives[0])) ? $relatives[0]->contact_number : set_value('contact_number_0')?>" id="contact_number_0" placeholder="Father's Contact Number here...">
               </div>
             </div>
           </div>
@@ -133,20 +154,20 @@
               <label for="mothersname" class="form-label"><span class="text-danger">*</span> Mothers Maiden name</label>
               <div class="row row-cols-1 row-cols-md-3 px-1 g-2 g-lg-3" id="mothersname">
                 <div class="col">
-                  <input type="text" name="firstname_1" id="firstname_1" value="<?= set_value('firstname_1')?>" class="form-control form-control-sm" placeholder="First Name here...">
+                  <input type="text" name="firstname_1" id="firstname_1" value="<?= (isset($relatives[1])) ? $relatives[1]->firstname : set_value('firstname_1')?>" class="form-control form-control-sm" placeholder="First Name here...">
                 </div>
                 <div class="col">
-                  <input type="text" name="middlename_1" id="middlename_1" value="<?= set_value('middlename_1')?>" class="form-control form-control-sm" placeholder="Middle Name here...">
+                  <input type="text" name="middlename_1" id="middlename_1" value="<?= (isset($relatives[1])) ? $relatives[1]->middlename : set_value('middlename_1')?>" class="form-control form-control-sm" placeholder="Middle Name here...">
                 </div>
                 <div class="col">
-                  <input type="text" name="lastname_1" id="lastname_1" value="<?= set_value('lastname_1')?>" class="form-control form-control-sm" placeholder="Last Name here...">
+                  <input type="text" name="lastname_1" id="lastname_1" value="<?= (isset($relatives[1])) ? $relatives[1]->lastname : set_value('lastname_1')?>" class="form-control form-control-sm" placeholder="Last Name here...">
                 </div>
                 <input type="hidden" name="relationship_1" value="mother">
               </div>
             </div>
             <div class="col-sm-3">
               <label for="contact_number" class="form-label"><span class="text-danger">*</span> Contact Number</label>
-              <input type="text" class="form-control form-control-sm " name="contact_number_1" id="contact_number_1" value="<?= set_value('contact_number_1')?>" placeholder="Mother's Contact Number here...">
+              <input type="text" class="form-control form-control-sm " name="contact_number_1" id="contact_number_1" value="<?= (isset($relatives[1])) ? $relatives[1]->contact_number : set_value('contact_number_1')?>" placeholder="Mother's Contact Number here...">
             </div>
           </div>
         </div>
@@ -160,13 +181,13 @@
         <div class="form-control form-control-sm ps-4">
           <div class="row">
             <div class="form-check col-auto mb-0">
-              <input class="form-check-input" type="radio" name="liveswithguardianorparent" checked id="liveswithparent">
+              <input class="form-check-input" type="radio" name="liveswithguardianorparent" value="yes" <?= (!isset($relatives[2])) ? set_radio('liveswithguardianorparent', 'yes', TRUE) : set_radio('liveswithguardianorparent', 'yes')?> checked id="liveswithparent">
               <label class="form-check-label" for="liveswithparent">
                 Yes
               </label>
             </div>
             <div class="form-check col-auto mb-0">
-              <input class="form-check-input" type="radio" name="liveswithguardianorparent" checked id="liveswithguardian">
+              <input class="form-check-input" type="radio" name="liveswithguardianorparent" value="no" <?= (isset($relatives[2])) ? set_radio('liveswithguardianorparent', 'no', TRUE) : set_radio('liveswithguardianorparent', 'no')?> id="liveswithguardian">
               <label class="form-check-label" for="liveswithguardian">
                 No
               </label>
@@ -180,23 +201,23 @@
           <label for="guardian" class="form-label">Guardian </label>
           <div class="row row-cols-1 row-cols-md-3 px-1 g-2 g-lg-3" id="guardian">
             <div class="col">
-              <input type="text" name="firstname_2" id="firstname_2" value="<?= set_value('firstname_2')?>" class="form-control form-control-sm" disabled placeholder="First Name here...">
+              <input type="text" name="firstname_2" id="firstname_2" value="<?= (isset($relatives[2])) ? $relatives[2]->firstname : set_value('firstname_2')?>" class="form-control form-control-sm" <?= (isset($relatives[2])) ? '' : 'disabled' ?> placeholder="First Name here...">
             </div>
             <div class="col">
-              <input type="text" name="middlename_2" id="middlename_2" value="<?= set_value('middlename_2')?>" class="form-control form-control-sm" disabled placeholder="Middle Name here...">
+              <input type="text" name="middlename_2" id="middlename_2" value="<?= (isset($relatives[2])) ? $relatives[2]->middlename : set_value('middlename_2')?>" class="form-control form-control-sm" <?= (isset($relatives[2])) ? '' : 'disabled' ?> placeholder="Middle Name here...">
             </div>
             <div class="col">
-              <input type="text" name="lastname_2" id="lastname_2" value="<?= set_value('lastname_2')?>" class="form-control form-control-sm" disabled placeholder="Last Name here...">
+              <input type="text" name="lastname_2" id="lastname_2" value="<?= (isset($relatives[2])) ? $relatives[2]->lastname : set_value('lastname_2')?>" class="form-control form-control-sm" <?= (isset($relatives[2])) ? '' : 'disabled' ?> placeholder="Last Name here...">
             </div>
           </div>
         </div>
         <div class="col-12 col-md-3">
           <label for="relationship" class="form-label">Relationship</label>
-          <input type="text" name="relationship_2" id="relationship_2" value="<?= set_value('relationship_2')?>" class="form-control form-control-sm" disabled placeholder="Relationship here...">
+          <input type="text" name="relationship_2" id="relationship_2" value="<?= (isset($relatives[2])) ? $relatives[2]->relationship : set_value('relationship_2')?>" class="form-control form-control-sm" <?= (isset($relatives[2])) ? '' : 'disabled' ?> placeholder="Relationship here...">
         </div>
         <div class="col-12 col-md-3">
           <label for="contact_number" class="form-label">Contact Number</label>
-          <input type="text" class="form-control form-control-sm " name="contact_number_2" value="<?= set_value('contact_number_2')?>" id="contact_number_2" disabled placeholder="Guardian's Contact Number here...">
+          <input type="text" class="form-control form-control-sm " name="contact_number_2" value="<?= (isset($relatives[2])) ? $relatives[2]->contact_number : set_value('contact_number_2')?>" id="contact_number_2" <?= (isset($relatives[2])) ? '' : 'disabled' ?> placeholder="Guardian's Contact Number here...">
         </div>
       </div>
 
@@ -227,19 +248,19 @@
       <div id="returneeTransferee" class="row g-2 g-lg-4 px-3 row-cols-1 row-cols-md-2">
         <div class="col">
           <label for="hea" class="form-label">Last Grade Level Completed</label>
-          <input type="number" name="hea" id="hea" class="form-control form-control-sm" value="<?= set_value('hea')?>" disabled placeholder="Last Grade Level Completed here...">
+          <input type="number" name="hea" id="hea" class="form-control form-control-sm" value="<?= (count($returnee_transferee) > 0) ? $returnee_transferee[0]->last_gradelevel : set_value('hea')?>" disabled placeholder="Last Grade Level Completed here...">
         </div>
         <div class="col">
           <label for="hea_ay" class="form-label">Last School Year Completed</label>
-          <input type="number" name="hea_ay" id="hea_ay" class="form-control form-control-sm" value="<?= set_value('hea_ay')?>" disabled placeholder="Last School Year Completed here...">
+          <input type="number" name="hea_ay" id="hea_ay" class="form-control form-control-sm" value="<?= (count($returnee_transferee) > 0) ? $returnee_transferee[0]->year_completed : set_value('hea_ay')?>" disabled placeholder="Last School Year Completed here...">
         </div>
         <div class="col">
           <label for="prev_school" class="form-label">School Name</label>
-          <input type="text" name="prev_school" id="prev_school" class="form-control form-control-sm" value="<?= set_value('prev_school')?>" disabled placeholder="School Name here...">
+          <input type="text" name="prev_school" id="prev_school" class="form-control form-control-sm" value="<?= (count($returnee_transferee) > 0) ? $returnee_transferee[0]->school_name : set_value('prev_school')?>" disabled placeholder="School Name here...">
         </div>
         <div class="col">
           <label for="prev_school_address" class="form-label">School Address</label>
-          <input type="text" name="prev_school_address" id="prev_school_address" value="<?= set_value('prev_school_address')?>" class="form-control form-control-sm" disabled placeholder="School Address here...">
+          <input type="text" name="prev_school_address" id="prev_school_address" value="<?= (count($returnee_transferee) > 0) ? $returnee_transferee[0]->school_address : set_value('prev_school_address')?>" class="form-control form-control-sm" disabled placeholder="School Address here...">
         </div>
       </div>
       
@@ -251,13 +272,13 @@
           <div class="form-control form-control-sm ps-4">
             <div class="row">
               <div class="form-check col-auto mb-0">
-                <input class="form-check-input" type="radio" name="semester" value="1" id="firstsem" <?= set_radio('semester', '1')?>>
+                <input class="form-check-input" type="radio" name="semester" value="1" id="firstsem" <?= (isset($enrollments) && $enrollments[0]->semester == 1) ? set_radio('semester', $enrollments[0]->semester, TRUE) : set_radio('semester', '1')?>>
                 <label class="form-check-label" for="firstsem">
                   1st Sem
                 </label>
               </div>
               <div class="form-check col-auto mb-0">
-                <input class="form-check-input" type="radio" name="semester" value="2" id="secondsem" <?= set_radio('semester', '2')?>>
+                <input class="form-check-input" type="radio" name="semester" value="2" id="secondsem" <?= (isset($enrollments) && $enrollments[0]->semester == 2) ? set_radio('semester', $enrollments[0]->semester, TRUE) : set_radio('semester', '2')?>>
                 <label class="form-check-label" for="secondsem">
                   2nd Sem
                 </label>
@@ -267,32 +288,79 @@
         </div>
         <div class="col-sm-3">
           <label for="semester" class="form-label"><span class="text-danger">*</span> Grade Level</label>
-          <input type="text" name="gradelevel" class="form-control form-control-sm" value="<?= set_value('gradelevel')?>" placeholder="Grade Level here...">
+          <input type="text" name="gradelevel" class="form-control form-control-sm" value="<?= (isset($enrollments)) ? $enrollments[0]->grade_level : set_value('gradelevel')?>" placeholder="Grade Level here...">
         </div>
         <div class="col-sm-3">
           <label for="section" class="form-label"><span class="text-danger">*</span> Section</label>
           <select name="section" id="" class="form-select form-select-sm">
             <option value="" selected disabled>Select a Section...</option>
             <?php foreach($sections as $key => $section) : ?>
-              <option value="<?= $section['section_id']?>" <?= set_select('section', $section['section_id']) ?>><?= $section['section_name']?></option>
+              <option value="<?= $section['section_id']?>" <?= (isset($enrollments)) ? set_select('section', $enrollments[0]->grade_level, TRUE) : set_select('section', $section['section_id']) ?>><?= $section['section_name']?></option>
             <?php endforeach ?>
           </select>
         </div>
       </div>
-        <div class="row px-3 py-2 py-lg-4">
-          <div class="col-12">
-            <label for="course" class="form-label"><span class="text-danger">*</span> Track and Strands</label>
-            <select name="course" id="course" class="form-select form-select-sm">
-              <option value="" selected disabled>Select Track and Strands...</option>
-              <?php foreach($courses as $key => $course) : ?>
-                <option value="<?= $course->course_id?>" <?= set_select('course', $course->course_id) ?>><?= $course->track_name?> - <?= $course->strand_name?></option>
-              <?php endforeach ?>
-            </select>
+      <div class="row px-3 py-2 py-lg-4">
+        <div class="col-12">
+          <label for="course" class="form-label"><span class="text-danger">*</span> Track and Strands</label>
+          <select name="course" id="course" class="form-select form-select-sm">
+            <option value="" selected disabled>Select Track and Strands...</option>
+            <?php foreach($courses as $key => $course) : ?>
+              <option value="<?= $course->course_id?>" <?= (isset($enrollments)) ? set_select('section', $enrollments[0]->course_id, TRUE) : set_select('course', $course->course_id) ?>><?= $course->track_name?> - <?= $course->strand_name?></option>
+            <?php endforeach ?>
+          </select>
+        </div>
+      </div>
+
+      <!-- For SHS -->
+      <label for="seniorhighstudent" class="h6 text-center bg-light w-100 mt-4 text-decoration-underline">Student's Requirements</label>
+      <div id="seniorhighstudent" class="row g-2 g-lg-4 px-3 row-cols-1 align-items-center">
+        <div class="col-sm-3">
+          <label for="isdocumentcomplete" class="form-label"><span class="text-danger">*</span> is the document complete?</label>
+          <div class="form-control form-control-sm ps-4">
+            <div class="row">
+              <div class="form-check col-auto mb-0">
+                <input class="form-check-input" type="radio" name="isdocumentcomplete" value="1" <?= (isset($enrollments) && $enrollments[0]->isDocumentComplete == '1') ? set_radio('isdocumentcomplete', $enrollments[0]->isDocumentComplete, TRUE) : set_radio('isdocumentcomplete', '1') ?> id="notcomplete">
+                <label class="form-check-label" for="firstsem">
+                  Yes
+                </label>
+              </div>
+              <div class="form-check col-auto mb-0">
+                <input class="form-check-input" type="radio" name="isdocumentcomplete" value="0" <?= (isset($enrollments) && $enrollments[0]->isDocumentComplete == '0') ? set_radio('isdocumentcomplete', $enrollments[0]->isDocumentComplete, TRUE) : set_radio('isdocumentcomplete', '0') ?> id="complete">
+                <label class="form-check-label" for="secondsem">
+                  No
+                </label>
+              </div>
+            </div>
           </div>
         </div>
+        <div class="col-sm-3">
+          <label for="status" class="form-label"><span class="text-danger">*</span> Marked As</label>
+          <div class="form-control form-control-sm ps-4">
+            <div class="row">
+              <div class="form-check col-auto mb-0">
+                <input class="form-check-input" type="radio" name="status" value="pending" <?= (isset($enrollments) && $enrollments[0]->status == 'pending') ? set_radio('semester', $enrollments[0]->status, TRUE) : set_radio('status', '1') ?> id="notcomplete">
+                <label class="form-check-label text-danger fst-italic" for="firstsem">
+                  Pending
+                </label>
+              </div>
+              <div class="form-check col-auto mb-0">
+                <input class="form-check-input" type="radio" name="status" value="approved" <?= (isset($enrollments) && $enrollments[0]->status == 'approved') ? set_radio('semester', $enrollments[0]->status, TRUE) : set_radio('status', '0') ?> id="complete">
+                <label class="form-check-label text-success fst-italic" for="secondsem">
+                  Approved
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6">
+          <label for="remarks" class="form-label">Remarks</label>
+          <input type="text" class="form-control form-control-sm" name="remarks" placeholder="Remarks here...">
+        </div>
+      </div>
 
       <div class="gap-2 d-sm-flex justify-content-end mt-3 mb-3 px-3 pb-3">
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save</button>
       </div>
     <?= form_close()?>
   </div>

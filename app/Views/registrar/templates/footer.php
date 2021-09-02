@@ -24,4 +24,23 @@
         <?= ($segment !== NULL ) ? "setAddRow('editTable', 'e_saveBtn', 'e_rows');" : NULL ;?>
       </script>
     <?php endif ?>
+    
+    <!-- TOAST SCRIPT -->
+    <script type="text/javascript">
+      document.addEventListener('DOMContentLoaded', () => {
+        <?php if(session()->getFlashdata('success')){ ?>
+            toastr.success("<?= session()->getFlashdata('success'); ?>");
+        <?php }else if(session()->getFlashdata('error')){  ?>
+          <?php if(!isset($validation)) :?>
+            toastr.error("<?= session()->getFlashdata('error'); ?>");
+          <?php else :?>
+            toastr.error("<?= session()->getFlashdata('error') . $validation->getError('strand')?>");
+          <?php endif?>
+        <?php }else if(session()->getFlashdata('warning')){  ?>
+            toastr.warning("<?= session()->getFlashdata('warning'); ?>");
+        <?php }else if(session()->getFlashdata('info')){  ?>
+            toastr.info("<?= session()->getFlashdata('info'); ?>");
+        <?php } ?>
+      });
+    </script>
 </html>

@@ -2,7 +2,7 @@
     <main class="p-3 my-container">
       <h3 class="mx-3 text-center bg-primary text-light p-4">Enrollments</h3>
       <div class="container-fluid col-sm-12 justify-content-center">
-        <table class="table bg-light shadow text-center table-striped table-borderless">
+        <table class="table bg-light text-center table-striped table-borderless">
           <thead>
             <tr>
               <th scope="col">Date Submitted</th>

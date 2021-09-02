@@ -12,6 +12,18 @@ class StudentModel extends Model {
   protected $returnType    = 'array';
   
   protected $allowedFields = [
-    'lrn', 'user_img', 'firstname', 'middlename', 'lastname', 'suffix', 'birthdate', 'birthplace', 'age', 'religion', 'nationality', 'contact_num', 'email'
+    'lrn', 'user_img', 'firstname', 'middlename', 'lastname', 'sex', 'suffix', 'birthdate', 'birthplace', 'age', 'religion', 'nationality', 'contact_num', 'email'
   ];
+
+  public function isDuplicate($data) {
+    $db = db_connect();
+
+    $builder = $db->table('students');
+    
+    $query = $builder->select('student_id')
+                     ->where($data)
+                     ->get();
+
+    return $query->getResult();
+  }
 }

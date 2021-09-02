@@ -12,7 +12,7 @@
       <div class="row">
         <!-- 2x2 -->
         <div class="col-lg-3 text-center align-self-center justify-self-center">
-          <img src="<?= site_url()?>assets/images/user.jpg" alt="hugenerd" style="width: 200px; height: 200px; background-color: rgba(0,0,255,.1);" class="img-fluid img-thumbnail mx-4 rounded-circle" alt="">
+          <img src="<?= site_url()?>assets/images/user.jpg" alt="2by2 picture" id="img_preview" style="width: 200px; height: 200px; background-color: rgba(0,0,255,.1);" class="img-fluid img-thumbnail mx-4 rounded-circle">
           <div class="px-3 pt-2">
             <input type="file" name="user_img" value="<?= set_value('user_img')?>" id="user_img" class="form-control form-control-sm">
           </div>
@@ -165,7 +165,7 @@
               </label>
             </div>
             <div class="form-check col-auto mb-0">
-              <input class="form-check-input" type="radio" name="liveswithguardianorparent" checked id="liveswithguardian">
+              <input class="form-check-input" type="radio" name="liveswithguardianorparent" id="liveswithguardian">
               <label class="form-check-label" for="liveswithguardian">
                 No
               </label>
@@ -299,3 +299,4 @@
 
 <script src="<?= site_url()?>js/returneeform_toggle.js"></script>
 <script src="<?= site_url()?>js/guardianfield_toggle.js"></script>
+<script src="<?= site_url()?>js/preview_image.js"></script>

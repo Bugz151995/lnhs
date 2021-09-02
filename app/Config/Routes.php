@@ -37,11 +37,16 @@ $routes->get('/', 'Home::index');
 // REGISTRAR ROUTE GROUP
 $routes->group('r', function($routes) {
 	$routes->get('/', 'Registrar::index');
+	$routes->get('auth/(:segment)', 'Registrar::auth/$1');
 	// enrollment management group
 	$routes->get('enrollments', 'Enrollment::viewEnrollments');
 
 	// assessment management group
-	$routes->get('assessment/(:num)', 'Assessment::viewEnrollment/$1');
+	$routes->group('assessment', function($routes) {
+		$routes->get('evaluation', 'Assessment::evaluation');
+		$routes->post('update/(:num)', 'Assessment::updateEnrollment/$1');
+		$routes->get('(:num)', 'Assessment::viewEnrollment/$1');
+	});
 
 	// course managment group
 	$routes->group('crs_mgt', function($routes) {
@@ -84,7 +89,6 @@ $routes->group('/', function($routes) {
 	});
 });
 
-$routes->get('r/auth/(:segment)', 'Registrar::auth/$1');
 $routes->get('a/auth/signin', 'Admin::index');
 
 /*

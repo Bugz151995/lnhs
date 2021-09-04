@@ -1,3 +1,8 @@
+  <footer class="bg-dark py-5 text-light text-center">
+    <div class="container">
+      <i class="fas fa-copyright"></i> Lagonoy High School 2021
+    </div>
+  </footer>
   </body>
   <!-- bootstrap js bundle -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>

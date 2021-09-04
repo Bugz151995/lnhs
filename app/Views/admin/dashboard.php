@@ -1,0 +1,3 @@
+<main>
+  <h1>THIS IS THE DASHBOARD FOR THE ADMIN</h1>
+</main>

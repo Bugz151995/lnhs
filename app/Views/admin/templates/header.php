@@ -10,6 +10,18 @@
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
     <link rel="stylesheet" href="<?= site_url()?>css/main.css">
     <title>Enrollment Request</title>
-
   </head>
-  <body class="bg-white">
+  <?php 
+    $uri = service('uri');
+    $page = $uri->getSegment(2);
+    $segment = $uri->getSegment(3);
+    $modal_open = 'modal-open';
+    $backdrop = '<div class="modal-backdrop fade show"></div>';
+    $page_wrapper = 'style="overflow: hidden; padding-right: 0px" data-bs-overflow="hidden" data-bs-padding-right="0px"';
+    $is_in_crs_mgt_page = ($page == 'crs_mgt' && $segment == 'edit_course' || $segment == 'update_course');
+    $is_in_crs_sched_page = ($page == 'crs_schedule' && $segment == 'edit_schedule' || $segment == 'update_schedule');
+  ?>
+
+  <body class="bg-light <?= ($is_in_crs_mgt_page || $is_in_crs_sched_page) ? $modal_open : '' ?>" <?= ($is_in_crs_mgt_page || $is_in_crs_sched_page) ? $page_wrapper : '' ?>>
+  <?= ($is_in_crs_mgt_page || $is_in_crs_sched_page) ? $backdrop : '' ?>
+  

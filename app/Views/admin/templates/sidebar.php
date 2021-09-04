@@ -22,7 +22,7 @@
           <span class="user-name">
             <strong>John Doe</strong>
           </span>
-          <span class="user-role text-dark">Registrar Staff</span>
+          <span class="user-role text-dark">Admin</span>
           <span class="user-status">
             <i class="fa fa-circle text-success"></i>
             <span class="text-dark">Online</span>
@@ -52,7 +52,7 @@
         <ul>
           <!-- dashboard nav link -->
           <li class="sidebar-dropdown <?= ($page == 'dashboard') ? 'active' : ''?>">
-            <a href="<?= site_url()?>r/dashboard">
+            <a href="<?= site_url()?>a/dashboard">
               <i class="fa fa-tachometer-alt fa-fw"></i>
               <span class="ps-1">Dashboard</span>
             </a>
@@ -67,11 +67,11 @@
             <div class="sidebar-submenu <?= ($page == 'crs_mgt' || $page == 'crs_schedule') ? 'd-block' : ''?>">
               <ul>
                 <li>
-                  <a href="<?= site_url()?>r/crs_mgt" class="<?= ($page == 'crs_mgt') ? 'active' : ''?>">Tracks and Strands
+                  <a href="<?= site_url()?>a/crs_mgt" class="<?= ($page == 'crs_mgt') ? 'active' : ''?>">Tracks and Strands
                   </a>
                 </li>
                 <li>
-                  <a href="<?= site_url()?>r/crs_schedule" class="<?= ($page == 'crs_schedule') ? 'active' : ''?>">Schedule</a>
+                  <a href="<?= site_url()?>a/crs_schedule" class="<?= ($page == 'crs_schedule') ? 'active' : ''?>">Schedule</a>
                 </li>
               </ul>
             </div>
@@ -86,11 +86,11 @@
             <div class="sidebar-submenu <?= ($page == 'enrollments' || $page == 'payment' || $page == 'assessment') ? 'd-block' : ''?>">
               <ul>
                 <li>
-                  <a href="<?= site_url()?>r/enrollments" class="<?= ($page == 'enrollments') ? 'active' : ''?>">Assessment
+                  <a href="<?= site_url()?>a/enrollments" class="<?= ($page == 'enrollments') ? 'active' : ''?>">Assessment
                   </a>
                 </li>
                 <li>
-                  <a href="<?= site_url()?>r/payment" class="<?= ($page == 'payment') ? 'active' : ''?>">Payment</a>
+                  <a href="<?= site_url()?>a/payment" class="<?= ($page == 'payment') ? 'active' : ''?>">Payment</a>
                 </li>
               </ul>
             </div>
@@ -105,13 +105,13 @@
             <div class="sidebar-submenu <?= ($page == 'esc_request' || $page == 'esc_approved' || $page == 'esc_denied') ? 'd-block' : ''?>">
               <ul>
                 <li>
-                  <a href="<?= site_url()?>r/esc_request">Verification</a>
+                  <a href="<?= site_url()?>a/esc_request">Verification</a>
                 </li>
                 <li>
-                  <a href="<?= site_url()?>r/esc_approved">Approved</a>
+                  <a href="<?= site_url()?>a/esc_approved">Approved</a>
                 </li>
                 <li>
-                  <a href="<?= site_url()?>r/esc_denied">Denied</a>
+                  <a href="<?= site_url()?>a/esc_denied">Denied</a>
                 </li>
               </ul>
             </div>
@@ -126,13 +126,31 @@
             <div class="sidebar-submenu <?= ($page == 'rep_masterlist' || $page == 'rep_escvoucher' || $page == 'rep_payment') ? 'd-block' : ''?>">
               <ul>
                 <li>
-                  <a href="<?= site_url()?>r/rep_masterlist">Masterlist</a>
+                  <a href="<?= site_url()?>a/rep_masterlist">Masterlist</a>
                 </li>
                 <li>
-                  <a href="<?= site_url()?>r/rep_escvoucher">ESC Voucher</a>
+                  <a href="<?= site_url()?>a/rep_escvoucher">ESC Voucher</a>
                 </li>
                 <li>
-                  <a href="<?= site_url()?>r/rep_payment">Payment</a>
+                  <a href="<?= site_url()?>a/rep_payment">Payment</a>
+                </li>
+              </ul>
+            </div>
+          </li>
+
+          <!-- Account -->
+          <li class="sidebar-dropdown <?= ($page == 'request' || $page == 'acc_activated' || $page == 'r_request') ? 'active' : ''?>">
+            <a href="#">
+              <i class="fas fa-user-cog fa-fw"></i>
+              <span class="ps-1">Account</span>
+            </a>
+            <div class="sidebar-submenu <?= ($page == 'request' || $page == 'acc_activated' || $page == 'r_request') ? 'd-block' : ''?>">
+              <ul>
+                <li>
+                  <a href="<?= site_url()?>a/request" class="<?= ($page == 'request' || $page == 'r_request') ? "text-primary" : '' ?>">Request</a>
+                </li>
+                <li>
+                  <a href="<?= site_url()?>a/acc_activated" class="<?= ($page == 'acc_activated') ? "text-primary" : '' ?>">Activated Account</a>
                 </li>
               </ul>
             </div>
@@ -143,7 +161,7 @@
       <div class="py-2 sidebar-menu">
         <ul>
           <li>
-            <a href="<?= site_url()?>r/signout">
+            <a href="<?= site_url()?>a/signout">
               <i class="fa fa-sign-out-alt fa-fw"></i>
               <span class="ps-1">Sign Out</span>
             </a>

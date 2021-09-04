@@ -221,10 +221,14 @@ class CourseManagement extends BaseController{
         $a = 1;
         while ($a <= $row_count) {
           $subjects = [
-            'subject_category' => esc($this->request->getPost('category_'.$a)),
-            'subject_code'     => esc($this->request->getPost('code_'.$a)),
-            'subject_name'     => esc($this->request->getPost('name_'.$a)),
+            'subject_category' => esc(trim($this->request->getPost('category_'.$a))),
+            'subject_code'     => esc(trim($this->request->getPost('code_'.$a))),
+            'subject_name'     => esc(trim($this->request->getPost('name_'.$a))),
           ];
+          $subject = $subject_model->isDuplicate($subjects);
+          if(count($count) > 0) {
+            $subjects['subject_id'] = esc($subject[0]->subject_id);
+          }
           $subject_model->save($subjects);
           array_push($subject_id, $subject_model->insertID());
           $a++;

@@ -2,9 +2,12 @@
 
 namespace App\Controllers;
 
+use \App\Models\RegistrarModel;
+
 class Registrar extends BaseController
 {
 	public function index() {
+		helper(['form', 'url']);
 		return view('registrar/signin');
 	}
 
@@ -16,13 +19,100 @@ class Registrar extends BaseController
 		echo view('registrar/templates/footer');
 	}
 
-	public function auth($page = NULL) {
-		helper('form');
-		if($page === NULL) {
-			echo view('registrar/dashboard');
-		}
+	public function signup() {
+		helper(['form', 'url']);
+		return view('registrar/signup');
+	}
 
-		echo view('registrar/'.$page);
+	public function signout() {
+		session()->destroy();
+		return redirect()->to('r');
+	}
+
+	public function auth() {
+		helper(['form', 'url']);
+		$r_model = new RegistrarModel();
+
+		$password = $this->request->getPost('ps');
+
+		$query = $r_model->select('*')
+										 ->where('username', esc($this->request->getPost('un')))
+										 ->where('isapproved', '1')
+										 ->get()
+										 ->getResult();
+
+		if(count($query) > 0) {
+			if(password_verify($password, $query[0]->password)) {
+				session()->set('registrar', $query[0]->registrar_id);
+				session()->set('islogged_in', true);
+				session()->setFlashData('info', 'Welcome back '.$query[0]->firstname.'!');
+				return redirect()->to('r/dashboard');
+			} else {
+				session()->setFlashData('error', 'Wrong Username or Password');
+				return redirect()->to('r');
+			}
+		} else {
+			session()->setFlashData('error', 'Access denied!');
+			return redirect()->to('r');
+		}
+	}
+
+	public function request() {
+		helper(['form', 'url']);
+		$registrar_model = new RegistrarModel();
+
+		$data = [
+			'firstname'      => esc($this->request->getPost('fname')),
+			'lastname'       => esc($this->request->getPost('lname')),
+			'middlename'     => esc($this->request->getPost('mname')),
+			'email'          => esc($this->request->getPost('em')),
+			'contact_number' => esc($this->request->getPost('cn')),
+			'username'       => esc($this->request->getPost('uname')),
+			'password'       => password_hash($this->request->getPost('ps'), PASSWORD_DEFAULT),
+		];
+
+		$rules = [
+			'fname' => [
+				'label' => 'First Name',
+				'rules' => 'required'
+			],
+			'lname' => [
+				'label' => 'Last Name',
+				'rules' => 'required'
+			],
+			'mname' => [
+				'label' => 'Middle Name',
+				'rules' => 'required'
+			],
+			'em' => [
+				'label' => 'Email',
+				'rules' => 'required|valid_email'
+			],
+			'cn' => [
+				'label' => 'Contact Number',
+				'rules' => 'required|min_length[11]|max_length[13]|integer'
+			],
+			'uname' => [
+				'label' => 'Username',
+				'rules' => 'required|is_unique[registrar.username]'
+			],
+			'ps' => [
+				'label' => 'Password',
+				'rules' => 'required'
+			],
+			'psc' => [
+				'label' => 'Password Confirmation',
+				'rules' => 'required|matches[ps]'
+			]
+		];
+
+		if(!$this->validate($rules)) {			
+			echo view('registrar/signup', ['validation' => $this->validator]);
+		} else {
+			session()->setFlashData('success', 'Your account request in now being processed. Please wait for the confirmation from the admin.');
+			$registrar_model->save($data);
+			return redirect()->to('r/auth/signup');
+		}
 	}
 
 	public function view($page = NULL) {

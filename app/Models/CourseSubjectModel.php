@@ -45,4 +45,16 @@ class CourseSubjectModel extends Model {
                    ->where('courses_subjects.semester', $sem)
                    ->get()->getResult();
   }
+
+  public function isDuplicate($data) {
+    $db = db_connect();
+
+    $builder = $db->table('courses_subjects');
+    
+    $query = $builder->select('course_subject_id')
+                     ->where($data)
+                     ->get();
+
+    return $query->getResult();
+  }
 }

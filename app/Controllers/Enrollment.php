@@ -12,6 +12,7 @@ use \App\Models\SectionModel;
 use \App\Models\StudentSectionModel;
 use \App\Models\CoursesModel;
 use \App\Models\TransfereeReturneeModel;
+use \App\Models\TokenRequestModel;
 
 class Enrollment extends BaseController {
   public function index() {
@@ -26,7 +27,7 @@ class Enrollment extends BaseController {
 
 		echo view('student/templates/header');
 		echo view('student/templates/topbar');
-		echo view('student/enrollment', $data);
+		echo view('student/request_token', $data);
 		echo view('student/templates/footer');
   }
 
@@ -99,6 +100,7 @@ class Enrollment extends BaseController {
         'courses'  => $course_model->getCourses()
       ];
 
+      session()->setFlashData('error', 'Oops Something went wrong. Please don\'t leave an unanswered field.');
       echo view('student/templates/header');
       echo view('student/templates/topbar');
       echo view('student/enrollment', $data);
@@ -245,7 +247,9 @@ class Enrollment extends BaseController {
   }
 
   public function request() {
+    helper(['form', 'url']);
     $student_model = new StudentModel();
+    $request_model = new TokenRequestModel();
 
     $file = $this->request->getFile('user_img');
     $rand_name = $file->getRandomName();
@@ -253,14 +257,12 @@ class Enrollment extends BaseController {
     $file->move('assets/students/', $rand_name);
 
     $student = [
-      'id_picture'  => esc($path),
       'firstname'   => esc($this->request->getPost('firstname')),
       'middlename'  => esc($this->request->getPost('middlename')),
       'lastname'    => esc($this->request->getPost('lastname')),
       'suffix'      => esc($this->request->getPost('suffix')),
       'contact_num' => esc($this->request->getPost('contact_num')),
-      'email'       => esc($this->request->getPost('email')),
-      'token'       => ''
+      'email'       => esc($this->request->getPost('email'))
     ];
 
     $student_name = [
@@ -269,7 +271,7 @@ class Enrollment extends BaseController {
       'lastname'    => esc($this->request->getPost('lastname')),
       'suffix'      => esc($this->request->getPost('suffix'))
     ];
-    
+
     $student_record = $student_model->isDuplicate($student_name);
 
     if(count($student_record) > 0) {
@@ -277,7 +279,46 @@ class Enrollment extends BaseController {
     }
 
     $student_model->save($student);
+
+    $request = [
+      'valid_id'    => esc($path),
+      'student_id'  => (count($student_record) > 0) ? esc($student_record[0]->student_id) : esc($student_model->insertID()),
+      'status'      => esc('pending')
+    ];
+
+    $request_model->save($request);
     session()->setFlashData('success', 'Request Successful!');
-    return redirect()->to('enrollment');
+    return redirect()->to('/');
+  }
+
+  public function auth($token = NULL) {
+    if ($token === NULL) {
+      return redirect()->to('/');
+    }
+
+    $request_model = new TokenRequestModel();
+
+    $query = $request_model->select('*')
+                           ->join('students', 'students.student_id = token_requests.student_id')
+                           ->where('token', $token)
+                           ->get()
+                           ->getResult();
+
+    if(count($query) > 0) {      
+      helper(['form', 'url']);
+      $section_model = new SectionModel();
+      $course_model = new CoursesModel();
+
+      $data = [
+        'sections' => $section_model->findAll(),
+        'courses'  => $course_model->getCourses(),
+        'student'  => $query
+      ];
+        
+      echo view('student/templates/header');
+      echo view('student/templates/topbar');
+      echo view('student/enrollment', $data);
+      echo view('student/templates/footer');
+    } else return redirect()->to('enrollment');
   }
 }

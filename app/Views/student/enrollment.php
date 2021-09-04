@@ -1,10 +1,5 @@
 <main class="container">
   <div class="bg-white mt-4">
-    <?php
-      if(isset($validation)) {
-        echo $validation->listErrors();
-      }
-    ?>
     <?= form_open_multipart('enrollment/submit')?>
       <!-- header -->
       <div class="bg-primary p-3 text-light text-center h5">Enrollment Form</div>
@@ -19,18 +14,18 @@
         </div>
         <!-- learners information -->
         <div class="col-lg-9">
-          <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-3 g-lg-4 g-2 px-3">
+          <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-3 g-lg-4 g-2 p-3">
             <div class="col">
               <label for="firstname" class="form-label"><span class="text-danger">*</span> First name</label>
-              <input type="text" class="form-control form-control-sm" name="firstname" value="<?= set_value('firstname')?>" id="firstname" placeholder="First Name here...">
+              <input type="text" class="form-control form-control-sm" name="firstname" value="<?= (isset($student)) ? $student[0]->firstname : set_value('firstname')?>" id="firstname" placeholder="First Name here...">
             </div>
             <div class="col">
               <label for="middlename" class="form-label"><span class="text-danger">*</span> Middle name</label>
-              <input type="text" id="middlename" name="middlename" value="<?= set_value('middlename')?>" class="form-control form-control-sm" placeholder="Middle Name here..."> 
+              <input type="text" id="middlename" name="middlename" value="<?= (isset($student)) ? $student[0]->middlename : set_value('middlename')?>" class="form-control form-control-sm" placeholder="Middle Name here..."> 
             </div>
             <div class="col">
               <label for="lastname" class="form-label"><span class="text-danger">*</span> Last Name</label>
-              <input type="text" class="form-control form-control-sm " id="lastname" name="lastname" value="<?= set_value('lastname')?>" placeholder="Last Name here...">
+              <input type="text" class="form-control form-control-sm " id="lastname" name="lastname" value="<?= (isset($student)) ? $student[0]->lastname : set_value('lastname')?>" placeholder="Last Name here...">
             </div>
             <div class="col">
               <label for="nameextension" class="form-label"><span class="text-danger">*</span> Name Extension</label>

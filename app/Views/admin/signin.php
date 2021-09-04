@@ -25,30 +25,30 @@
 
 					<!-- form -->
 					<div class="col-12 col-sm-8">
-						<form class="bg-white rounded p-4">
+						<?= form_open('a/auth/signin') ?>
 							<ul class="nav nav-tabs">
 								<li class="nav-item">
-									<a class="nav-link" aria-current="page" href="<?= site_url()?>r/signin">Registrar</a>
+									<a class="nav-link" aria-current="page" href="<?= site_url()?>r">Registrar</a>
 								</li>
 								<li class="nav-item">
-									<a class="nav-link active" href="<?= site_url()?>a/signin">Admin</a>
+									<a class="nav-link active" href="<?= site_url()?>a">Admin</a>
 								</li>
 							</ul>
 
 							<div class="form-group mt-4">
 								<label for="username" class="form-label">Username</label>
-								<input type="text" class="form-control" id="username" placeholder="User Name" required autofocus>
+								<input type="text" name="un" class="form-control" id="username" placeholder="User Name" required autofocus>
 							</div>
 
 							<div class="form-group mt-3">
 								<label for="password" class="form-label">Password</label>
-								<input type="password" class="form-control" id="password" placeholder="Password" required>
+								<input type="password" name="ps" class="form-control" id="password" placeholder="Password" required>
 							</div>
 							
 							<div class="form-group mt-3 d-flex justify-content-end">
 								<button type="submit" class="btn btn-primary">Sign in</button>
 							</div>
-						</form>
+						<?= form_close() ?>
 					</div>
 				</div>
 			</div>

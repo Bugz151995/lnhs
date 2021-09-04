@@ -37,19 +37,24 @@ $routes->get('/', 'Home::index');
 // REGISTRAR ROUTE GROUP
 $routes->group('r', function($routes) {
 	$routes->get('/', 'Registrar::index');
-	$routes->get('auth/(:segment)', 'Registrar::auth/$1');
+	$routes->get('signout', 'Registrar::signout');
+	$routes->group('auth', function($routes) {
+		$routes->get('signup', 'Registrar::signup');
+		$routes->post('signin', 'Registrar::auth');
+		$routes->post('signup/submit', 'Registrar::request');
+	});
 	// enrollment management group
-	$routes->get('enrollments', 'Enrollment::viewEnrollments');
+	$routes->get('enrollments', 'Enrollment::viewEnrollments', ['filter'=> 'auth']);
 
 	// assessment management group
-	$routes->group('assessment', function($routes) {
+	$routes->group('assessment', ['filter'=> 'auth'], function($routes) {
 		$routes->get('evaluation', 'Assessment::evaluation');
 		$routes->post('update/(:num)', 'Assessment::updateEnrollment/$1');
 		$routes->get('(:num)', 'Assessment::viewEnrollment/$1');
 	});
 
 	// course managment group
-	$routes->group('crs_mgt', function($routes) {
+	$routes->group('crs_mgt', ['filter'=> 'auth'], function($routes) {
 		$routes->get('/', 'CourseManagement::index');
 		$routes->get('delete_subject/(:num)/(:num)', 'CourseManagement::deleteSubject/$1/$2');
 		$routes->post('update_course', 'CourseManagement::updateCourse');
@@ -59,7 +64,7 @@ $routes->group('r', function($routes) {
 	});
 
 	// schedule managment group
-	$routes->group('crs_schedule', function($routes) {
+	$routes->group('crs_schedule', ['filter'=> 'auth'], function($routes) {
 		$routes->get('/', 'ScheduleManagement::index');
 		$routes->post('new_schedule', 'ScheduleManagement::setSched');
 		$routes->post('edit_schedule', 'ScheduleManagement::editSched');
@@ -68,17 +73,37 @@ $routes->group('r', function($routes) {
 		$routes->post('new_section', 'ScheduleManagement::addSection');
 	});
 	
-	$routes->get('(:any)', 'Registrar::view/$1');
+	$routes->get('(:any)', 'Registrar::view/$1', ['filter'=> 'auth']);
+});
+
+// ADMIN ROUTE GROUP
+$routes->group('a', function($routes) {
+	$routes->get('/', 'Admin::index');
+	$routes->get('signout', 'Admin::signout');
+	$routes->post('auth/signin', 'Admin::auth');
+	$routes->get('(:segment)', 'Admin::view/$1', ['filter'=> 'auth']);
+
+	$routes->group('request', ['filter'=> 'auth'], function($routes) {
+		$routes->post('approve', 'Admin::approveRequest');
+		$routes->post('deny', 'Admin::denyRequest');		
+	});
+	
+	$routes->group('r_request', ['filter'=> 'auth'], function($routes) {
+		$routes->post('approve', 'Admin::approveRequest');
+		$routes->post('deny', 'Admin::denyRequest');		
+	});
 });
 
 // STUDENT ROUTE GROUPS
 $routes->group('/', function($routes) {
 	$routes->get('/', 'Student::home');
 	$routes->get('about', 'Student::about');
+	$routes->get('auth/enrollment/(:any)', 'Enrollment::auth/$1');
 
 	// enrollment
 	$routes->group('enrollment', function($routes) {	
 		$routes->get('/', 'Enrollment::index');
+		$routes->post('request', 'Enrollment::request');
 		$routes->post('submit', 'Enrollment::create');
 		$routes->post('success', 'Enrollment::success');
 	});
@@ -87,9 +112,8 @@ $routes->group('/', function($routes) {
 	$routes->group('esc_registration', function($routes) {	
 		$routes->get('/', 'VoucherManagement::index');
 	});
+	
 });
-
-$routes->get('a/auth/signin', 'Admin::index');
 
 /*
  * --------------------------------------------------------------------

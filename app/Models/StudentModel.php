@@ -12,7 +12,7 @@ class StudentModel extends Model {
   protected $returnType    = 'array';
   
   protected $allowedFields = [
-    'lrn', 'user_img', 'firstname', 'middlename', 'lastname', 'sex', 'suffix', 'birthdate', 'birthplace', 'age', 'religion', 'nationality', 'contact_num', 'email'
+    'lrn', 'user_img', 'firstname', 'middlename', 'lastname', 'sex', 'suffix', 'birthdate', 'birthplace', 'age', 'religion', 'nationality', 'contact_num', 'email', 'id_picture', 'token'
   ];
 
   public function isDuplicate($data) {

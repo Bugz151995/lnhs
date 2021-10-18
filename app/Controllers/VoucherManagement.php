@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use \App\Models\RegistrarModel;
 use \App\Models\StudentModel;
 use \App\Models\AddressModel;
 use \App\Models\StudentAddressModel;
@@ -212,12 +213,14 @@ class VoucherManagement extends BaseController {
 
   public function requests() {
     helper(['form', 'url']);
+		$r = new RegistrarModel();
     $esca = new EscApplicationModel();
     $c = new ClassModel();
 		$en = new EnrollmentModel();
 		$esc = new EscGrantModel();
 
     $data = [		
+			'user'    => $r->find(session()->get('registrar')),
 			'notif_e' => $en->select('*')
 									    ->where(['status' => 'pending'])
 											->orderBy('submitted_at', 'DESC')
@@ -256,12 +259,14 @@ class VoucherManagement extends BaseController {
 
   public function verify() {
     helper(['form', 'url']);
+		$r = new RegistrarModel();
     $esca = new EscApplicationModel();
-    $r = new RelationModel();
+    $re = new RelationModel();
 		$en = new EnrollmentModel();
 		$esc = new EscGrantModel();
 
     $data = [		
+			'user'    => $r->find(session()->get('registrar')),
 			'notif_e' => $en->select('*')
 									    ->where(['status' => 'pending'])
 											->orderBy('submitted_at', 'DESC')
@@ -289,7 +294,7 @@ class VoucherManagement extends BaseController {
                                 ->join('class', 'class.class_id = students_class.class_id')
                                 ->orderBy('submitted_at', 'DESC')
                                 ->find(esc($this->request->getPost('e')));
-    $data['relatives'] = $r->join('persons', 'persons.person_id = relations.person_id')
+    $data['relatives'] = $re->join('persons', 'persons.person_id = relations.person_id')
                            ->getWhere(['student_id' => esc($this->request->getPost('s'))])
                            ->getResultArray();
 
@@ -344,10 +349,12 @@ class VoucherManagement extends BaseController {
     helper(['form', 'url']);
     $esca = new EscApplicationModel();
     $c = new ClassModel();
+		$r = new RegistrarModel();
 		$en = new EnrollmentModel();
 		$esc = new EscGrantModel();
 
     $data = [		
+			'user'    => $r->find(session()->get('registrar')),
 			'notif_e' => $en->select('*')
 									    ->where(['status' => 'pending'])
 											->orderBy('submitted_at', 'DESC')
@@ -404,12 +411,14 @@ class VoucherManagement extends BaseController {
     if(!$this->validate(['searchdate' => 'required'])){
       return redirect()->to('r/'.$p);
     } else {
+      $r = new RegistrarModel();
       $esca = new EscApplicationModel();
       $c = new ClassModel();
       $en = new EnrollmentModel();
       $esc = new EscGrantModel();
 
       $data = [		
+        'user'    => $r->find(session()->get('registrar')),
         'notif_e' => $en->select('*')
                         ->where(['status' => 'pending'])
                         ->orderBy('submitted_at', 'DESC')
@@ -473,12 +482,14 @@ class VoucherManagement extends BaseController {
     if(!$this->validate(['searchclass' => 'required'])){
       return redirect()->to('r/'.$p);
     } else {
+      $r = new RegistrarModel();
       $esca = new EscApplicationModel();
       $c = new ClassModel();
       $en = new EnrollmentModel();
       $esc = new EscGrantModel();
 
       $data = [		
+        'user'    => $r->find(session()->get('registrar')),
         'notif_e' => $en->select('*')
                         ->where(['status' => 'pending'])
                         ->orderBy('submitted_at', 'DESC')
@@ -540,12 +551,14 @@ class VoucherManagement extends BaseController {
     if(!$this->validate(['search' => 'required'])){
       return redirect()->to('r/'.$p);
     } else {
+      $r = new RegistrarModel();
       $esca = new EscApplicationModel();
       $c = new ClassModel();
       $en = new EnrollmentModel();
       $esc = new EscGrantModel();
 
-      $data = [		
+      $data = [	
+        'user'    => $r->find(session()->get('registrar')),	
         'notif_e' => $en->select('*')
                         ->where(['status' => 'pending'])
                         ->orderBy('submitted_at', 'DESC')
@@ -596,10 +609,12 @@ class VoucherManagement extends BaseController {
     helper(['form', 'url']);
     $esca = new EscApplicationModel();
     $c = new ClassModel();
+		$r = new RegistrarModel();
 		$en = new EnrollmentModel();
 		$esc = new EscGrantModel();
 
     $data = [		
+      'user'    => $r->find(session()->get('registrar')),
 			'notif_e' => $en->select('*')
 									    ->where(['status' => 'pending'])
 											->orderBy('submitted_at', 'DESC')
@@ -641,11 +656,13 @@ class VoucherManagement extends BaseController {
   public function view() {
     helper(['form', 'url']);
     $esc = new EscApplicationModel();
-    $r = new RelationModel();
+    $re = new RelationModel();
 		$en = new EnrollmentModel();
 		$esc = new EscGrantModel();
+		$r = new RegistrarModel();
 
     $data = [		
+      'user'    => $r->find(session()->get('registrar')),
 			'notif_e' => $en->select('*')
 									    ->where(['status' => 'pending'])
 											->orderBy('submitted_at', 'DESC')
@@ -664,18 +681,17 @@ class VoucherManagement extends BaseController {
 									     ->where(['status' => 'pending'])
 									     ->orderBy('assessed_at', 'DESC')
 									     ->get()->getRowArray(),
+      'application' => $esc->join('students', 'students.student_id = esc_applications.student_id')
+                           ->join('students_class', 'students_class.student_id = students.student_id')
+                           ->join('students_address', 'students_address.student_id = students.student_id')
+                           ->join('address', 'address.address_id = students_address.address_id')
+                           ->join('class', 'class.class_id = students_class.class_id')
+                           ->orderBy('submitted_at', 'DESC')
+                           ->find(esc($this->request->getPost('e'))),
+      'relatives' => $re->join('persons', 'persons.person_id = relations.person_id')
+                            ->getWhere(['student_id' => esc($this->request->getPost('s'))])
+                            ->getResultArray()
     ];
-
-    $data['application'] = $esc->join('students', 'students.student_id = esc_applications.student_id')
-                                ->join('students_class', 'students_class.student_id = students.student_id')
-                                ->join('students_address', 'students_address.student_id = students.student_id')
-                                ->join('address', 'address.address_id = students_address.address_id')
-                                ->join('class', 'class.class_id = students_class.class_id')
-                                ->orderBy('submitted_at', 'DESC')
-                                ->find(esc($this->request->getPost('e')));
-    $data['relatives'] = $r->join('persons', 'persons.person_id = relations.person_id')
-                           ->getWhere(['student_id' => esc($this->request->getPost('s'))])
-                           ->getResultArray();
 
     echo view('registrar/templates/header');
     echo view('registrar/templates/sidebar', $data);

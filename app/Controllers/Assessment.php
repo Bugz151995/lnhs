@@ -15,6 +15,7 @@ use \App\Models\StudentSchedulesModel;
 use \App\Models\EscGrantModel;
 use App\Models\TeacherModel;
 use \App\Models\CoursesModel;
+use \App\Models\RegistrarModel;
 use \App\Models\TransfereeReturneeModel;
 
 class Assessment extends BaseController {
@@ -40,7 +41,8 @@ class Assessment extends BaseController {
 
   public function viewEnrollment($student_id) {
     helper(['form', 'url']);
-    $class_model            = new ClassModel();
+		$r                        = new RegistrarModel();
+    $class_model              = new ClassModel();
     $course_model             = new CoursesModel();
     $enrollment_model         = new EnrollmentModel();
     $person_model             = new PersonModel();
@@ -49,6 +51,7 @@ class Assessment extends BaseController {
     $esc                      = new EscGrantModel();
 
     $data = [
+			'user'                => $r->find(session()->get('registrar')),	
       'class'               => $class_model->findAll(),
       'courses'             => $course_model->getCourses(),
       'enrollments'         => $enrollment_model->getStudentEnrollment($student_id),
@@ -282,6 +285,7 @@ class Assessment extends BaseController {
 
   public function evaluation($student_id) {
     helper(['form', 'url']);
+		$r                   = new RegistrarModel();
     $c                   = new ClassModel();
     $course_model        = new CoursesModel();
     $student_model       = new StudentModel();
@@ -299,6 +303,7 @@ class Assessment extends BaseController {
                                   ->join('enrollments', 'enrollments.student_id = students.student_id')
                                   ->find(esc($student_id));
     $data = [
+			'user'           => $r->find(session()->get('registrar')),	
       'class'          => $c->findAll(),
       'courses'        => $course_model->getCourses(),
       'student_id'     => esc($student_id),

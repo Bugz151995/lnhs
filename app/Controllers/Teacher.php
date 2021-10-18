@@ -10,11 +10,13 @@ use \App\Models\EscGrantModel;
 class Teacher extends BaseController {
 	public function index() {
 		helper('form');		
+		$r = new RegistrarModel();
     $t = new TeacherModel();
 		$en = new EnrollmentModel();
 		$esc = new EscGrantModel();
 
     $data = [		
+			'user'    => $r->find(session()->get('registrar')),
 			'notif_e' => $en->select('*')
 									    ->where(['status' => 'pending'])
 											->orderBy('submitted_at', 'DESC')
@@ -45,11 +47,13 @@ class Teacher extends BaseController {
 
   public function viewnewteacher() {
 		helper('form');		
+		$r = new RegistrarModel();
     $t = new TeacherModel();
 		$en = new EnrollmentModel();
 		$esc = new EscGrantModel();
 
     $data = [		
+			'user'    => $r->find(session()->get('registrar')),
 			'notif_e' => $en->select('*')
 									    ->where(['status' => 'pending'])
 											->orderBy('submitted_at', 'DESC')
@@ -79,12 +83,14 @@ class Teacher extends BaseController {
   }
 
   public function vieweditteacher() {
-		helper('form');		
+		helper('form');	
+		$r = new RegistrarModel();	
     $t = new TeacherModel();
 		$en = new EnrollmentModel();
 		$esc = new EscGrantModel();
 
     $data = [		
+			'user'    => $r->find(session()->get('registrar')),
 			'notif_e' => $en->select('*')
 									    ->where(['status' => 'pending'])
 											->orderBy('submitted_at', 'DESC')
@@ -104,26 +110,50 @@ class Teacher extends BaseController {
 									     ->orderBy('assessed_at', 'DESC')
 									     ->get()->getRowArray(),
       'teachers' => $t->findAll(),
+      'teacher' => $t->find($this->request->getPost('teacher_id')),
     ];
 
     echo view('registrar/templates/header');
     echo view('registrar/templates/sidebar', $data);
 		echo view('registrar/templates/topbar');
-		echo view('registrar/teacher/teacher_list');
+		echo view('registrar/teacher/edit_teacher');
     echo view('registrar/templates/footer');
   }
 
   public function viewdeleteteacher() {    
 		helper('form');		
     $t = new TeacherModel();
+		$r = new RegistrarModel();
+		$en = new EnrollmentModel();
+		$esc = new EscGrantModel();
 
-    $data['teacher_id'] = esc($this->request->getPost('teacher_id'));
-    $data['teachers'] = $t->findAll();
-
+    $data = [
+      'user'       => $r->find(session()->get('registrar')),
+			'notif_e' => $en->select('*')
+									    ->where(['status' => 'pending'])
+											->orderBy('submitted_at', 'DESC')
+											->limit(5)
+									    ->get()->getResultArray(),					 
+			'notif_g' => $esc->select('*')
+											 ->orderBy('assessed_at', 'DESC')
+											 ->limit(5)
+											 ->where(['status' => 'pending'])
+											 ->get()->getResultArray(),	
+			'e_n'     => $en->selectCount('enrollment_id', 'e')
+									    ->where(['status' => 'pending'])
+									    ->orderBy('submitted_at', 'DESC')
+									    ->get()->getRowArray(),											 
+			'g_n'     => $esc->selectCount('esc_grant_id', 'g')
+									     ->where(['status' => 'pending'])
+									     ->orderBy('assessed_at', 'DESC')
+									     ->get()->getRowArray(),
+      'teacher_id' => esc($this->request->getPost('teacher_id')),
+      'teachers'   => $t->findAll()
+    ];
     echo view('registrar/templates/header');
-    echo view('registrar/templates/sidebar');
+    echo view('registrar/templates/sidebar', $data);
 		echo view('registrar/templates/topbar');
-		echo view('registrar/teacher/delete_teacher', $data);
+		echo view('registrar/teacher/delete_teacher');
     echo view('registrar/templates/footer');
   }
 
@@ -221,8 +251,10 @@ class Teacher extends BaseController {
     if (!$this->validate($rules)) {
       $en = new EnrollmentModel();
       $esc = new EscGrantModel();
+      $r = new RegistrarModel();
   
       $data = [		
+        'user'    => $r->find(session()->get('registrar')),
         'notif_e' => $en->select('*')
                         ->where(['status' => 'pending'])
                         ->orderBy('submitted_at', 'DESC')
@@ -295,6 +327,7 @@ class Teacher extends BaseController {
       ];
 
       $data = [		
+        'user'    => $r->find(session()->get('registrar')),
         'notif_e' => $en->select('*')
                         ->where(['status' => 'pending'])
                         ->orderBy('submitted_at', 'DESC')

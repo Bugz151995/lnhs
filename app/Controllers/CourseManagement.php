@@ -11,6 +11,7 @@ use App\Models\ScheduleModel;
 use App\Models\StudentScheduleModel;
 use \App\Models\EnrollmentModel;
 use \App\Models\EscGrantModel;
+use \App\Models\RegistrarModel;
 
 class CourseManagement extends BaseController{
 	public function index() {
@@ -21,8 +22,10 @@ class CourseManagement extends BaseController{
     $coursesubject_model = new CourseSubjectModel();
 		$en = new EnrollmentModel();
 		$esc = new EscGrantModel();
+		$r = new RegistrarModel();
     
     $data = [
+			'user'    => $r->find(session()->get('registrar')),
       'track'         => $track_model->findAll(),
       'track_strands' => $course_model->select('courses.course_id, strands.strand_id, tracks.track_name, strands.strand_name, courses.added_at')
                                       ->orderBy('courses.track_id', 'ASC')
@@ -95,6 +98,7 @@ class CourseManagement extends BaseController{
     $strand_model = new StrandModel();
     $subject_model = new SubjectModel();
     $course_model = new CoursesModel();
+		$r = new RegistrarModel();
     $coursesubject_model = new CourseSubjectModel();
 
     if($this->request->getMethod('post')) {
@@ -130,6 +134,7 @@ class CourseManagement extends BaseController{
         $g         = $this->request->getPost('grade');
 
         $data = [
+          'user'    => $r->find(session()->get('registrar')),
           'track'         => $track_model->findAll(),
           'track_strands' => $course_model->select('courses.course_id, strands.strand_id, tracks.track_name, strands.strand_name, courses.added_at')
                                           ->orderBy('courses.track_id', 'ASC')
@@ -217,6 +222,7 @@ class CourseManagement extends BaseController{
     $coursesubject_model = new CourseSubjectModel();
 		$en = new EnrollmentModel();
 		$esc = new EscGrantModel();
+		$r = new RegistrarModel();
     
     $course_id = $this->request->getPost('course');
     $sem = $this->request->getPost('semester');
@@ -228,6 +234,7 @@ class CourseManagement extends BaseController{
     }
 
     $data = [
+			'user'    => $r->find(session()->get('registrar')),
       'track'         => $track_model->findAll(),
       'track_strands' => $course_model->select('courses.course_id, strands.strand_id, tracks.track_name, strands.strand_name, courses.added_at')
                                       ->orderBy('courses.track_id', 'ASC')
@@ -284,6 +291,7 @@ class CourseManagement extends BaseController{
     $course_model = new CoursesModel();
 		$en = new EnrollmentModel();
 		$esc = new EscGrantModel();
+		$r = new RegistrarModel();
     $coursesubject_model = new CourseSubjectModel();
 
     if($this->request->getMethod('post')) {
@@ -316,6 +324,7 @@ class CourseManagement extends BaseController{
         session()->setFlashData('row_count', $row_count);
 
         $data = [
+          'user'    => $r->find(session()->get('registrar')),
           'track'         => $track_model->findAll(),
           'track_strands' => $course_model->getCourses(),
           'course'        => $coursesubject_model->getCoursesPerSemester(),
@@ -403,6 +412,7 @@ class CourseManagement extends BaseController{
     $course_model = new CoursesModel();
 		$en = new EnrollmentModel();
 		$esc = new EscGrantModel();
+		$r = new RegistrarModel();
     $coursesubject_model = new CourseSubjectModel();
     
     $rules = [
@@ -419,6 +429,7 @@ class CourseManagement extends BaseController{
       session()->setTempData('error', 'Oops! Something went wrong. ', 3);
 
       $data = [
+        'user'    => $r->find(session()->get('registrar')),
         'track' => $track_model->findAll(),
         'strand' => $strand_model->findAll(),
         'track_strands' => $course_model->getCourses(),
@@ -445,9 +456,9 @@ class CourseManagement extends BaseController{
       ];
   
       echo view('registrar/templates/header');
-      echo view('registrar/templates/sidebar');
+      echo view('registrar/templates/sidebar', $data);
       echo view('registrar/templates/topbar');
-      echo view('registrar/course/crs_mgt', $data);
+      echo view('registrar/course/crs_mgt');
       echo view('registrar/templates/footer');
     } else {
         // get strand data
@@ -481,9 +492,11 @@ class CourseManagement extends BaseController{
       $course_model        = new CoursesModel();
       $en = new EnrollmentModel();
       $esc = new EscGrantModel();
+      $r = new RegistrarModel();
       $coursesubject_model = new CourseSubjectModel();
       
       $data = [
+        'user'          => $r->find(session()->get('registrar')),
         'track'         => $track_model->findAll(),
         'track_strands' => $course_model->select('courses.course_id, strands.strand_id, tracks.track_name, strands.strand_name, courses.added_at')
                                         ->orderBy('courses.track_id', 'ASC')
@@ -521,9 +534,9 @@ class CourseManagement extends BaseController{
       ];
 
       echo view('registrar/templates/header');
-      echo view('registrar/templates/sidebar');
+      echo view('registrar/templates/sidebar', $data);
       echo view('registrar/templates/topbar');
-      echo view('registrar/course/crs_mgt', $data);
+      echo view('registrar/course/crs_mgt');
       echo view('registrar/templates/footer');
     }    
   }

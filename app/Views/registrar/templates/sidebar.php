@@ -20,7 +20,10 @@
         </div>
         <div class="user-info text-secondary">
           <span class="user-name">
-            <strong>John Doe</strong>
+            <strong>
+              <?= $user['firstname'].' ' ?>
+              <?= $user['lastname'] ?>
+            </strong>
           </span>
           <span class="user-role text-dark">Registrar Staff</span>
           <span class="user-status">
@@ -33,12 +36,7 @@
         <div>
           <!-- sidebar-search -->
           <div class="input-group">
-            <input type="text" class="form-control search-menu" placeholder="Search...">
-            <div class="input-group-append">
-              <span class="input-group-text h-100">
-                <i class="fa fa-search" aria-hidden="true"></i>
-              </span>
-            </div>
+            <input type="text" disabled class="form-control search-menu" placeholder="Navigate">
           </div>
         </div>
       </div>

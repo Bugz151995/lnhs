@@ -12,6 +12,7 @@ use App\Models\ClassModel;
 use App\Models\ScheduleModel;
 use \App\Models\EnrollmentModel;
 use \App\Models\EscGrantModel;
+use \App\Models\RegistrarModel;
 
 class ScheduleManagement extends BaseController{
 	public function index() {
@@ -25,8 +26,10 @@ class ScheduleManagement extends BaseController{
     $schedule_model      = new ScheduleModel();
 		$en = new EnrollmentModel();
 		$esc = new EscGrantModel();
+		$r = new RegistrarModel();
 
     $data = [
+			'user'    => $r->find(session()->get('registrar')),	
       'track'         => $track_model->findAll(),
       'track_strands' => $course_model->getCourses(),
       'courses'       => $course_model->select('*')
@@ -73,6 +76,7 @@ class ScheduleManagement extends BaseController{
     $section_model       = new ClassModel();
 		$en = new EnrollmentModel();
 		$esc = new EscGrantModel();
+		$r = new RegistrarModel();
 
     $rows = $this->request->getPost('e_row_count');
 
@@ -97,6 +101,7 @@ class ScheduleManagement extends BaseController{
       $sem = $this->request->getPost('semester');
       
       $data = [
+        'user'           => $r->find(session()->get('registrar')),	
         'track'          => $track_model->findAll(),
         'track_strands'  => $course_model->getCourses(),
         'courses'        => $coursesubject_model->getCoursesPerSemester(),
@@ -172,11 +177,13 @@ class ScheduleManagement extends BaseController{
     $schedule_model      = new ScheduleModel();
 		$en = new EnrollmentModel();
 		$esc = new EscGrantModel();
+		$r = new RegistrarModel();
     
     $class = $this->request->getPost('class');
     $sem = $this->request->getPost('sem');
 
     $data = [
+			'user'           => $r->find(session()->get('registrar')),	
       'track'          => $track_model->findAll(),
       'track_strands'  => $course_model->getCourses(),
       'courses'        => $course_model->getCoursesPerSemester(),
@@ -249,8 +256,10 @@ class ScheduleManagement extends BaseController{
       $section_model       = new ClassModel();
       $en = new EnrollmentModel();
       $esc = new EscGrantModel();
+      $r = new RegistrarModel();
       
       $data = [
+        'user'    => $r->find(session()->get('registrar')),	
         'track'           => $track_model->findAll(),
         'track_strands'   => $course_model->getCourses(),
         'courses'         => $course_model->getCoursesPerSemester(),
@@ -328,6 +337,7 @@ class ScheduleManagement extends BaseController{
     $schedule_model      = new ScheduleModel();
 		$en = new EnrollmentModel();
 		$esc = new EscGrantModel();
+		$r = new RegistrarModel();
     
     $res = $schedule_model->getScheduleWhere($course_id, $sem, $g);
     $q = $course_model->select('strands.strand_name')
@@ -348,6 +358,7 @@ class ScheduleManagement extends BaseController{
         session()->setTempData('error', 'There are no teachers added to the database. Please add teachers first.', 3);
       }
       $data = [
+        'user'            => $r->find(session()->get('registrar')),	
         'track'           => $track_model->findAll(),
         'track_strands'   => $course_model->getCourses(),
         'courses'         => $course_model->getCoursesPerSemester(),
@@ -441,6 +452,7 @@ class ScheduleManagement extends BaseController{
     $schedule_model      = new ScheduleModel();
 		$en = new EnrollmentModel();
 		$esc = new EscGrantModel();
+		$r = new RegistrarModel();
 
     if(!$this->validate(['search' => 'required'])){
       return redirect()->to('r/crs_schedule');
@@ -450,6 +462,7 @@ class ScheduleManagement extends BaseController{
         'class_name'  => esc($this->request->getPost('search')),
       ];
       $data = [
+        'user'          => $r->find(session()->get('registrar')),	
         'track'         => $track_model->findAll(),
         'track_strands' => $course_model->getCourses(),
         'courses'       => $course_model->select('*')

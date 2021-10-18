@@ -15,6 +15,7 @@ use \App\Models\TransfereeReturneeModel;
 use \App\Models\TokenRequestModel;
 use \App\Models\StudentSchedulesModel;
 use \App\Models\EscGrantModel;
+use \App\Models\RegistrarModel;
 use CodeIgniter\I18n\Time;
 
 class Enrollment extends BaseController {
@@ -43,6 +44,7 @@ class Enrollment extends BaseController {
   public function viewEnrollments() {
     helper(['form', 'url']);
     $enrollment_model = new EnrollmentModel();
+		$r = new RegistrarModel();
     $c = new ClassModel();
     $sc = new StudentSchedulesModel();
 		$en = new EnrollmentModel();
@@ -74,6 +76,7 @@ class Enrollment extends BaseController {
     }    
 
     $data = [
+			'user'        => $r->find(session()->get('registrar')),	
       'enrollments' => $enrollments,
       'class'       => $c->findAll(),
       'schedule'    => $sched_status,			
@@ -106,152 +109,168 @@ class Enrollment extends BaseController {
 
   public function searchdate() {
     helper(['form', 'url']);
+		$r = new RegistrarModel();
     $enrollment_model = new EnrollmentModel();
     $c = new ClassModel();
 		$en = new EnrollmentModel();
 		$esc = new EscGrantModel();
 
-    $search = [
-      'submitted_at' => esc($this->request->getPost('searchdate'))
-    ];
-    $data = [
-      'enrollments' => $enrollment_model->select('*')
-                                        ->join('students', 'students.student_id = enrollments.student_id')
-                                        ->join('students_class', 'students_class.student_id = students.student_id')
-                                        ->join('class', 'class.class_id = students_class.class_id')
-                                        ->join('students_address', 'students_address.student_id = students.student_id')
-                                        ->join('address', 'address.address_id = students_address.address_id')
-                                        ->groupBy('students.student_id')
-                                        ->like($search)
-                                        ->get()
-                                        ->getResult(),
-      'class'       => $c->findAll(),			
-			'notif_e' => $en->select('*')
-									    ->where(['status' => 'pending'])
-											->orderBy('submitted_at', 'DESC')
-											->limit(5)
-									    ->get()->getResultArray(),					 
-			'notif_g' => $esc->select('*')
-											 ->orderBy('assessed_at', 'DESC')
-											 ->limit(5)
-											 ->where(['status' => 'pending'])
-											 ->get()->getResultArray(),	
-			'e_n'     => $en->selectCount('enrollment_id', 'e')
-									    ->where(['status' => 'pending'])
-									    ->orderBy('submitted_at', 'DESC')
-									    ->get()->getRowArray(),											 
-			'g_n'     => $esc->selectCount('esc_grant_id', 'g')
-									     ->where(['status' => 'pending'])
-									     ->orderBy('assessed_at', 'DESC')
-									     ->get()->getRowArray(),
-    ];
+    if (!$this->validate(['searchdate' => 'required'])) {
+      return redirect()->to('r/enrollments');
+    } else {    
+      $search = [
+        'submitted_at' => esc($this->request->getPost('searchdate'))
+      ];
+      $data = [
+        'user'        => $r->find(session()->get('registrar')),
+        'enrollments' => $enrollment_model->select('*')
+                                          ->join('students', 'students.student_id = enrollments.student_id')
+                                          ->join('students_class', 'students_class.student_id = students.student_id')
+                                          ->join('class', 'class.class_id = students_class.class_id')
+                                          ->join('students_address', 'students_address.student_id = students.student_id')
+                                          ->join('address', 'address.address_id = students_address.address_id')
+                                          ->groupBy('students.student_id')
+                                          ->like($search)
+                                          ->get()
+                                          ->getResult(),
+        'class'       => $c->findAll(),			
+        'notif_e' => $en->select('*')
+                        ->where(['status' => 'pending'])
+                        ->orderBy('submitted_at', 'DESC')
+                        ->limit(5)
+                        ->get()->getResultArray(),					 
+        'notif_g' => $esc->select('*')
+                        ->orderBy('assessed_at', 'DESC')
+                        ->limit(5)
+                        ->where(['status' => 'pending'])
+                        ->get()->getResultArray(),	
+        'e_n'     => $en->selectCount('enrollment_id', 'e')
+                        ->where(['status' => 'pending'])
+                        ->orderBy('submitted_at', 'DESC')
+                        ->get()->getRowArray(),											 
+        'g_n'     => $esc->selectCount('esc_grant_id', 'g')
+                        ->where(['status' => 'pending'])
+                        ->orderBy('assessed_at', 'DESC')
+                        ->get()->getRowArray(),
+      ];
 
-    echo view('registrar/templates/header');
-    echo view('registrar/templates/sidebar', $data);
-		echo view('registrar/templates/topbar');
-		echo view('registrar/assessment/index');
-    echo view('registrar/templates/footer');
+      echo view('registrar/templates/header');
+      echo view('registrar/templates/sidebar', $data);
+      echo view('registrar/templates/topbar');
+      echo view('registrar/assessment/index');
+      echo view('registrar/templates/footer');
+    }
   }
 
   public function searchclass() {
     helper(['form', 'url']);
-		$en = new EnrollmentModel();
-		$esc = new EscGrantModel();
-    $enrollment_model = new EnrollmentModel();
-    $c = new ClassModel();
 
-    $search = [
-      'class.class_id' => esc($this->request->getPost('searchclass'))
-    ];
-    $data = [
-      'enrollments' => $enrollment_model->select('*')
-                                        ->join('students', 'students.student_id = enrollments.student_id')
-                                        ->join('students_class', 'students_class.student_id = students.student_id')
-                                        ->join('class', 'class.class_id = students_class.class_id')
-                                        ->join('students_address', 'students_address.student_id = students.student_id')
-                                        ->join('address', 'address.address_id = students_address.address_id')
-                                        ->groupBy('students.student_id')
-                                        ->like($search)
-                                        ->get()
-                                        ->getResult(),
-      'class'       => $c->findAll(),			
-			'notif_e' => $en->select('*')
-									    ->where(['status' => 'pending'])
-											->orderBy('submitted_at', 'DESC')
-											->limit(5)
-									    ->get()->getResultArray(),					 
-			'notif_g' => $esc->select('*')
-											 ->orderBy('assessed_at', 'DESC')
-											 ->limit(5)
-											 ->where(['status' => 'pending'])
-											 ->get()->getResultArray(),	
-			'e_n'     => $en->selectCount('enrollment_id', 'e')
-									    ->where(['status' => 'pending'])
-									    ->orderBy('submitted_at', 'DESC')
-									    ->get()->getRowArray(),											 
-			'g_n'     => $esc->selectCount('esc_grant_id', 'g')
-									     ->where(['status' => 'pending'])
-									     ->orderBy('assessed_at', 'DESC')
-									     ->get()->getRowArray(),
-    ];
+    if (!$this->validate(['searchclass' => 'required'])) {
+      return redirect()->to('r/enrollments');
+    } else { 
+      $en = new EnrollmentModel();
+      $esc = new EscGrantModel();
+      $enrollment_model = new EnrollmentModel();
+      $c = new ClassModel();
 
-    echo view('registrar/templates/header');
-    echo view('registrar/templates/sidebar', $data);
-		echo view('registrar/templates/topbar');
-		echo view('registrar/assessment/index');
-    echo view('registrar/templates/footer');
+      $search = [
+        'class.class_id' => esc($this->request->getPost('searchclass'))
+      ];
+      $data = [
+        'enrollments' => $enrollment_model->select('*')
+                                          ->join('students', 'students.student_id = enrollments.student_id')
+                                          ->join('students_class', 'students_class.student_id = students.student_id')
+                                          ->join('class', 'class.class_id = students_class.class_id')
+                                          ->join('students_address', 'students_address.student_id = students.student_id')
+                                          ->join('address', 'address.address_id = students_address.address_id')
+                                          ->groupBy('students.student_id')
+                                          ->like($search)
+                                          ->get()
+                                          ->getResult(),
+        'class'       => $c->findAll(),			
+        'notif_e' => $en->select('*')
+                        ->where(['status' => 'pending'])
+                        ->orderBy('submitted_at', 'DESC')
+                        ->limit(5)
+                        ->get()->getResultArray(),					 
+        'notif_g' => $esc->select('*')
+                        ->orderBy('assessed_at', 'DESC')
+                        ->limit(5)
+                        ->where(['status' => 'pending'])
+                        ->get()->getResultArray(),	
+        'e_n'     => $en->selectCount('enrollment_id', 'e')
+                        ->where(['status' => 'pending'])
+                        ->orderBy('submitted_at', 'DESC')
+                        ->get()->getRowArray(),											 
+        'g_n'     => $esc->selectCount('esc_grant_id', 'g')
+                        ->where(['status' => 'pending'])
+                        ->orderBy('assessed_at', 'DESC')
+                        ->get()->getRowArray(),
+      ];
+
+      echo view('registrar/templates/header');
+      echo view('registrar/templates/sidebar', $data);
+      echo view('registrar/templates/topbar');
+      echo view('registrar/assessment/index');
+      echo view('registrar/templates/footer');
+    }
   }
 
   public function search() {
     helper(['form', 'url']);
-		$en = new EnrollmentModel();
-		$esc = new EscGrantModel();
-    $enrollment_model = new EnrollmentModel();
-    $c = new ClassModel();
 
-    $search = [
-      'middlename' => esc($this->request->getPost('search')),
-      'lastname'   => esc($this->request->getPost('search')),
-      'suffix'     => esc($this->request->getPost('search')),
-    ];
-    $data = [
-      'enrollments' => $enrollment_model->select('*')
-                                        ->join('students', 'students.student_id = enrollments.student_id')
-                                        ->join('students_class', 'students_class.student_id = students.student_id')
-                                        ->join('class', 'class.class_id = students_class.class_id')
-                                        ->join('students_address', 'students_address.student_id = students.student_id')
-                                        ->join('address', 'address.address_id = students_address.address_id')
-                                        ->groupBy('students.student_id')
-                                        ->like(['firstname'  => esc($this->request->getPost('search'))])
-                                        ->orlike($search)
-                                        ->get()
-                                        ->getResult(),
-      'class'       => $c->findAll(),			
-			'notif_e' => $en->select('*')
-									    ->where(['status' => 'pending'])
-											->orderBy('submitted_at', 'DESC')
-											->limit(5)
-									    ->get()->getResultArray(),					 
-			'notif_g' => $esc->select('*')
-											 ->orderBy('assessed_at', 'DESC')
-											 ->limit(5)
-											 ->where(['status' => 'pending'])
-											 ->get()->getResultArray(),	
-			'e_n'     => $en->selectCount('enrollment_id', 'e')
-									    ->where(['status' => 'pending'])
-									    ->orderBy('submitted_at', 'DESC')
-									    ->get()->getRowArray(),											 
-			'g_n'     => $esc->selectCount('esc_grant_id', 'g')
-									     ->where(['status' => 'pending'])
-									     ->orderBy('assessed_at', 'DESC')
-									     ->get()->getRowArray(),
-    ];
+    if (!$this->validate(['search' => 'required'])) {
+      return redirect()->to('r/enrollments');
+    } else { 
+      $en = new EnrollmentModel();
+      $esc = new EscGrantModel();
+      $enrollment_model = new EnrollmentModel();
+      $c = new ClassModel();
 
-    echo view('registrar/templates/header');
-    echo view('registrar/templates/sidebar', $data);
-		echo view('registrar/templates/topbar');
-		echo view('registrar/assessment/index');
-    echo view('registrar/templates/footer');
+      $search = [
+        'middlename' => esc($this->request->getPost('search')),
+        'lastname'   => esc($this->request->getPost('search')),
+        'suffix'     => esc($this->request->getPost('search')),
+      ];
+      $data = [
+        'enrollments' => $enrollment_model->select('*')
+                                          ->join('students', 'students.student_id = enrollments.student_id')
+                                          ->join('students_class', 'students_class.student_id = students.student_id')
+                                          ->join('class', 'class.class_id = students_class.class_id')
+                                          ->join('students_address', 'students_address.student_id = students.student_id')
+                                          ->join('address', 'address.address_id = students_address.address_id')
+                                          ->groupBy('students.student_id')
+                                          ->like(['firstname'  => esc($this->request->getPost('search'))])
+                                          ->orlike($search)
+                                          ->get()
+                                          ->getResult(),
+        'class'       => $c->findAll(),			
+        'notif_e' => $en->select('*')
+                        ->where(['status' => 'pending'])
+                        ->orderBy('submitted_at', 'DESC')
+                        ->limit(5)
+                        ->get()->getResultArray(),					 
+        'notif_g' => $esc->select('*')
+                        ->orderBy('assessed_at', 'DESC')
+                        ->limit(5)
+                        ->where(['status' => 'pending'])
+                        ->get()->getResultArray(),	
+        'e_n'     => $en->selectCount('enrollment_id', 'e')
+                        ->where(['status' => 'pending'])
+                        ->orderBy('submitted_at', 'DESC')
+                        ->get()->getRowArray(),											 
+        'g_n'     => $esc->selectCount('esc_grant_id', 'g')
+                        ->where(['status' => 'pending'])
+                        ->orderBy('assessed_at', 'DESC')
+                        ->get()->getRowArray(),
+      ];
+
+      echo view('registrar/templates/header');
+      echo view('registrar/templates/sidebar', $data);
+      echo view('registrar/templates/topbar');
+      echo view('registrar/assessment/index');
+      echo view('registrar/templates/footer');
+    }
   }
 
   public function create() {

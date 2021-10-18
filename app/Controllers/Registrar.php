@@ -14,11 +14,13 @@ class Registrar extends BaseController {
 	}
 
 	public function home() {
+		$r = new RegistrarModel();
 		$en = new EnrollmentModel();
 		$esc = new EscGrantModel();
 		$myTime = new Time('now', 'Asia/Manila', 'en_US');
 		
-		$data = [					
+		$data = [	
+			'user'    => $r->find(session()->get('registrar')),				
 			'notif_e' => $en->select('*')
 									    ->where(['status' => 'pending'])
 											->orderBy('submitted_at', 'DESC')

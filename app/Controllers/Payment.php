@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use \App\Models\EnrollmentModel;
+use \App\Models\RegistrarModel;
 use \App\Models\EscGrantModel;
 use \App\Models\ClassModel;
 use \App\Models\PaymentModel;
@@ -15,6 +16,7 @@ class Payment extends BaseController {
 	public function index() {
     helper(['form', 'url']);
     $enrollment_model = new EnrollmentModel();
+		$r = new RegistrarModel();
     $c = new ClassModel();
     $p = new PaymentModel();
 		$en = new EnrollmentModel();
@@ -53,6 +55,7 @@ class Payment extends BaseController {
     }
 
     $data = [
+			'user'    => $r->find(session()->get('registrar')),
       'enrollments' => $enrollments,
       'class'       => $c->findAll(),
       'payment'     => $payment,
@@ -91,6 +94,7 @@ class Payment extends BaseController {
     $fees_model    = new FeesModel();
 		$en = new EnrollmentModel();
 		$esc = new EscGrantModel();
+		$r = new RegistrarModel();
     $myTime = new Time('now', 'Asia/Manila', 'en_US');
 
     $student_data = $student_model->join('students_class', 'students_class.student_id = students.student_id')
@@ -102,6 +106,7 @@ class Payment extends BaseController {
                                   ->find(esc($sid));
 
     $data = [
+			'user'      => $r->find(session()->get('registrar')),
       'student'   => $student_data,
       'payment'   => $payment_model->where([
                                   'student_id' => $student_data['student_id'],
@@ -199,6 +204,7 @@ class Payment extends BaseController {
     $p = new PaymentModel();
 		$en = new EnrollmentModel();
 		$esc = new EscGrantModel();
+		$r = new RegistrarModel();
 
     if($this->validate(['searchdate' => 'required'])){
       $search = [
@@ -227,18 +233,18 @@ class Payment extends BaseController {
                     ->findAll();
         $amount = $p->where($search)
                     ->orderBy('recorded_at', 'DESC')
-                    ->limit(1)
-                    ->findAll();
+                    ->first();
         if(isset($ispaid, $amount) && count($ispaid) > 0 && count($amount) > 0) {
           array_push($payment, 1);
           array_push($total, $amount);
         } else {
           array_push($payment, 0);
-          array_push($total, 0);
+          array_push($total, ['balance' => 0]);
         }
       }
 
       $data = [
+        'user'        => $r->find(session()->get('registrar')),
         'enrollments' => $enrollments,
         'class'       => $c->findAll(),
         'payment'     => $payment,
@@ -280,6 +286,7 @@ class Payment extends BaseController {
     $p = new PaymentModel();
 		$en = new EnrollmentModel();
 		$esc = new EscGrantModel();
+		$r = new RegistrarModel();
 
     if($this->validate(['searchclass' => 'required'])){
       $search = [
@@ -308,18 +315,18 @@ class Payment extends BaseController {
                     ->findAll();
         $amount = $p->where($search)
                     ->orderBy('recorded_at', 'DESC')
-                    ->limit(1)
-                    ->findAll();
+                    ->first();
         if(isset($ispaid, $amount) && count($ispaid) > 0 && count($amount) > 0) {
           array_push($payment, 1);
           array_push($total, $amount);
         } else {
           array_push($payment, 0);
-          array_push($total, 0);
+          array_push($total, ['balance' => 0]);
         }
       }
 
       $data = [
+        'user'        => $r->find(session()->get('registrar')),
         'enrollments' => $enrollments,
         'class'       => $c->findAll(),
         'payment'     => $payment,
@@ -361,6 +368,7 @@ class Payment extends BaseController {
     $p = new PaymentModel();
 		$en = new EnrollmentModel();
 		$esc = new EscGrantModel();
+		$r = new RegistrarModel();
 
     if($this->validate(['search' => 'required'])){
       $search = [
@@ -392,18 +400,18 @@ class Payment extends BaseController {
                     ->findAll();
         $amount = $p->where($search)
                     ->orderBy('recorded_at', 'DESC')
-                    ->limit(1)
-                    ->findAll();
+                    ->first();
         if(isset($ispaid, $amount) && count($ispaid) > 0 && count($amount) > 0) {
           array_push($payment, 1);
           array_push($total, $amount);
         } else {
           array_push($payment, 0);
-          array_push($total, 0);
+          array_push($total, ['balance' => 0]);
         }
       }
 
       $data = [
+        'user'        => $r->find(session()->get('registrar')),
         'enrollments' => $enrollments,
         'class'       => $c->findAll(),
         'payment'     => $payment,

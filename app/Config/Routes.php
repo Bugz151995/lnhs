@@ -130,7 +130,6 @@ $routes->group('r', function($routes) {
 		$routes->post('create', 'Teacher::create');
 		$routes->post('search', 'Teacher::search');
 	});
-	$routes->get('(:any)', 'Registrar::view/$1', ['filter'=> 'auth']);
 });
 
 // ADMIN ROUTE GROUP

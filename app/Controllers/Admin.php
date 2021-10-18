@@ -6,6 +6,7 @@ use \App\Models\StudentModel;
 use \App\Models\RegistrarModel;
 use \App\Models\AdminModel;
 use \App\Models\TokenRequestModel;
+use CodeIgniter\I18n\Time;
 
 class Admin extends BaseController {
 	public function index() {
@@ -24,12 +25,20 @@ class Admin extends BaseController {
 								         ->get()
 								         ->getResult();
 
-		if(password_verify($password, $query[0]->password)) {
-			session()->set('admin', $query[0]->admin_id);
-			session()->set('islogged_in', true);
-			session()->setFlashData('info', 'Welcome back '.$query[0]->firstname.'!');
-			return redirect()->to('a/dashboard');
-		} else return redirect()->to('a');
+		if(count($query) > 0) {
+			if(password_verify($password, $query[0]->password)) {
+				session()->set('admin', $query[0]->admin_id);
+				session()->set('islogged_in', true);
+				session()->setTempData('info', 'Welcome back '.$query[0]->firstname.'!', 3);
+				return redirect()->to('a/dashboard');
+			} else {
+				session()->setTempData('error', 'Invalid username or password!', 3);
+				return redirect()->to('a');
+			}
+		} else {
+			session()->setTempData('error', 'Invalid username or password!', 3);
+			return redirect()->to('a');
+		}
 	}
 
 	public function signout() {
@@ -37,49 +46,10 @@ class Admin extends BaseController {
 		return redirect()->to('a');
 	}
 
-	public function view($page = NULL) {
-		helper(['form', 'url']);
-
-		$student_model = new StudentModel();
-		$registrar_model = new RegistrarModel();
-    $request_model = new TokenRequestModel();
-
-
-		switch ($page) {
-			case 'request':
-				$data['students'] = $request_model->select('*')
-																				  ->join('students', 'students.student_id = token_requests.student_id')
-																				  ->where('status', '0')
-																				  ->get()->getResult();
-				echo view('admin/templates/header');
-				echo view('admin/templates/sidebar');
-				echo view('admin/templates/topbar');
-				echo view('admin/'.$page, $data);
-				echo view('admin/templates/footer');
-				break;
-			case 'r_request':
-				$data['registrar'] = $registrar_model->select('*')
-																					   ->where('isapproved', '0')
-																					   ->get()->getResult();
-				echo view('admin/templates/header');
-				echo view('admin/templates/sidebar');
-				echo view('admin/templates/topbar');
-				echo view('admin/'.$page, $data);
-				echo view('admin/templates/footer');
-				break;
-			default:
-				echo view('admin/templates/header');
-				echo view('admin/templates/sidebar');
-				echo view('admin/templates/topbar');
-				echo view('admin/'.$page);
-				echo view('admin/templates/footer');
-				break;
-		}
-	}
-
 	public function approveRequest() {
 		helper(['form', 'url']);
 		$request_id = $this->request->getPost('request_id');
+		
 		if(isset($request_id)) {
 			$email = \Config\Services::email();
 			$request_model = new TokenRequestModel();
@@ -93,15 +63,15 @@ class Admin extends BaseController {
 			];
 
 			$useremail = $this->request->getPost('email');
-	
-			session()->setFlashData('email', $useremail);
 
 			$email->setTo($useremail);
 			$email->setSubject('Enrollment Form Access Token');
-			$email->setMessage(site_url().'auth/enrollment/'.$token);//your message here
+			$email->setMessage(site_url().'auth/enrollment/'.$token);//your message here			
 			if($email->send()) {
-				session()->setFlashData('success', 'Student Token request has been successfully approved! Email was sent');
+				session()->setTempData('success', 'Student Token request has been successfully approved! Email was sent', 3);
 				$request_model->save($data);
+			} else {
+				session()->setTempData('error', 'Oops! The token was not approved, the application might be blocked by google.', 3);
 			}
 			return redirect()->to('a/request');
 		} else {
@@ -114,7 +84,7 @@ class Admin extends BaseController {
 				'isapproved'   => '1'
 			];
 	
-			session()->setFlashData('success', 'Registrar Account has been successfully approved!');
+			session()->setTempData('success', 'Registrar Account has been successfully approved!', 3);
 			$registrar_model->save($data);
 			return redirect()->to('a/r_request');
 		}    
@@ -130,16 +100,15 @@ class Admin extends BaseController {
 		$registrar = esc($this->request->getPost('registrar_id'));
 
 		if (isset($request, $student)) {
-			session()->setFlashData('info', 'Student data and request has been denied!');
+			session()->setTempData('info', 'Student data and request has been denied!', 3);
 			$request_model->delete($request);
-			$student_model->delete($student);
 
 			return redirect()->to('a/request');
 		} else {
-			session()->setFlashData('info', 'Registrar data and request has been denied!');
+			session()->setTempData('info', 'Registrar data and request has been denied!', 3);
 			$registrar_model->delete($registrar);
 
-			return redirect()->to('a/request');
+			return redirect()->to('a/r_request');
 		}
 	}
 
@@ -158,4 +127,386 @@ class Admin extends BaseController {
 
     return $token;
   }
+
+	public function home() {
+		helper(['form', 'url']);
+
+		$student_model = new StudentModel();
+		$registrar_model = new RegistrarModel();
+    $request_model = new TokenRequestModel();
+		$myTime = new Time('now', 'Asia/Manila', 'en_US');
+		$a = new AdminModel();
+
+		$data['ns_content'] = $request_model->select('*')
+																			->orderBy('requested_at', 'DESC')
+																			->join('students', 'students.student_id = token_requests.student_id')
+																			->where('token_requests.status', '0')
+																			->limit(3)
+																			->get()->getResult();
+
+		$data['nr_content'] = $registrar_model->select('*')
+																				 ->orderBy('requested_at', 'DESC')
+																				 ->where('isapproved', '0')
+																				 ->limit(2)
+																				 ->get()->getResult();
+
+		$data['admin'] = $a->find(session()->get('admin'));
+		$data['notif_s'] = $request_model->selectCount('students.student_id', 'total')
+																		 ->join('students', 'students.student_id = token_requests.student_id')
+																		 ->where('status', '0')
+																		 ->get()->getRowArray();    
+		$data['notif_r'] = $registrar_model->selectCount('registrar_id', 'total')
+																			 ->where('isapproved', '0')
+																			 ->get()->getRowArray();
+
+		$pen_s = $request_model->selectCount('students.student_id', 'total')
+												  ->join('students', 'students.student_id = token_requests.student_id')
+													->like(['requested_at' => $myTime->getYear()])
+												  ->where('status', '0')
+												  ->get()->getRowArray();    
+
+		$pen_r = $registrar_model->selectCount('registrar_id', 'total')
+														->like(['requested_at' => $myTime->getYear()])
+													  ->where('isapproved', '0')
+													  ->get()->getRowArray();
+
+		$app_s = $request_model->selectCount('students.student_id', 'total')
+												  ->join('students', 'students.student_id = token_requests.student_id')
+													->like(['requested_at' => $myTime->getYear()])
+												  ->where('status', '1')
+												  ->get()->getRowArray();    
+
+		$app_r = $registrar_model->selectCount('registrar_id', 'total')
+														->like(['requested_at' => $myTime->getYear()])
+													  ->where('isapproved', '1')
+													  ->get()->getRowArray();
+
+		$data['approved_s'] = $app_s['total'];
+		$data['approved_r'] = $app_r['total'];
+		$data['pending_s'] = $pen_s['total'];
+		$data['pending_r'] = $pen_r['total'];
+
+		echo view('admin/templates/header');
+		echo view('admin/templates/sidebar', $data);
+		echo view('admin/templates/topbar');
+		echo view('admin/dashboard');
+		echo view('admin/templates/footer');
+	}
+
+	public function changepass() {
+		helper(['form', 'url']);
+
+		$student_model = new StudentModel();
+		$registrar_model = new RegistrarModel();
+    $request_model = new TokenRequestModel();
+		$myTime = new Time('now', 'Asia/Manila', 'en_US');
+		$a = new AdminModel();
+
+		$data['ns_content'] = $request_model->select('*')
+																			->orderBy('requested_at', 'DESC')
+																			->join('students', 'students.student_id = token_requests.student_id')
+																			->where('token_requests.status', '0')
+																			->limit(3)
+																			->get()->getResult();
+
+		$data['nr_content'] = $registrar_model->select('*')
+																				 ->orderBy('requested_at', 'DESC')
+																				 ->where('isapproved', '0')
+																				 ->limit(2)
+																				 ->get()->getResult();
+
+		$data['admin'] = $a->find(session()->get('admin'));
+		$data['notif_s'] = $request_model->selectCount('students.student_id', 'total')
+																		 ->join('students', 'students.student_id = token_requests.student_id')
+																		 ->where('status', '0')
+																		 ->get()->getRowArray();    
+		$data['notif_r'] = $registrar_model->selectCount('registrar_id', 'total')
+																			 ->where('isapproved', '0')
+																			 ->get()->getRowArray();
+
+		$pen_s = $request_model->selectCount('students.student_id', 'total')
+												  ->join('students', 'students.student_id = token_requests.student_id')
+													->like(['requested_at' => $myTime->getYear()])
+												  ->where('status', '0')
+												  ->get()->getRowArray();    
+
+		$pen_r = $registrar_model->selectCount('registrar_id', 'total')
+														->like(['requested_at' => $myTime->getYear()])
+													  ->where('isapproved', '0')
+													  ->get()->getRowArray();
+
+		$app_s = $request_model->selectCount('students.student_id', 'total')
+												  ->join('students', 'students.student_id = token_requests.student_id')
+													->like(['requested_at' => $myTime->getYear()])
+												  ->where('status', '1')
+												  ->get()->getRowArray();    
+
+		$app_r = $registrar_model->selectCount('registrar_id', 'total')
+														->like(['requested_at' => $myTime->getYear()])
+													  ->where('isapproved', '1')
+													  ->get()->getRowArray();
+
+		$data['approved_s'] = $app_s['total'];
+		$data['approved_r'] = $app_r['total'];
+		$data['pending_s'] = $pen_s['total'];
+		$data['pending_r'] = $pen_r['total'];
+
+		echo view('admin/templates/header');
+		echo view('admin/templates/sidebar', $data);
+		echo view('admin/templates/topbar');
+		echo view('admin/change_pass');
+		echo view('admin/templates/footer');
+	}
+
+	public function savepass() {		
+		$rules = [
+			'password' => [
+				'label' => 'Password',
+				'rules' => 'required|verify_admin[password]',
+				'errors' => [
+					'verify_admin' => 'Invalid Password! please enter your correct password.'
+				]
+			],
+			'newpass' => [
+				'label' => 'New Password',
+				'rules' => 'required'
+			],
+			'passconf' => [
+				'label' => 'Password Confirmation',
+				'rules' => 'required|matches[newpass]'
+			],
+		];
+		$a = new AdminModel();
+
+		if (!$this->validate($rules)) {
+			helper(['form', 'url']);
+	
+			$student_model = new StudentModel();
+			$registrar_model = new RegistrarModel();
+			$request_model = new TokenRequestModel();
+			$myTime = new Time('now', 'Asia/Manila', 'en_US');
+	
+			$data['ns_content'] = $request_model->select('*')
+																				->orderBy('requested_at', 'DESC')
+																				->join('students', 'students.student_id = token_requests.student_id')
+																				->where('token_requests.status', '0')
+																				->limit(3)
+																				->get()->getResult();
+	
+			$data['nr_content'] = $registrar_model->select('*')
+																					 ->orderBy('requested_at', 'DESC')
+																					 ->where('isapproved', '0')
+																					 ->limit(2)
+																					 ->get()->getResult();
+	
+			$data['admin'] = $a->find(session()->get('admin'));
+			$data['notif_s'] = $request_model->selectCount('students.student_id', 'total')
+																			 ->join('students', 'students.student_id = token_requests.student_id')
+																			 ->where('status', '0')
+																			 ->get()->getRowArray();    
+			$data['notif_r'] = $registrar_model->selectCount('registrar_id', 'total')
+																				 ->where('isapproved', '0')
+																				 ->get()->getRowArray();
+	
+			$pen_s = $request_model->selectCount('students.student_id', 'total')
+														->join('students', 'students.student_id = token_requests.student_id')
+														->like(['requested_at' => $myTime->getYear()])
+														->where('status', '0')
+														->get()->getRowArray();    
+	
+			$pen_r = $registrar_model->selectCount('registrar_id', 'total')
+															->like(['requested_at' => $myTime->getYear()])
+															->where('isapproved', '0')
+															->get()->getRowArray();
+	
+			$app_s = $request_model->selectCount('students.student_id', 'total')
+														->join('students', 'students.student_id = token_requests.student_id')
+														->like(['requested_at' => $myTime->getYear()])
+														->where('status', '1')
+														->get()->getRowArray();    
+	
+			$app_r = $registrar_model->selectCount('registrar_id', 'total')
+															->like(['requested_at' => $myTime->getYear()])
+															->where('isapproved', '1')
+															->get()->getRowArray();
+	
+			$data['approved_s'] = $app_s['total'];
+			$data['approved_r'] = $app_r['total'];
+			$data['pending_s'] = $pen_s['total'];
+			$data['pending_r'] = $pen_r['total'];
+			$data['validation'] = $this->validator;
+	
+			echo view('admin/templates/header');
+			echo view('admin/templates/sidebar', $data);
+			echo view('admin/templates/topbar');
+			echo view('admin/change_pass');
+			echo view('admin/templates/footer');
+		} else {
+			$data['password'] = password_hash($this->request->getPost('newpass'), PASSWORD_DEFAULT);
+			$data['admin_id'] = esc(session()->get('admin'));
+			$a->save($data);
+			session()->setTempData('success', 'New password was successfully saved!', 3);
+			return redirect()->to('a/dashboard');
+		}
+	}
+
+	public function update() {
+		helper(['form', 'url']);
+
+		$student_model = new StudentModel();
+		$registrar_model = new RegistrarModel();
+    $request_model = new TokenRequestModel();
+		$myTime = new Time('now', 'Asia/Manila', 'en_US');
+		$a = new AdminModel();
+
+		$data['ns_content'] = $request_model->select('*')
+																			->orderBy('requested_at', 'DESC')
+																			->join('students', 'students.student_id = token_requests.student_id')
+																			->where('token_requests.status', '0')
+																			->limit(3)
+																			->get()->getResult();
+
+		$data['nr_content'] = $registrar_model->select('*')
+																				 ->orderBy('requested_at', 'DESC')
+																				 ->where('isapproved', '0')
+																				 ->limit(2)
+																				 ->get()->getResult();
+
+		$data['admin'] = $a->find(session()->get('admin'));
+		$data['notif_s'] = $request_model->selectCount('students.student_id', 'total')
+																		 ->join('students', 'students.student_id = token_requests.student_id')
+																		 ->where('status', '0')
+																		 ->get()->getRowArray();    
+		$data['notif_r'] = $registrar_model->selectCount('registrar_id', 'total')
+																			 ->where('isapproved', '0')
+																			 ->get()->getRowArray();
+
+		$pen_s = $request_model->selectCount('students.student_id', 'total')
+												  ->join('students', 'students.student_id = token_requests.student_id')
+													->like(['requested_at' => $myTime->getYear()])
+												  ->where('status', '0')
+												  ->get()->getRowArray();    
+
+		$pen_r = $registrar_model->selectCount('registrar_id', 'total')
+														->like(['requested_at' => $myTime->getYear()])
+													  ->where('isapproved', '0')
+													  ->get()->getRowArray();
+
+		$app_s = $request_model->selectCount('students.student_id', 'total')
+												  ->join('students', 'students.student_id = token_requests.student_id')
+													->like(['requested_at' => $myTime->getYear()])
+												  ->where('status', '1')
+												  ->get()->getRowArray();    
+
+		$app_r = $registrar_model->selectCount('registrar_id', 'total')
+														->like(['requested_at' => $myTime->getYear()])
+													  ->where('isapproved', '1')
+													  ->get()->getRowArray();
+
+		$data['approved_s'] = $app_s['total'];
+		$data['approved_r'] = $app_r['total'];
+		$data['pending_s'] = $pen_s['total'];
+		$data['pending_r'] = $pen_r['total'];
+
+		echo view('admin/templates/header');
+		echo view('admin/templates/sidebar', $data);
+		echo view('admin/templates/topbar');
+		echo view('admin/update_account');
+		echo view('admin/templates/footer');
+	}
+
+	public function saveuser() {		
+		$rules = [
+			'fname' => [
+				'label' => 'Firstname',
+				'rules' => 'required',
+			],
+			'lname' => [
+				'label' => 'Lastname',
+				'rules' => 'required'
+			],
+			'uname' => [
+				'label' => 'Username',
+				'rules' => 'required'
+			],
+		];
+		$a = new AdminModel();
+
+		if (!$this->validate($rules)) {
+			helper(['form', 'url']);
+	
+			$student_model = new StudentModel();
+			$registrar_model = new RegistrarModel();
+			$request_model = new TokenRequestModel();
+			$myTime = new Time('now', 'Asia/Manila', 'en_US');
+	
+			$data['ns_content'] = $request_model->select('*')
+																				->orderBy('requested_at', 'DESC')
+																				->join('students', 'students.student_id = token_requests.student_id')
+																				->where('token_requests.status', '0')
+																				->limit(3)
+																				->get()->getResult();
+	
+			$data['nr_content'] = $registrar_model->select('*')
+																					 ->orderBy('requested_at', 'DESC')
+																					 ->where('isapproved', '0')
+																					 ->limit(2)
+																					 ->get()->getResult();
+	
+			$data['admin'] = $a->find(session()->get('admin'));
+			$data['notif_s'] = $request_model->selectCount('students.student_id', 'total')
+																			 ->join('students', 'students.student_id = token_requests.student_id')
+																			 ->where('status', '0')
+																			 ->get()->getRowArray();    
+			$data['notif_r'] = $registrar_model->selectCount('registrar_id', 'total')
+																				 ->where('isapproved', '0')
+																				 ->get()->getRowArray();
+	
+			$pen_s = $request_model->selectCount('students.student_id', 'total')
+														->join('students', 'students.student_id = token_requests.student_id')
+														->like(['requested_at' => $myTime->getYear()])
+														->where('status', '0')
+														->get()->getRowArray();    
+	
+			$pen_r = $registrar_model->selectCount('registrar_id', 'total')
+															->like(['requested_at' => $myTime->getYear()])
+															->where('isapproved', '0')
+															->get()->getRowArray();
+	
+			$app_s = $request_model->selectCount('students.student_id', 'total')
+														->join('students', 'students.student_id = token_requests.student_id')
+														->like(['requested_at' => $myTime->getYear()])
+														->where('status', '1')
+														->get()->getRowArray();    
+	
+			$app_r = $registrar_model->selectCount('registrar_id', 'total')
+															->like(['requested_at' => $myTime->getYear()])
+															->where('isapproved', '1')
+															->get()->getRowArray();
+	
+			$data['approved_s'] = $app_s['total'];
+			$data['approved_r'] = $app_r['total'];
+			$data['pending_s'] = $pen_s['total'];
+			$data['pending_r'] = $pen_r['total'];
+			$data['validation'] = $this->validator;
+	
+			echo view('admin/templates/header');
+			echo view('admin/templates/sidebar', $data);
+			echo view('admin/templates/topbar');
+			echo view('admin/update_account');
+			echo view('admin/templates/footer');
+		} else {
+			$data = [
+				'firstname'  => esc($this->request->getPost('fname')),
+				'lastname'   => esc($this->request->getPost('lname')),
+				'middlename' => esc($this->request->getPost('mname')),
+				'username'   => esc($this->request->getPost('uname')),
+				'admin_id'   => esc(session()->get('admin')),
+			];
+
+			$a->save($data);
+			session()->setTempData('success', 'The New user credentials was successfully saved!', 3);
+			return redirect()->to('a/dashboard');
+		}
+	}
 }

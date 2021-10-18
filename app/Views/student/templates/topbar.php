@@ -21,7 +21,7 @@
               <a class="nav-link <?= ($page == 'enrollment') ? 'active' : ''?>" href="<?= site_url()?>enrollment">Enrollment</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link <?= ($page == 'esc_registration') ? 'active' : ''?>" href="<?= site_url()?>esc_registration">ESC Voucher Registration</a>
+              <a class="nav-link <?= ($page == 'esc') ? 'active' : ''?>" href="<?= site_url()?>esc">ESC Voucher Registration</a>
             </li>
             <li class="nav-item">
               <a class="nav-link <?= ($page == 'about') ? 'active' : ''?>" href="<?= site_url()?>about">About Us</a>

@@ -7,7 +7,7 @@
       <!-- sidebar-brand -->
       <div class="sidebar-brand">
         <img src="<?= site_url()?>assets/images/school_logo.png" alt="" class="img-fluid" style="width: 40px">
-        <a href="#" class="px-2 text-dark">LNHS-ES</a>
+        <a href="#" class="px-2 text-dark">LHS-ES</a>
         <div id="close-sidebar">
           <i class="fas fa-times"></i>
         </div>
@@ -16,7 +16,7 @@
       <!-- sidebar-header -->
       <div class="sidebar-header">
         <div class="user-pic">
-          <img class="img-responsive img-rounded" src="<?= site_url()?>assets/images/user.jpg" alt="User picture">
+          <img class="img-responsive img-rounded-start" src="<?= site_url()?>assets/images/user.jpg" alt="User picture">
         </div>
         <div class="user-info text-secondary">
           <span class="user-name">
@@ -67,11 +67,11 @@
             <div class="sidebar-submenu <?= ($page == 'crs_mgt' || $page == 'crs_schedule') ? 'd-block' : ''?>">
               <ul>
                 <li>
-                  <a href="<?= site_url()?>r/crs_mgt" class="<?= ($page == 'crs_mgt') ? 'active' : ''?>">Tracks and Strands
+                  <a href="<?= site_url()?>r/crs_mgt" class="<?= ($page == 'crs_mgt') ? 'active bg-white rounded-start shadow-sm' : ''?>">Manage Course
                   </a>
                 </li>
                 <li>
-                  <a href="<?= site_url()?>r/crs_schedule" class="<?= ($page == 'crs_schedule') ? 'active' : ''?>">Schedule</a>
+                  <a href="<?= site_url()?>r/crs_schedule" class="<?= ($page == 'crs_schedule') ? 'active bg-white rounded-start shadow-sm' : ''?>">Schedule</a>
                 </li>
               </ul>
             </div>
@@ -86,11 +86,11 @@
             <div class="sidebar-submenu <?= ($page == 'enrollments' || $page == 'payment' || $page == 'assessment') ? 'd-block' : ''?>">
               <ul>
                 <li>
-                  <a href="<?= site_url()?>r/enrollments" class="<?= ($page == 'enrollments') ? 'active' : ''?>">Assessment
+                  <a href="<?= site_url()?>r/enrollments" class="<?= ($page == 'enrollments' || $page == 'assessment') ? 'active bg-white rounded-start shadow-sm' : ''?>">Assessment
                   </a>
                 </li>
                 <li>
-                  <a href="<?= site_url()?>r/payment" class="<?= ($page == 'payment') ? 'active' : ''?>">Payment</a>
+                  <a href="<?= site_url()?>r/payment" class="<?= ($page == 'payment') ? 'active bg-white rounded-start shadow-sm' : ''?>">Payment</a>
                 </li>
               </ul>
             </div>
@@ -105,34 +105,28 @@
             <div class="sidebar-submenu <?= ($page == 'esc_request' || $page == 'esc_approved' || $page == 'esc_denied') ? 'd-block' : ''?>">
               <ul>
                 <li>
-                  <a href="<?= site_url()?>r/esc_request">Verification</a>
+                  <a href="<?= site_url()?>r/esc_request" class="<?= ($page == 'esc_request') ? 'active bg-white rounded-start shadow-sm' : ''?>">Verification</a>
                 </li>
                 <li>
-                  <a href="<?= site_url()?>r/esc_approved">Approved</a>
+                  <a href="<?= site_url()?>r/esc_approved" class="<?= ($page == 'esc_approved') ? 'active bg-white rounded-start shadow-sm' : ''?>">Approved</a>
                 </li>
                 <li>
-                  <a href="<?= site_url()?>r/esc_denied">Denied</a>
+                  <a href="<?= site_url()?>r/esc_denied" class="<?= ($page == 'esc_denied') ? 'active bg-white rounded-start shadow-sm' : ''?>">Denied</a>
                 </li>
               </ul>
             </div>
           </li>
 
-          <!-- Reports -->
-          <li class="sidebar-dropdown <?= ($page == 'rep_masterlist' || $page == 'rep_escvoucher' || $page == 'rep_payment') ? 'active' : ''?>">
+          <!-- faculty -->
+          <li class="sidebar-dropdown <?= ($page == 'teacher_list') ? 'active' : ''?>">
             <a href="#">
-              <i class="fa fa-chart-line fa-fw"></i>
-              <span class="ps-1">Reports</span>
+              <i class="fa fa-users fa-fw"></i>
+              <span class="ps-1">Teachers</span>
             </a>
-            <div class="sidebar-submenu <?= ($page == 'rep_masterlist' || $page == 'rep_escvoucher' || $page == 'rep_payment') ? 'd-block' : ''?>">
+            <div class="sidebar-submenu <?= ($page == 'teacher_list') ? 'd-block' : ''?>">
               <ul>
                 <li>
-                  <a href="<?= site_url()?>r/rep_masterlist">Masterlist</a>
-                </li>
-                <li>
-                  <a href="<?= site_url()?>r/rep_escvoucher">ESC Voucher</a>
-                </li>
-                <li>
-                  <a href="<?= site_url()?>r/rep_payment">Payment</a>
+                  <a href="<?= site_url()?>r/teacher_list" class="<?= ($page == 'teacher_list') ? 'active bg-white rounded-start shadow-sm' : ''?>">List of Teachers</a>
                 </li>
               </ul>
             </div>

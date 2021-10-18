@@ -11,11 +11,11 @@
     <title>Enrollment Request</title>
 
   </head>
-  <body class="bg-light">
-    <header class="bg-white">
-      <nav class="container navbar navbar-expand-lg navbar-light">
+  <body class="bg-white">
+    <header class="bg-primary">
+      <nav class="container navbar navbar-expand-lg navbar-dark">
         <div class="container-fluid">
-          <a class="navbar-brand d-flex gap-2 align-items-center" href="#">
+          <a class="navbar-brand d-flex gap-2 align-items-center" href="<?= site_url()?>">
             <img src="<?= site_url()?>assets/images/school_logo.png" alt="" width="40" class="img-fluid">
             <span class="d-none d-sm-block">Lagonoy High School</span>
           </a>
@@ -26,8 +26,8 @@
             $uri = service('uri');
             $page = $uri->getSegment(1);
           ?>
-          <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <div class="collapse navbar-collapse offset justify-content-end" id="navbarSupportedContent">
+            <ul class="nav navbar-nav ">
               <li class="nav-item">
                 <a class="nav-link <?= ($page == '') ? 'active' : ''?>" aria-current="page" href="<?= site_url()?>">Home</a>
               </li>

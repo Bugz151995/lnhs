@@ -3,17 +3,70 @@
 namespace App\Controllers;
 
 use \App\Models\RegistrarModel;
+use \App\Models\EnrollmentModel;
+use \App\Models\EscGrantModel;
+use CodeIgniter\I18n\Time;
 
-class Registrar extends BaseController
-{
+class Registrar extends BaseController {
 	public function index() {
 		helper(['form', 'url']);
 		return view('registrar/signin');
 	}
 
 	public function home() {
+		$en = new EnrollmentModel();
+		$esc = new EscGrantModel();
+		$myTime = new Time('now', 'Asia/Manila', 'en_US');
+		
+		$data = [					
+			'notif_e' => $en->select('*')
+									    ->where(['status' => 'pending'])
+											->orderBy('submitted_at', 'DESC')
+											->limit(5)
+									    ->get()->getResultArray(),					 
+			'notif_g' => $esc->select('*')
+											 ->orderBy('assessed_at', 'DESC')
+											 ->limit(5)
+											 ->where(['status' => 'pending'])
+											 ->get()->getResultArray(),	
+			'e_n'     => $en->selectCount('enrollment_id', 'e')
+									    ->where(['status' => 'pending'])
+									    ->orderBy('submitted_at', 'DESC')
+									    ->get()->getRowArray(),											 
+			'g_n'     => $esc->selectCount('esc_grant_id', 'g')
+									     ->where(['status' => 'pending'])
+									     ->orderBy('assessed_at', 'DESC')
+									     ->get()->getRowArray(),		
+
+			'enrolled' => $en->selectCount('enrollment_id')
+											 ->where(['status' => 'approved'])
+											 ->like(['submitted_at' => $myTime->getYear()])
+											 ->get()->getRowArray(),
+			'approved' => $en->selectCount('enrollment_id', 'approved')
+											 ->select('acad_year')
+											 ->groupBy(['acad_year', 'status'])
+											 ->where(['status' => 'approved'])
+											 ->get()->getResultArray(),											 
+			'esc_grant' => $esc->selectCount('esc_grant_id', 'approved')
+											   ->select('acad_year')
+											   ->groupBy(['acad_year', 'status'])
+											   ->where(['status' => 'approved'])
+											   ->get()->getResultArray(),												 
+			'e_strand' => $en->selectCount('enrollment_id', 'approved')
+											 ->select('acad_year')
+											 ->select('strand_name')
+											 ->join('courses', 'courses.course_id = enrollments.course_id')
+											 ->join('strands', 'courses.strand_id = strands.strand_id')
+											 ->groupBy(['acad_year', 'status', 'enrollments.course_id'])
+											 ->where(['status' => 'approved'])
+											 ->get()->getResultArray(),		
+			'grants'   => $esc->selectCount('esc_grant_id')
+												->where(['status' => 'approved'])
+											  ->like(['assessed_at' => $myTime->getYear()])
+											  ->get()->getRowArray(),
+		];
 		echo view('registrar/templates/header');
-		echo view('registrar/templates/sidebar');
+		echo view('registrar/templates/sidebar', $data);
 		echo view('registrar/templates/topbar');
 		echo view('registrar/dashboard');
 		echo view('registrar/templates/footer');

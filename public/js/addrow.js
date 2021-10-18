@@ -49,21 +49,21 @@ function setAddRow(body, btn, rows){
               select.appendChild(option);
               i++;
             }
-            select.setAttribute('class', 'form-select');
+            select.setAttribute('class', 'form-select form-select-sm');
             select.setAttribute('name', 'category_' + tierNumber);
             td.appendChild(select);
             break;
           case 2:
             input.setAttribute('type', 'text');
             input.setAttribute('name', 'code_' + tierNumber);
-            input.setAttribute('class', 'form-control');
+            input.setAttribute('class', 'form-control form-control-sm');
             input.setAttribute('placeholder', 'Subject Code here...');
             td.appendChild(input);
             break;
           case 3:
             input.setAttribute('type', 'text');
             input.setAttribute('name', 'name_' + tierNumber);
-            input.setAttribute('class', 'form-control');
+            input.setAttribute('class', 'form-control form-control-sm');
             input.setAttribute('placeholder', 'Subject Name here...');
             td.appendChild(input);
             break;

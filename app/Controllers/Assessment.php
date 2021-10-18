@@ -7,26 +7,30 @@ use \App\Models\AddressModel;
 use \App\Models\StudentAddressModel;
 use \App\Models\PersonModel;
 use \App\Models\RelationModel;
+use \App\Models\ScheduleModel;
 use \App\Models\EnrollmentModel;
-use \App\Models\SectionModel;
-use \App\Models\StudentSectionModel;
+use \App\Models\ClassModel;
+use \App\Models\StudentClassModel;
+use \App\Models\StudentSchedulesModel;
+use \App\Models\EscGrantModel;
+use App\Models\TeacherModel;
 use \App\Models\CoursesModel;
 use \App\Models\TransfereeReturneeModel;
 
 class Assessment extends BaseController {
   public function index() {
     helper(['form', 'url']);
-    $section_model = new SectionModel();
+    $class_model = new ClassModel();
     $course_model = new CoursesModel();
 
     $data = [
-      'sections' => $section_model->findAll(),
+      'class' => $class_model->findAll(),
       'courses'  => $course_model->getCourses()
     ];
 
 		echo view('registrar/templates/header');
 		echo view('registrar/templates/topbar');
-		echo view('registrar/enrollment', $data);
+		echo view('registrar/enrollments', $data);
 		echo view('registrar/templates/footer');
   }
 
@@ -36,55 +40,59 @@ class Assessment extends BaseController {
 
   public function viewEnrollment($student_id) {
     helper(['form', 'url']);
-    $section_model            = new SectionModel();
+    $class_model            = new ClassModel();
     $course_model             = new CoursesModel();
     $enrollment_model         = new EnrollmentModel();
     $person_model             = new PersonModel();
     $transfereereturnee_model = new TransfereeReturneeModel();
+    $en                       = new EnrollmentModel();
+    $esc                      = new EscGrantModel();
 
     $data = [
-      'sections'              => $section_model->findAll(),
-      'courses'               => $course_model->getCourses(),
-      'enrollments'           => $enrollment_model->getStudentEnrollment($student_id),
-      'relatives'             => $person_model->select('*')
-                                              ->join('relations', 'relations.person_id = persons.person_id')
-                                              ->where('relations.student_id', $student_id)
-                                              ->get()->getResult(),
-      'returnee_transferee'   => $transfereereturnee_model->select('*')
-                                                          ->where('student_id', $student_id)
-                                                          ->get()->getResult(),
-      
+      'class'               => $class_model->findAll(),
+      'courses'             => $course_model->getCourses(),
+      'enrollments'         => $enrollment_model->getStudentEnrollment($student_id),
+      'relatives'           => $person_model->select('*')
+                                            ->join('relations', 'relations.person_id = persons.person_id')
+                                            ->where('relations.student_id', $student_id)
+                                            ->get()->getResult(),
+      'returnee_transferee' => $transfereereturnee_model->select('*')
+                                                        ->where('student_id', $student_id)
+                                                        ->get()->getResult(),
+      'notif_e' => $en->select('*')
+                      ->where(['status' => 'pending'])
+                      ->orderBy('submitted_at', 'DESC')
+                      ->limit(5)
+                      ->get()->getResultArray(),					 
+      'notif_g' => $esc->select('*')
+                        ->orderBy('assessed_at', 'DESC')
+                        ->limit(5)
+                        ->where(['status' => 'pending'])
+                        ->get()->getResultArray(),	
+      'e_n'     => $en->selectCount('enrollment_id', 'e')
+                      ->where(['status' => 'pending'])
+                      ->orderBy('submitted_at', 'DESC')
+                      ->get()->getRowArray(),											 
+      'g_n'     => $esc->selectCount('esc_grant_id', 'g')
+                        ->where(['status' => 'pending'])
+                        ->orderBy('assessed_at', 'DESC')
+                        ->get()->getRowArray(),
     ];
 
-    session()->setFlashData('student_id', $student_id);
-
     echo view('registrar/templates/header');
-    echo view('registrar/templates/sidebar');
+    echo view('registrar/templates/sidebar', $data);
 		echo view('registrar/templates/topbar');
-		echo view('registrar/assessment', $data);
+		echo view('registrar/assessment/assessment');
     echo view('registrar/templates/footer');
   }
 
   public function updateEnrollment() {
-    helper(['form', 'url']);
-
-    $student_model            = new StudentModel();
-    $person_model             = new PersonModel();
-    $relation_model           = new RelationModel();
-    $enrollment_model         = new EnrollmentModel();
-    $address_model            = new AddressModel();
-    $student_add_model        = new StudentAddressModel();
-    $student_section_model    = new StudentSectionModel();
-    $section_model            = new SectionModel();
-    $course_model             = new CoursesModel();
-    $transfereereturnee_model = new TransfereeReturneeModel();
-    
+    helper(['form', 'url']);    
     
     $rules = [
       'firstname'          => 'required',
       'middlename'         => 'required',
       'lastname'           => 'required',
-      'suffix'             => 'required',
       'bday'               => 'required',
       'age'                => 'required',
       'sex'                => 'required',
@@ -97,7 +105,7 @@ class Assessment extends BaseController {
       'modality'           => 'required',
       'semester'           => 'required',
       'gradelevel'         => 'required',
-      'section'            => 'required',
+      'class'              => 'required',
       'course'             => 'required',
       'isdocumentcomplete' => 'required',
       'status'             => 'required',
@@ -111,12 +119,23 @@ class Assessment extends BaseController {
     }
 
     if(!$this->validate($rules)) {
-      session()->setFlashData('error', 'Update failed! Session has been reset. Please don\'t leave an unanswered field.');
-      return redirect()->to('r/enrollments');
+      session()->setTempData('validation', $this->validator, 3);
+      return redirect()->to('r/assessment/'.esc($this->request->getPost('s')));
     } else {
+      $student_model            = new StudentModel();
+      $person_model             = new PersonModel();
+      $relation_model           = new RelationModel();
+      $enrollment_model         = new EnrollmentModel();
+      $address_model            = new AddressModel();
+      $student_add_model        = new StudentAddressModel();
+      $student_class_model      = new StudentClassModel();
+      $class_model              = new ClassModel();
+      $course_model             = new CoursesModel();
+      $transfereereturnee_model = new TransfereeReturneeModel();
       // GET STUDENT DATA AND UPDATE
       $student = [
-        'student_id' => esc($this->request->getPost('student_id')),
+        'student_id' => esc($this->request->getPost('s')),
+        'lrn'        => esc($this->request->getPost('lrn')),
         'firstname'  => esc($this->request->getPost('firstname')),
         'middlename' => esc($this->request->getPost('middlename')),
         'lastname'   => esc($this->request->getPost('lastname')),
@@ -130,15 +149,15 @@ class Assessment extends BaseController {
       $student_model->save($student);
 
       // GET RETURNEE OR TRANSFEREE DATA AND UPDATE
-      $last_gradelevel = $this->request->getPost('hea');
-      $year_completed  = $this->request->getPost('hea_ay');
-      $school_name     = $this->request->getPost('prev_school');
-      $school_address  = $this->request->getPost('prev_school_address');
-      $returnee_transferee_id = $this->request->getPost('returnee_transferee_id');
+      $last_gradelevel        = $this->request->getPost('hea');
+      $year_completed         = $this->request->getPost('hea_ay');
+      $school_name            = $this->request->getPost('prev_school');
+      $school_address         = $this->request->getPost('prev_school_address');
+      $returnee_transferee_id = $this->request->getPost('rt');
       
       $returnee_transferee = [
         'transferee_returnee_id' => esc($returnee_transferee_id),
-        'student_id'             => esc($this->request->getPost('student_id')),
+        'student_id'             => esc($this->request->getPost('s')),
         'last_gradelevel'        => esc($last_gradelevel),
         'year_completed'         => esc($year_completed),
         'school_name'            => esc($school_name),
@@ -151,20 +170,20 @@ class Assessment extends BaseController {
 
       // GET ENROLLMENT AND UPDATE
       $enrollment = [
-        'enrollment_id'     => esc($this->request->getPost('enrollment_id')),
-        'learning_modality' => esc($this->request->getPost('modality')),
-        'grade_level'       => esc($this->request->getPost('gradelevel')),
-        'student_id'        => esc($this->request->getPost('student_id')),
-        'course_id'         => esc($this->request->getPost('course')),
-        'semester'          => esc($this->request->getPost('semester')),
-        'status'            => esc($this->request->getPost('status'))
+        'enrollment_id'      => esc($this->request->getPost('e')),
+        'learning_modality'  => esc($this->request->getPost('modality')),
+        'student_id'         => esc($this->request->getPost('s')),
+        'course_id'          => esc($this->request->getPost('course')),
+        'semester'           => esc($this->request->getPost('semester')),
+        'status'             => esc($this->request->getPost('status')),
+        'isdocumentcomplete' => esc($this->request->getPost('isdocumentcomplete')),
       ];
 
       $enrollment_model->save($enrollment);
 
       // GET ADDRESS, CHECK IF IT EXIST, IF YES THEN GET ID AND SAVE, IF NO THEN SAVE.
       $address = [
-        'address_id'        => esc($this->request->getPost('address_id')),
+        'address_id'        => esc($this->request->getPost('a')),
         'street'            => esc($this->request->getPost('street')),
         'barangay'          => esc($this->request->getPost('barangay')),
         'city_municipality' => esc($this->request->getPost('mun_city')),
@@ -175,9 +194,9 @@ class Assessment extends BaseController {
       $address_model->save($address);
 
       $student_address = [
-        'student_address_id' => esc($this->request->getPost('student_address_id')),
-        'address_id'         => esc($this->request->getPost('address_id')),
-        'student_id'         => esc($this->request->getPost('student_id'))
+        'student_address_id' => esc($this->request->getPost('sa')),
+        'address_id'         => esc($this->request->getPost('a')),
+        'student_id'         => esc($this->request->getPost('s'))
       ];
 
       $student_add_model->save($student_address);    
@@ -207,7 +226,7 @@ class Assessment extends BaseController {
           ];
 
           $relationship = [
-            'student_id' => esc($this->request->getPost('student_id')),
+            'student_id' => esc($this->request->getPost('s')),
             'relationship' => esc($this->request->getPost('relationship_'.$i))
           ];
           
@@ -255,35 +274,92 @@ class Assessment extends BaseController {
         }
       }
 
-      // get section and save
-      $section = [
-        'student_section_id' => esc($this->request->getPost('student_section_id')),
-        'section_id'         => esc($this->request->getPost('section')),
-        'student_id'         => esc($this->request->getPost('student_id'))
-      ];
-
-      $student_section_model->save($section);
-
-      session()->setFlashData('success', 'Update Successful!');
+      session()->setTempData('success', 'Update Successful!', 3);
       // display success message
-      return redirect()->to('r/enrollments');
+      return redirect()->to('r/assessment/'.esc($this->request->getPost('s')));
     }
   }
 
-  public function evaluation() {
+  public function evaluation($student_id) {
     helper(['form', 'url']);
-    $section_model = new SectionModel();
-    $course_model = new CoursesModel();
+    $c                   = new ClassModel();
+    $course_model        = new CoursesModel();
+    $student_model       = new StudentModel();
+    $schedule_model      = new ScheduleModel();
+    $teacher_model       = new TeacherModel();
 
+    $en = new EnrollmentModel();
+    $esc = new EscGrantModel();
+
+    $student_data = $student_model->join('students_class', 'students_class.student_id = students.student_id')
+                                  ->join('class', 'class.class_id = students_class.class_id')
+                                  ->join('courses', 'courses.course_id = class.course_id')
+                                  ->join('tracks', 'tracks.track_id = courses.track_id')
+                                  ->join('strands', 'strands.strand_id = courses.strand_id')
+                                  ->join('enrollments', 'enrollments.student_id = students.student_id')
+                                  ->find(esc($student_id));
     $data = [
-      'sections' => $section_model->findAll(),
-      'courses'  => $course_model->getCourses()
+      'class'          => $c->findAll(),
+      'courses'        => $course_model->getCourses(),
+      'student_id'     => esc($student_id),
+      'student'        => $student_data,
+      'teachers'       => $teacher_model->findAll(),
+      'section_scheds' => $schedule_model->getSectionSched($student_data['class_id'], $student_data['semester']),
+      'notif_e' => $en->select('*')
+                      ->where(['status' => 'pending'])
+                      ->orderBy('submitted_at', 'DESC')
+                      ->limit(5)
+                      ->get()->getResultArray(),					 
+      'notif_g' => $esc->select('*')
+                        ->orderBy('assessed_at', 'DESC')
+                        ->limit(5)
+                        ->where(['status' => 'pending'])
+                        ->get()->getResultArray(),	
+      'e_n'     => $en->selectCount('enrollment_id', 'e')
+                      ->where(['status' => 'pending'])
+                      ->orderBy('submitted_at', 'DESC')
+                      ->get()->getRowArray(),											 
+      'g_n'     => $esc->selectCount('esc_grant_id', 'g')
+                        ->where(['status' => 'pending'])
+                        ->orderBy('assessed_at', 'DESC')
+                        ->get()->getRowArray(),
     ];
 
 		echo view('registrar/templates/header');
-    echo view('registrar/templates/sidebar');
+    echo view('registrar/templates/sidebar', $data);
 		echo view('registrar/templates/topbar');
-		echo view('registrar/evaluation');
+		echo view('registrar/assessment/evaluation');
     echo view('registrar/templates/footer');
+  }
+
+  public function saveEvaluation() {
+    $sc = new StudentSchedulesModel();
+
+    $schedules = $this->request->getPost('e_schedule');
+    $search = [
+      'semester'   => esc($this->request->getPost('sem')),
+      'acad_year'  => esc($this->request->getPost('ay')),
+      'student_id' => esc($this->request->getPost('s')),
+    ];
+    $res = $sc->where($search)
+              ->findAll();
+              
+    if(isset($res) && count($res) > 0) {
+      session()->setTempData('error', 'The Schedule of the Student has already been set!', 3);
+      return redirect()->to('r/enrollments');
+    } else {
+      foreach ($schedules as $key => $sched) {
+        $data = [
+          'schedule_id' => esc($sched),
+          'student_id'  => esc($this->request->getPost('s')),
+          'semester'   => esc($this->request->getPost('sem')),
+          'acad_year'  => esc($this->request->getPost('ay')),
+        ];
+        $sc->save($data);
+      }
+
+      session()->setTempData('success', 'The Schedule of the Student has been successfully saved!', 3);
+      return redirect()->to('r/enrollments');
+    }
   }
 }

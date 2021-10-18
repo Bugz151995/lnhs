@@ -7,7 +7,7 @@
       <!-- sidebar-brand -->
       <div class="sidebar-brand">
         <img src="<?= site_url()?>assets/images/school_logo.png" alt="" class="img-fluid" style="width: 40px">
-        <a href="#" class="px-2 text-dark">LNHS-ES</a>
+        <a href="#" class="px-2 text-dark">LHS-ES</a>
         <div id="close-sidebar">
           <i class="fas fa-times"></i>
         </div>
@@ -20,7 +20,13 @@
         </div>
         <div class="user-info text-secondary">
           <span class="user-name">
-            <strong>John Doe</strong>
+            <strong>
+              <?= $admin['firstname'].' ' ?>
+              <?php if($admin['middlename']) : ?>
+                <?= substr($admin['middlename'], 0, 1).'. ' ?>
+              <?php endif ?>
+              <?= $admin['lastname'] ?>
+            </strong>
           </span>
           <span class="user-role text-dark">Admin</span>
           <span class="user-status">
@@ -33,12 +39,7 @@
         <div>
           <!-- sidebar-search -->
           <div class="input-group">
-            <input type="text" class="form-control search-menu" placeholder="Search...">
-            <div class="input-group-append">
-              <span class="input-group-text h-100">
-                <i class="fa fa-search" aria-hidden="true"></i>
-              </span>
-            </div>
+            <label for="" class="form-control bg-light border-0">Menu</label>
           </div>
         </div>
       </div>
@@ -58,86 +59,6 @@
             </a>
           </li>
 
-          <!-- course management nav link -->
-          <li class="sidebar-dropdown <?= ($page == 'crs_mgt') ? 'active' : ''?>">
-            <a href="#">
-              <i class="far fa-list-alt fa-fw"></i>
-              <span class="ps-1">Course Management</span>
-            </a>
-            <div class="sidebar-submenu <?= ($page == 'crs_mgt' || $page == 'crs_schedule') ? 'd-block' : ''?>">
-              <ul>
-                <li>
-                  <a href="<?= site_url()?>a/crs_mgt" class="<?= ($page == 'crs_mgt') ? 'active' : ''?>">Tracks and Strands
-                  </a>
-                </li>
-                <li>
-                  <a href="<?= site_url()?>a/crs_schedule" class="<?= ($page == 'crs_schedule') ? 'active' : ''?>">Schedule</a>
-                </li>
-              </ul>
-            </div>
-          </li>
-
-          <!-- enrollment nav link -->
-          <li class="sidebar-dropdown <?= ($page == 'enrollments' || $page == 'payment' || $page == 'assessment') ? 'active' : ''?>">
-            <a href="#">
-              <i class="far fa-address-card fa-fw"></i>
-              <span class="ps-1">Enrollment</span>
-            </a>
-            <div class="sidebar-submenu <?= ($page == 'enrollments' || $page == 'payment' || $page == 'assessment') ? 'd-block' : ''?>">
-              <ul>
-                <li>
-                  <a href="<?= site_url()?>a/enrollments" class="<?= ($page == 'enrollments') ? 'active' : ''?>">Assessment
-                  </a>
-                </li>
-                <li>
-                  <a href="<?= site_url()?>a/payment" class="<?= ($page == 'payment') ? 'active' : ''?>">Payment</a>
-                </li>
-              </ul>
-            </div>
-          </li>
-
-          <!-- ESC voucher -->
-          <li class="sidebar-dropdown <?= ($page == 'esc_request' || $page == 'esc_approved' || $page == 'esc_denied') ? 'active' : ''?>">
-            <a href="#">
-              <i class="fas fa-tags fa-fw"></i>
-              <span class="ps-1">ESC Voucher</span>
-            </a>
-            <div class="sidebar-submenu <?= ($page == 'esc_request' || $page == 'esc_approved' || $page == 'esc_denied') ? 'd-block' : ''?>">
-              <ul>
-                <li>
-                  <a href="<?= site_url()?>a/esc_request">Verification</a>
-                </li>
-                <li>
-                  <a href="<?= site_url()?>a/esc_approved">Approved</a>
-                </li>
-                <li>
-                  <a href="<?= site_url()?>a/esc_denied">Denied</a>
-                </li>
-              </ul>
-            </div>
-          </li>
-
-          <!-- Reports -->
-          <li class="sidebar-dropdown <?= ($page == 'rep_masterlist' || $page == 'rep_escvoucher' || $page == 'rep_payment') ? 'active' : ''?>">
-            <a href="#">
-              <i class="fa fa-chart-line fa-fw"></i>
-              <span class="ps-1">Reports</span>
-            </a>
-            <div class="sidebar-submenu <?= ($page == 'rep_masterlist' || $page == 'rep_escvoucher' || $page == 'rep_payment') ? 'd-block' : ''?>">
-              <ul>
-                <li>
-                  <a href="<?= site_url()?>a/rep_masterlist">Masterlist</a>
-                </li>
-                <li>
-                  <a href="<?= site_url()?>a/rep_escvoucher">ESC Voucher</a>
-                </li>
-                <li>
-                  <a href="<?= site_url()?>a/rep_payment">Payment</a>
-                </li>
-              </ul>
-            </div>
-          </li>
-
           <!-- Account -->
           <li class="sidebar-dropdown <?= ($page == 'request' || $page == 'acc_activated' || $page == 'r_request') ? 'active' : ''?>">
             <a href="#">
@@ -149,11 +70,24 @@
                 <li>
                   <a href="<?= site_url()?>a/request" class="<?= ($page == 'request' || $page == 'r_request') ? "text-primary" : '' ?>">Request</a>
                 </li>
-                <li>
-                  <a href="<?= site_url()?>a/acc_activated" class="<?= ($page == 'acc_activated') ? "text-primary" : '' ?>">Activated Account</a>
-                </li>
               </ul>
             </div>
+          </li>
+
+          <!-- change password link -->
+          <li class="sidebar-dropdown <?= ($page == 'changepass') ? 'active' : ''?>">
+            <a href="<?= site_url()?>a/changepass">
+              <i class="fa fa-lock-open fa-fw"></i>
+              <span class="ps-1">Change Password</span>
+            </a>
+          </li>
+
+          <!-- change user credentials link -->
+          <li class="sidebar-dropdown <?= ($page == 'updateaccount') ? 'active' : ''?>">
+            <a href="<?= site_url()?>a/updateaccount">
+              <i class="fa fa-user-shield fa-fw"></i>
+              <span class="ps-1">Update My Account</span>
+            </a>
           </li>
         </ul>
       </div>

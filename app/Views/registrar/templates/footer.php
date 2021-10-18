@@ -10,6 +10,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
     <script src="<?= site_url()?>js/google_charts.js"></script>
     <script src="<?= site_url()?>js/toggle_sidebar.js"></script>
+    <script src="<?= site_url()?>js/print.js"></script>
     
     <?php 
       $uri = service('uri');
@@ -28,18 +29,20 @@
     <!-- TOAST SCRIPT -->
     <script type="text/javascript">
       document.addEventListener('DOMContentLoaded', () => {
-        <?php if(session()->getFlashdata('success')){ ?>
-            toastr.success("<?= session()->getFlashdata('success'); ?>");
-        <?php }else if(session()->getFlashdata('error')){  ?>
-          <?php if(!isset($validation)) :?>
-            toastr.error("<?= session()->getFlashdata('error'); ?>");
-          <?php else :?>
-            toastr.error("<?= session()->getFlashdata('error') . $validation->getError('strand')?>");
-          <?php endif?>
-        <?php }else if(session()->getFlashdata('warning')){  ?>
-            toastr.warning("<?= session()->getFlashdata('warning'); ?>");
-        <?php }else if(session()->getFlashdata('info')){  ?>
-            toastr.info("<?= session()->getFlashdata('info'); ?>");
+        <?php if(session()->getTempData('success')){ ?>
+            toastr.success("<?= session()->getTempData('success'); ?>");
+        <?php }else if(session()->getTempData('error')){  ?>
+            toastr.error("<?= session()->getTempData('error'); ?>");
+        <?php }else if(session()->getTempData('warning')){  ?>
+            toastr.warning("<?= session()->getTempData('warning'); ?>");
+        <?php }else if(session()->getTempData('info')){  ?>
+            toastr.info("<?= session()->getTempData('info'); ?>");
+        <?php }else if(session()->getTempData('validation')){  ?>
+            <?php $validation = session()->getTempData('validation');?>
+            <?php $errors = $validation->getErrors(); ?>
+            <?php foreach ($errors as $key => $error) :?>
+            toastr.error("<?= $error; ?>");
+            <?php endforeach?>
         <?php } ?>
       });
     </script>

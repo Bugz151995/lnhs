@@ -12,7 +12,12 @@ class PersonModel extends Model {
   protected $returnType    = 'array';
   
   protected $allowedFields = [
-    'person_id', 'lastname', 'firstname', 'middlename', 'contact_number'
+    'lastname', 
+    'firstname', 
+    'middlename', 
+    'contact_number', 
+    'income_source', 
+    'gross_income'
   ];
 
   public function isDuplicate($data) {

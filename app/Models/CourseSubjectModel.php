@@ -12,7 +12,7 @@ class CourseSubjectModel extends Model {
   protected $returnType    = 'array';
   
   protected $allowedFields = [
-    'course_id', 'subject_id', 'semester'
+    'course_id', 'subject_id', 'semester', 'grade_level'
   ];
 
   public function getCoursesPerSemester() {
@@ -21,16 +21,15 @@ class CourseSubjectModel extends Model {
     $builder = $db->table('courses_subjects');
 
     return $builder->select('*')
-                   ->join('subjects', 'subjects.subject_id = courses_subjects.subject_id')
-                   ->join('courses', 'courses.course_id = courses_subjects.course_id')
+                   ->join('courses', 'courses_subjects.course_id = courses.course_id')
+                   ->groupBy(['strands.strand_id'])
                    ->join('tracks', 'tracks.track_id = courses.track_id')
                    ->join('strands', 'strands.strand_id = courses.strand_id')
-                   ->groupBy('semester')
                    ->get()
                    ->getResult();
   }
 
-  public function getSubjects($course_id, $sem) {
+  public function getSubjects($course_id, $sem, $g) {
     $db = db_connect();
 
     $builder = $db->table('courses_subjects');
@@ -40,9 +39,9 @@ class CourseSubjectModel extends Model {
                    ->join('courses', 'courses.course_id = courses_subjects.course_id')
                    ->join('tracks', 'tracks.track_id = courses.track_id')
                    ->join('strands', 'strands.strand_id = courses.strand_id')
-                   ->orderBy('subjects.subject_id', 'ASC')
                    ->where('courses_subjects.course_id', $course_id)
                    ->where('courses_subjects.semester', $sem)
+                   ->where('courses_subjects.grade_level', $g)
                    ->get()->getResult();
   }
 

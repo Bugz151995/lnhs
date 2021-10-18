@@ -8,21 +8,26 @@ use \App\Models\StudentAddressModel;
 use \App\Models\PersonModel;
 use \App\Models\RelationModel;
 use \App\Models\EnrollmentModel;
-use \App\Models\SectionModel;
-use \App\Models\StudentSectionModel;
+use \App\Models\ClassModel;
+use \App\Models\StudentClassModel;
 use \App\Models\CoursesModel;
 use \App\Models\TransfereeReturneeModel;
 use \App\Models\TokenRequestModel;
+use \App\Models\StudentSchedulesModel;
+use \App\Models\EscGrantModel;
+use CodeIgniter\I18n\Time;
 
 class Enrollment extends BaseController {
   public function index() {
     helper(['form', 'url']);
-    $section_model = new SectionModel();
+    $class_model = new ClassModel();
     $course_model = new CoursesModel();
+    $myTime = new Time('now', 'Asia/Manila', 'en_US');
 
     $data = [
-      'sections' => $section_model->findAll(),
-      'courses'  => $course_model->getCourses()
+      'class' => $class_model->findAll(),
+      'courses'  => $course_model->getCourses(),
+      'now'      => $myTime
     ];
 
 		echo view('student/templates/header');
@@ -36,16 +41,216 @@ class Enrollment extends BaseController {
   }
 
   public function viewEnrollments() {
+    helper(['form', 'url']);
     $enrollment_model = new EnrollmentModel();
+    $c = new ClassModel();
+    $sc = new StudentSchedulesModel();
+		$en = new EnrollmentModel();
+		$esc = new EscGrantModel();
+
+    $enrollments = $enrollment_model->select('*')
+                                    ->join('students', 'students.student_id = enrollments.student_id')
+                                    ->join('students_class', 'students_class.student_id = students.student_id')
+                                    ->join('class', 'class.class_id = students_class.class_id')
+                                    ->join('students_address', 'students_address.student_id = students.student_id')
+                                    ->join('address', 'address.address_id = students_address.address_id')
+                                    ->groupBy('students.student_id')
+                                    ->get()
+                                    ->getResult();
+
+    $sched_status = array();
+    foreach ($enrollments as $key => $e) {
+      $search = [
+        'semester'   => $e->semester,
+        'acad_year'  => $e->acad_year,
+        'student_id' => $e->student_id,
+      ];
+      $res = $sc->where($search)
+                ->findAll();
+      
+      if(isset($res) && count($res) > 0) {
+        array_push($sched_status, 1);
+      } else array_push($sched_status, 0);
+    }    
 
     $data = [
-      'enrollments' => $enrollment_model->getEnrollments()
+      'enrollments' => $enrollments,
+      'class'       => $c->findAll(),
+      'schedule'    => $sched_status,			
+			'notif_e' => $en->select('*')
+									    ->where(['status' => 'pending'])
+											->orderBy('submitted_at', 'DESC')
+											->limit(5)
+									    ->get()->getResultArray(),					 
+			'notif_g' => $esc->select('*')
+											 ->orderBy('assessed_at', 'DESC')
+											 ->limit(5)
+											 ->where(['status' => 'pending'])
+											 ->get()->getResultArray(),	
+			'e_n'     => $en->selectCount('enrollment_id', 'e')
+									    ->where(['status' => 'pending'])
+									    ->orderBy('submitted_at', 'DESC')
+									    ->get()->getRowArray(),											 
+			'g_n'     => $esc->selectCount('esc_grant_id', 'g')
+									     ->where(['status' => 'pending'])
+									     ->orderBy('assessed_at', 'DESC')
+									     ->get()->getRowArray(),
     ];
 
     echo view('registrar/templates/header');
-    echo view('registrar/templates/sidebar');
+    echo view('registrar/templates/sidebar', $data);
 		echo view('registrar/templates/topbar');
-		echo view('registrar/enrollments', $data);
+		echo view('registrar/assessment/index');
+    echo view('registrar/templates/footer');
+  }
+
+  public function searchdate() {
+    helper(['form', 'url']);
+    $enrollment_model = new EnrollmentModel();
+    $c = new ClassModel();
+		$en = new EnrollmentModel();
+		$esc = new EscGrantModel();
+
+    $search = [
+      'submitted_at' => esc($this->request->getPost('searchdate'))
+    ];
+    $data = [
+      'enrollments' => $enrollment_model->select('*')
+                                        ->join('students', 'students.student_id = enrollments.student_id')
+                                        ->join('students_class', 'students_class.student_id = students.student_id')
+                                        ->join('class', 'class.class_id = students_class.class_id')
+                                        ->join('students_address', 'students_address.student_id = students.student_id')
+                                        ->join('address', 'address.address_id = students_address.address_id')
+                                        ->groupBy('students.student_id')
+                                        ->like($search)
+                                        ->get()
+                                        ->getResult(),
+      'class'       => $c->findAll(),			
+			'notif_e' => $en->select('*')
+									    ->where(['status' => 'pending'])
+											->orderBy('submitted_at', 'DESC')
+											->limit(5)
+									    ->get()->getResultArray(),					 
+			'notif_g' => $esc->select('*')
+											 ->orderBy('assessed_at', 'DESC')
+											 ->limit(5)
+											 ->where(['status' => 'pending'])
+											 ->get()->getResultArray(),	
+			'e_n'     => $en->selectCount('enrollment_id', 'e')
+									    ->where(['status' => 'pending'])
+									    ->orderBy('submitted_at', 'DESC')
+									    ->get()->getRowArray(),											 
+			'g_n'     => $esc->selectCount('esc_grant_id', 'g')
+									     ->where(['status' => 'pending'])
+									     ->orderBy('assessed_at', 'DESC')
+									     ->get()->getRowArray(),
+    ];
+
+    echo view('registrar/templates/header');
+    echo view('registrar/templates/sidebar', $data);
+		echo view('registrar/templates/topbar');
+		echo view('registrar/assessment/index');
+    echo view('registrar/templates/footer');
+  }
+
+  public function searchclass() {
+    helper(['form', 'url']);
+		$en = new EnrollmentModel();
+		$esc = new EscGrantModel();
+    $enrollment_model = new EnrollmentModel();
+    $c = new ClassModel();
+
+    $search = [
+      'class.class_id' => esc($this->request->getPost('searchclass'))
+    ];
+    $data = [
+      'enrollments' => $enrollment_model->select('*')
+                                        ->join('students', 'students.student_id = enrollments.student_id')
+                                        ->join('students_class', 'students_class.student_id = students.student_id')
+                                        ->join('class', 'class.class_id = students_class.class_id')
+                                        ->join('students_address', 'students_address.student_id = students.student_id')
+                                        ->join('address', 'address.address_id = students_address.address_id')
+                                        ->groupBy('students.student_id')
+                                        ->like($search)
+                                        ->get()
+                                        ->getResult(),
+      'class'       => $c->findAll(),			
+			'notif_e' => $en->select('*')
+									    ->where(['status' => 'pending'])
+											->orderBy('submitted_at', 'DESC')
+											->limit(5)
+									    ->get()->getResultArray(),					 
+			'notif_g' => $esc->select('*')
+											 ->orderBy('assessed_at', 'DESC')
+											 ->limit(5)
+											 ->where(['status' => 'pending'])
+											 ->get()->getResultArray(),	
+			'e_n'     => $en->selectCount('enrollment_id', 'e')
+									    ->where(['status' => 'pending'])
+									    ->orderBy('submitted_at', 'DESC')
+									    ->get()->getRowArray(),											 
+			'g_n'     => $esc->selectCount('esc_grant_id', 'g')
+									     ->where(['status' => 'pending'])
+									     ->orderBy('assessed_at', 'DESC')
+									     ->get()->getRowArray(),
+    ];
+
+    echo view('registrar/templates/header');
+    echo view('registrar/templates/sidebar', $data);
+		echo view('registrar/templates/topbar');
+		echo view('registrar/assessment/index');
+    echo view('registrar/templates/footer');
+  }
+
+  public function search() {
+    helper(['form', 'url']);
+		$en = new EnrollmentModel();
+		$esc = new EscGrantModel();
+    $enrollment_model = new EnrollmentModel();
+    $c = new ClassModel();
+
+    $search = [
+      'middlename' => esc($this->request->getPost('search')),
+      'lastname'   => esc($this->request->getPost('search')),
+      'suffix'     => esc($this->request->getPost('search')),
+    ];
+    $data = [
+      'enrollments' => $enrollment_model->select('*')
+                                        ->join('students', 'students.student_id = enrollments.student_id')
+                                        ->join('students_class', 'students_class.student_id = students.student_id')
+                                        ->join('class', 'class.class_id = students_class.class_id')
+                                        ->join('students_address', 'students_address.student_id = students.student_id')
+                                        ->join('address', 'address.address_id = students_address.address_id')
+                                        ->groupBy('students.student_id')
+                                        ->like(['firstname'  => esc($this->request->getPost('search'))])
+                                        ->orlike($search)
+                                        ->get()
+                                        ->getResult(),
+      'class'       => $c->findAll(),			
+			'notif_e' => $en->select('*')
+									    ->where(['status' => 'pending'])
+											->orderBy('submitted_at', 'DESC')
+											->limit(5)
+									    ->get()->getResultArray(),					 
+			'notif_g' => $esc->select('*')
+											 ->orderBy('assessed_at', 'DESC')
+											 ->limit(5)
+											 ->where(['status' => 'pending'])
+											 ->get()->getResultArray(),	
+			'e_n'     => $en->selectCount('enrollment_id', 'e')
+									    ->where(['status' => 'pending'])
+									    ->orderBy('submitted_at', 'DESC')
+									    ->get()->getRowArray(),											 
+			'g_n'     => $esc->selectCount('esc_grant_id', 'g')
+									     ->where(['status' => 'pending'])
+									     ->orderBy('assessed_at', 'DESC')
+									     ->get()->getRowArray(),
+    ];
+
+    echo view('registrar/templates/header');
+    echo view('registrar/templates/sidebar', $data);
+		echo view('registrar/templates/topbar');
+		echo view('registrar/assessment/index');
     echo view('registrar/templates/footer');
   }
 
@@ -58,18 +263,16 @@ class Enrollment extends BaseController {
     $enrollment_model         = new EnrollmentModel();
     $address_model            = new AddressModel();
     $student_add_model        = new StudentAddressModel();
-    $student_section_model    = new StudentSectionModel();
-    $section_model            = new SectionModel();
+    $student_class_model      = new StudentClassModel();
+    $class_model              = new ClassModel();
     $course_model             = new CoursesModel();
     $transfereereturnee_model = new TransfereeReturneeModel();
-    
-    
+        
     $rules = [
       'user_img'   => 'uploaded[user_img]|is_image[user_img]',
       'firstname'  => 'required',
       'middlename' => 'required',
       'lastname'   => 'required',
-      'suffix'     => 'required',
       'bday'       => 'required',
       'age'        => 'required',
       'sex'        => 'required',
@@ -79,11 +282,12 @@ class Enrollment extends BaseController {
       'barangay'   => 'required',
       'mun_city'   => 'required',
       'province'   => 'required',
+      'zip'        => 'required',
       'modality'   => 'required',
       'semester'   => 'required',
       'gradelevel' => 'required',
-      'section'    => 'required',
       'course'     => 'required',
+      'class'      => 'required',
     ];
 
     for ($i=0; $i < 2; $i++) {
@@ -94,58 +298,58 @@ class Enrollment extends BaseController {
     }
 
     if(!$this->validate($rules)) {
+      $student_model = new StudentModel();
+
+      $query = $student_model->select('*')
+                             ->join('token_requests', 'token_requests.student_id = students.student_id')
+                             ->join('students_class', 'students_class.student_id = students.student_id')
+                             ->join('class', 'class.class_id = students_class.class_id')
+                             ->getWhere(['token' => session()->get('token')])
+                             ->getResult();
       $data = [
         'validation' => $this->validator,
-        'sections' => $section_model->findAll(),
-        'courses'  => $course_model->getCourses()
+        'student'    => $query,
+        'class'      => $class_model->findAll(),
+        'courses'    => $course_model->getCourses()
       ];
 
-      session()->setFlashData('error', 'Oops Something went wrong. Please don\'t leave an unanswered field.');
+      session()->setTempData('error', 'Oops Something went wrong. Please don\'t leave an unanswered required field.', 3);
       echo view('student/templates/header');
       echo view('student/templates/topbar');
-      echo view('student/enrollment', $data);
+      echo view('student/enrollment_form', $data);
       echo view('student/templates/footer');
     } else {
       // GET STUDENT DATA AND SAVE
       $file = $this->request->getFile('user_img');
       $rand_name = $file->getRandomName();
-      $path = 'assets/students/'.$rand_name;
+      $path = site_url().'assets/students/'.$rand_name;
       $file->move('assets/students/', $rand_name);
 
-      $student = [
-        'user_img'   => esc($path),
-        'firstname'  => esc($this->request->getPost('firstname')),
-        'middlename' => esc($this->request->getPost('middlename')),
-        'lastname'   => esc($this->request->getPost('lastname')),
-        'sex'        => esc($this->request->getPost('sex')),
-        'suffix'     => esc($this->request->getPost('suffix')),
-        'birthdate'  => esc($this->request->getPost('bday')),
-        'age'        => esc($this->request->getPost('age')),
-        'religion'   => esc($this->request->getPost('religion')),
-      ];
+      $student_id = $this->request->getPost('s');
 
-      $student_name = [
+      $student = [
+        'student_id'  => esc($student_id),      
+        'user_img'    => esc($path),
         'firstname'   => esc($this->request->getPost('firstname')),
         'middlename'  => esc($this->request->getPost('middlename')),
         'lastname'    => esc($this->request->getPost('lastname')),
-        'suffix'      => esc($this->request->getPost('suffix'))
+        'sex'         => esc($this->request->getPost('sex')),
+        'suffix'      => esc($this->request->getPost('suffix')),
+        'birthdate'   => esc($this->request->getPost('bday')),
+        'birthplace'  => esc($this->request->getPost('bplace')),
+        'age'         => esc($this->request->getPost('age')),
+        'religion'    => esc($this->request->getPost('religion')),
+        'nationality' => esc($this->request->getPost('natl')),
       ];
 
-      $student_record = $student_model->isDuplicate($student_name);
-
-      if(count($student_record) > 0) {
-        $student['student_id'] = $student_record[0]->student_id;
-        $student_model->save($student);
-      } else {
-        $student_model->save($student);
-        $student_id = $student_model->insertID();
-      }
+      $student_model->save($student);
 
       // GET RETURNEE OR TRANSFEREE DATA AND SAVE
       $last_gradelevel = $this->request->getPost('hea');
       $year_completed  = $this->request->getPost('hea_ay');
       $school_name     = $this->request->getPost('prev_school');
       $school_address  = $this->request->getPost('prev_school_address');
+
       if(isset($last_gradelevel, $year_completed, $school_name, $school_address)){
         $returnee_transferee = [
           'student_id'      => esc($student_id),
@@ -176,6 +380,7 @@ class Enrollment extends BaseController {
         'barangay'          => esc($this->request->getPost('barangay')),
         'city_municipality' => esc($this->request->getPost('mun_city')),
         'province'          => esc($this->request->getPost('province')),
+        'zip_code'          => esc($this->request->getPost('zip')),
       ];
       
       // check if the address exist
@@ -233,14 +438,7 @@ class Enrollment extends BaseController {
         }
       }
 
-      // get section and save
-      $section = [
-        'section_id' => esc($this->request->getPost('section')),
-        'student_id' => esc($student_id)
-      ];
-
-      $student_section_model->save($section);
-
+      session()->destroy();
       // display success message
       return redirect()->to('enrollment/success');
     }
@@ -248,47 +446,114 @@ class Enrollment extends BaseController {
 
   public function request() {
     helper(['form', 'url']);
-    $student_model = new StudentModel();
-    $request_model = new TokenRequestModel();
+    $student_model       = new StudentModel();
+    $request_model       = new TokenRequestModel();
+    $student_class_model = new StudentClassModel();
 
-    $file = $this->request->getFile('user_img');
-    $rand_name = $file->getRandomName();
-    $path = 'assets/students/'.$rand_name;
-    $file->move('assets/students/', $rand_name);
-
-    $student = [
-      'firstname'   => esc($this->request->getPost('firstname')),
-      'middlename'  => esc($this->request->getPost('middlename')),
-      'lastname'    => esc($this->request->getPost('lastname')),
-      'suffix'      => esc($this->request->getPost('suffix')),
-      'contact_num' => esc($this->request->getPost('contact_num')),
-      'email'       => esc($this->request->getPost('email'))
+    $rules = [
+      'user_img'   => 'uploaded[user_img]|is_image[user_img]',
+      'firstname'  => 'required',
+      'middlename' => 'required',
+      'lastname'   => 'required',
+      'class'      => 'required',
+      'email'      => 'required',
+      'sy'         => 'required',
+      'sem'        => 'required',
     ];
 
-    $student_name = [
-      'firstname'   => esc($this->request->getPost('firstname')),
-      'middlename'  => esc($this->request->getPost('middlename')),
-      'lastname'    => esc($this->request->getPost('lastname')),
-      'suffix'      => esc($this->request->getPost('suffix'))
-    ];
+    if($this->validate($rules)){  
+      $res = $student_model->select('student_id')
+                            ->getWhere(['email' => esc($this->request->getPost('email'))])
+                            ->getRowArray();
 
-    $student_record = $student_model->isDuplicate($student_name);
+      if(isset($res) && count($res) > 0) {
+        session()->setTempData('error', 'The email has been used. Please input other email!', 3);
+        return redirect()->to('enrollment');
+      } else {
+        $file = $this->request->getFile('user_img');
+        $rand_name = $file->getRandomName();
+        $path = site_url().'assets/students/'.$rand_name;
+        $file->move('assets/students/', $rand_name);
 
-    if(count($student_record) > 0) {
-      $student['student_id'] = $student_record[0]->student_id;
+        $student = [
+          'user_img'    => esc($path),
+          'firstname'   => esc($this->request->getPost('firstname')),
+          'middlename'  => esc($this->request->getPost('middlename')),
+          'lastname'    => esc($this->request->getPost('lastname')),
+          'contact_num' => esc($this->request->getPost('contact_num')),
+          'email'       => esc($this->request->getPost('email'))
+        ];
+
+        $student_data = [
+          'firstname'   => esc($this->request->getPost('firstname')),
+          'middlename'  => esc($this->request->getPost('middlename')),
+          'lastname'    => esc($this->request->getPost('lastname')),
+          'suffix'      => esc($this->request->getPost('suffix'))
+        ];
+
+        $student_record = $student_model->select('student_id')
+                                        ->getWhere($student_data)
+                                        ->getRowArray();
+
+        if(isset($student_record) && count($student_record) > 0) {
+          $student['student_id'] = $student_record['student_id'];
+        }
+
+        $student_model->save($student);
+
+        $sid = (isset($student_record) && count($student_record) > 0) ? esc($student_record['student_id']) : $student_model->insertID();
+        $sy = $request_model->select('student_id')
+                            ->getWhere([
+                              'acad_year'  => esc($this->request->getPost('sy')), 
+                              'student_id' => esc($sid),
+                              'semester'   => esc($this->request->getPost('sem'))])
+                            ->getRowArray();
+
+        if(isset($sy) && count($sy) > 0) {
+          session()->setTempData('error', 'You can only request a Token once in a Semester!', 3);
+          return redirect()->to('enrollment');
+        } else {
+          $request = [
+            'valid_id'   => esc($path),
+            'student_id' => esc($sid),  
+            'token'      => esc(''),  
+            'acad_year'  => esc($this->request->getPost('sy')), 
+            'semester'   => esc($this->request->getPost('sem')),       
+            'status'     => esc('pending')
+          ];
+
+          $req = $request_model->select('token_request_id')
+                                ->getWhere(['student_id' => esc($sid)])
+                                ->getRowArray();
+
+          if (isset($req) && count($req) > 0) {
+            $request['token_request_id'] = $req['token_request_id'];
+          }
+
+          $request_model->save($request);
+
+          $sc = [
+            'student_id' => esc($sid),
+            'class_id'   => esc($this->request->getPost('class'))
+          ];
+
+          $screq = $student_class_model->select('student_class_id')
+                                        ->getWhere(['student_id' => esc($sid)])
+                                        ->getRowArray();
+
+          if (isset($screq) && count($screq) > 0) {
+            $sc['student_class_id'] = esc($screq['student_class_id']);
+          }
+
+          $student_class_model->save($sc);
+          session()->setTempData('success', 'Token Request Successful, Please wait for thee token to be sent to your Email!', 3);
+          return redirect()->to('/');
+        }
+      }
+    } else {
+      session()->setTempData('error', 'Please Don\'t leave a field with a red asterisk unanswered.', 3);
+      return redirect()->to('enrollment');
     }
-
-    $student_model->save($student);
-
-    $request = [
-      'valid_id'    => esc($path),
-      'student_id'  => (count($student_record) > 0) ? esc($student_record[0]->student_id) : esc($student_model->insertID()),
-      'status'      => esc('pending')
-    ];
-
-    $request_model->save($request);
-    session()->setFlashData('success', 'Request Successful!');
-    return redirect()->to('/');
   }
 
   public function auth($token = NULL) {
@@ -296,29 +561,35 @@ class Enrollment extends BaseController {
       return redirect()->to('/');
     }
 
-    $request_model = new TokenRequestModel();
+    $student_model = new StudentModel();
 
-    $query = $request_model->select('*')
-                           ->join('students', 'students.student_id = token_requests.student_id')
-                           ->where('token', $token)
-                           ->get()
+    $query = $student_model->select('*')
+                           ->join('token_requests', 'token_requests.student_id = students.student_id')
+                           ->join('students_class', 'students_class.student_id = students.student_id')
+                           ->join('class', 'class.class_id = students_class.class_id')
+                           ->getWhere(['token' => $token])
                            ->getResult();
+
+    session()->set('token', $token);
 
     if(count($query) > 0) {      
       helper(['form', 'url']);
-      $section_model = new SectionModel();
+      $class_model = new ClassModel();
       $course_model = new CoursesModel();
 
       $data = [
-        'sections' => $section_model->findAll(),
+        'class'    => $class_model->findAll(),
         'courses'  => $course_model->getCourses(),
-        'student'  => $query
+        'student'  => $query,
       ];
         
       echo view('student/templates/header');
       echo view('student/templates/topbar');
-      echo view('student/enrollment', $data);
+      echo view('student/enrollment_form', $data);
       echo view('student/templates/footer');
-    } else return redirect()->to('enrollment');
+    } else {
+      session()->setTempData('error', 'You are forbidden to access the form.');
+      return redirect()->to('enrollment');
+    }
   }
 }

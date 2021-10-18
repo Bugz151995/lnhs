@@ -4,30 +4,25 @@ function setChart(chart) {
   google.charts.setOnLoadCallback(chart);
 }
 
-function redraw(chart, data) {
+function redraw(chart, data, title, container, haxis, vaxis, d) {
   window.addEventListener('resize', () => {
     // medium above
-    if(window.innerWidth >= 768){
+    var w = container.getBoundingClientRect().width - 50;
 
-        var options = {
-          title: 'Enrolled Student',
-          curveType: 'function',
-          width: 296,
-          legend: { position: 'bottom' }
-        };
+    var options = {
+      title: title,
+      curveType: 'function',
+      width: w,
+      legend: { position: 'bottom' },
+      hAxis: {
+        title: haxis,
+      },
+      vAxis: {
+        title: vaxis
+      },
+      is3D: d
+    };
 
-        chart.draw(data, options);
-
-    } else if (window.innerWidth >= 992){ // large above
-
-        var options = {
-          title: 'Enrolled Student',
-          curveType: 'function',
-          width: 296,
-          legend: { position: 'bottom' }
-        };
-
-        chart.draw(data, options);
-    } 
+    chart.draw(data, options);
   });
 }

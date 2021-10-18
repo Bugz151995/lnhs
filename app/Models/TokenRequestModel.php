@@ -11,6 +11,6 @@ class TokenRequestModel extends Model {
   protected $returnType    = 'array';
   
   protected $allowedFields = [
-    'valid_id', 'token', 'requested_at', 'status', 'student_id'
+    'valid_id', 'token', 'requested_at', 'status', 'student_id', 'acad_year', 'semester'
   ];
 }

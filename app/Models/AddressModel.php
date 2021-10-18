@@ -12,7 +12,7 @@ class AddressModel extends Model {
   protected $returnType    = 'array';
   
   protected $allowedFields = [
-    'address_id', 'street', 'barangay', 'city_municipality', 'province'
+    'address_id', 'street', 'barangay', 'city_municipality', 'province', 'zip_code'
   ];
 
   public function isDuplicate($data) {

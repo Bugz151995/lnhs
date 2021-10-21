@@ -4,7 +4,7 @@
     <h4>Assessment</h4>
     <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="<?= site_url()?>a/dashboard">Home</a></li>
+        <li class="breadcrumb-item"><a href="<?= site_url()?>r/dashboard">Home</a></li>
         <li class="breadcrumb-item active" aria-current="page">Enrollments</li>
         <li class="breadcrumb-item active" aria-current="page">Assessment</li>
       </ol>
@@ -18,8 +18,8 @@
       <!-- learners information -->
       <div class="row">
         <input type="hidden" name="s" value="<?= $enrollments[0]->student_id?>">
-        <input type="hidden" name="e" value="<?= $enrollments[0]->student_id?>">
-        <input type="hidden" name="rt" value="<?= (count($returnee_transferee) > 0) ? $returnee_transferee[0]->transferees_returnee_id : '' ?>">
+        <input type="hidden" name="e" value="<?= $enrollments[0]->enrollment_id?>">
+        <input type="hidden" name="rt" value="<?= (count($returnee_transferee) > 0) ? $returnee_transferee[0]->transferee_returnee_id : '' ?>">
         <input type="hidden" name="a" value="<?= $enrollments[0]->address_id?>">
         <input type="hidden" name="sa" value="<?= $enrollments[0]->student_address_id?>">
         <input type="hidden" name="father_id" value="<?= (isset($relatives[0])) ? $relatives[0]->person_id : ''?>">
@@ -228,13 +228,13 @@
         <div class="form-control form-control-sm ps-4">
           <div class="row">
             <div class="form-check col-auto mb-0">
-              <input class="form-check-input" type="radio" name="returneeortransferee" id="isreturneeortransferee">
+              <input class="form-check-input" type="radio" name="returneeortransferee" value="1" id="isreturneeortransferee">
               <label class="form-check-label" for="isreturneeortransferee">
                 Yes
               </label>
             </div>
             <div class="form-check col-auto mb-0">
-              <input class="form-check-input" type="radio" name="returneeortransferee" checked id="isnotreturneeortransferee">
+              <input class="form-check-input" type="radio" name="returneeortransferee" value="0" checked id="isnotreturneeortransferee">
               <label class="form-check-label" for="isnotreturneeortransferee">
                 No
               </label>
@@ -368,4 +368,39 @@
 </main>
 
 <script src="<?= site_url()?>js/returneeform_toggle.js"></script>
-<script src="<?= site_url()?>js/guardianfield_toggle.js"></script>
+<script>
+window.addEventListener("DOMContentLoaded", () => {
+  const isreturnee_transferee = document.getElementById('isreturneeortransferee');
+  const isnotreturnee_transferee = document.getElementById('isnotreturneeortransferee');
+  const hea = document.getElementById('hea');
+  const hea_ay = document.getElementById('hea_ay');
+  const prev_school = document.getElementById('prev_school');
+  const prev_school_address = document.getElementById('prev_school_address');
+
+  isreturnee_transferee.addEventListener('change', () => {
+    if(isreturnee_transferee.checked) {
+      hea.toggleAttribute('disabled');
+      hea_ay.toggleAttribute('disabled');
+      prev_school.toggleAttribute('disabled');
+      prev_school_address.toggleAttribute('disabled');
+    }
+  });
+  isnotreturnee_transferee.addEventListener('change', () => {
+    if(isnotreturnee_transferee.checked) {
+      hea.toggleAttribute('disabled');
+      hea_ay.toggleAttribute('disabled');
+      prev_school.toggleAttribute('disabled');
+      prev_school_address.toggleAttribute('disabled');
+    }
+  });
+})
+
+<?php if(count($returnee_transferee) > 0):?>  
+  hea.toggleAttribute('disabled');
+  hea_ay.toggleAttribute('disabled');
+  prev_school.toggleAttribute('disabled');
+  prev_school_address.toggleAttribute('disabled');
+  document.getElementById('isreturneeortransferee').setAttribute('checked', true);
+  document.getElementById('isnotreturneeortransferee').removeAttribute('checked');
+<?php endif?>
+</script>

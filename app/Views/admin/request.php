@@ -144,7 +144,7 @@
           <?php endforeach ?>
         <?php else : ?>
           <tr>
-            <td colspan="7"><span class="text-danger fst-italic">No Records Found</span></td>
+            <td colspan="9"><span class="text-danger fst-italic">No Records Found</span></td>
           </tr>
         <?php endif ?>
       </tbody>

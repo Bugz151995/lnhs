@@ -86,7 +86,7 @@
             <div class="col align-self-center justify-self-center">
               <div class="row row-cols-1 row-cols-lg-2 g-3 justify-content-center">
                 <div class="col-auto">
-                  <img src="<?= site_url()?>assets/images/user.jpg" alt="2by2 picture" id="img_preview" style="width: 200px; height: 200px; background-color: rgba(0,0,255,.1);" class="img-fluid img-thumbnail mx-4 rounded">
+                  <img src="<?= site_url()?>assets/images/user.jpg" alt="2by2 picture" id="img_preview" style="width: 150px; height: 150px; background-color: rgba(0,0,255,.1);" class="img-fluid img-thumbnail mx-4 rounded">
                 </div>
                 <div class="col d-flex flex-column justify-content-center">
                   <div class="">
@@ -129,8 +129,6 @@
                 </div>
               </div> 
             </div>
-
-            <hr>
             
             <div class="row row-cols-1 row-cols-lg-3 g-3 mb-3">
               <div class="col">

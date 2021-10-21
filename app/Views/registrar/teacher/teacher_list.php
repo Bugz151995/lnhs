@@ -1,25 +1,10 @@
-<!-- TOAST SCRIPT -->
-<script type="text/javascript">
-  document.addEventListener('DOMContentLoaded', () => {
-    <?php if(session()->getTempData('success')){ ?>
-        toastr.success("<?= session()->getTempData('success'); ?>");
-    <?php }else if(session()->getTempData('error')){  ?>
-        toastr.error("<?= session()->getTempData('error'); ?>");
-    <?php }else if(session()->getTempData('warning')){  ?>
-        toastr.warning("<?= session()->getTempData('warning'); ?>");
-    <?php }else if(session()->getTempData('info')){  ?>
-        toastr.info("<?= session()->getTempData('info'); ?>");
-    <?php } ?>
-  });
-</script>
-
 <main class="container px-5 py-3">
   <!-- breadcrumb -->
   <div class="d-flex justify-content-between">
     <h4>Teacher</h4>
     <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="#">Home</a></li>
+        <li class="breadcrumb-item"><a href="<?= site_url()?>r/dashboard">Home</a></li>
         <li class="breadcrumb-item active" aria-current="page">Teacher</li>
       </ol>
     </nav>

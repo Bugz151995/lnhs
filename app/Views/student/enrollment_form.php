@@ -75,7 +75,7 @@
 
     <!-- INSTRUCTIONS -->
     <div class="modal fade" id="page" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true" aria-hidden="true" aria-labelledby="pageLabel" tabindex="-1">
-      <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
+      <div class="modal-dialog modal-dialog-centered modal-xl modal-dialog-scrollable">
         <div class="modal-content">
           <div class="modal-header bg-primary text-light">
             <h5 class="modal-title" id="pageLabel"><i class="fas fa-list fa-fw me-1"></i>Enrollment Form</h5>
@@ -97,7 +97,7 @@
     <!-- PAGE 1 -->
     <!-- 2x2 pic -->
     <div class="modal fade" id="page0" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true" aria-hidden="true" aria-labelledby="page0Label" tabindex="-1">
-      <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
+      <div class="modal-dialog modal-dialog-centered modal-xl modal-dialog-scrollable">
         <div class="modal-content">
           <div class="modal-header bg-primary text-light">
             <h5 class="modal-title" id="page0Label"><i class="fas fa-list fa-fw me-1"></i>Enrollment Form</h5>
@@ -132,7 +132,7 @@
     <!-- PAGE 2 -->
     <!-- about me -->
     <div class="modal fade" id="page1" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true" aria-labelledby="page1Label" tabindex="-1">
-      <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
+      <div class="modal-dialog modal-dialog-centered modal-xl modal-dialog-scrollable">
         <div class="modal-content">
           <div class="modal-header bg-primary text-light">
             <h5 class="modal-title" id="page1Label"><i class="fas fa-list fa-fw me-1"></i>Enrollment Form</h5>
@@ -202,7 +202,7 @@
     <!-- PAGE 3 -->
     <!-- address -->
     <div class="modal fade" id="page2" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true" aria-hidden="true" aria-labelledby="page2Label" tabindex="-1">
-      <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
+      <div class="modal-dialog modal-dialog-centered modal-xl modal-dialog-scrollable">
         <div class="modal-content">
           <div class="modal-header bg-primary text-light">
             <h5 class="modal-title" id="page2Label"><i class="fas fa-list fa-fw me-1"></i>Enrollment Form</h5>
@@ -250,7 +250,7 @@
 
     <!-- PAGE 4 -->
     <div class="modal fade" id="page3" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true" aria-hidden="true" aria-labelledby="page3Label" tabindex="-1">
-      <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
+      <div class="modal-dialog modal-dialog-centered modal-xl modal-dialog-scrollable">
         <div class="modal-content">
           <div class="modal-header bg-primary text-light">
             <h5 class="modal-title" id="page3Label"><i class="fas fa-list fa-fw me-1"></i>Enrollment Form</h5>
@@ -280,7 +280,7 @@
                     </div>
                   </div>
                   <div class="col-lg-3">
-                    <label for="contact_number" class="form-label"><span class="text-danger">*</span> Contact Number (Father)</label>
+                    <label for="contact_number" class="form-label">Contact Number (Father)</label>
                     <div class="col">
                       <input type="text" class="form-control form-control-sm " name="contact_number_0" value="<?= set_value('contact_number_0')?>" id="contact_number_0" placeholder="Father's Contact Number here...">
                     </div>
@@ -306,7 +306,7 @@
                     </div>
                   </div>
                   <div class="col-lg-3">
-                    <label for="contact_number" class="form-label"><span class="text-danger">*</span> Contact Number (Mother)</label>
+                    <label for="contact_number" class="form-label">Contact Number (Mother)</label>
                     <input type="text" class="form-control form-control-sm " name="contact_number_1" id="contact_number_1" value="<?= set_value('contact_number_1')?>" placeholder="Mother's Contact Number here...">
                   </div>
                 </div>
@@ -369,7 +369,7 @@
 
     <!-- PAGE 5 -->
     <div class="modal fade" id="page4" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true" aria-hidden="true" aria-labelledby="page4Label" tabindex="-1">
-      <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
+      <div class="modal-dialog modal-dialog-centered modal-xl modal-dialog-scrollable">
         <div class="modal-content">
           <div class="modal-header bg-primary text-light">
             <h5 class="modal-title" id="page4Label"><i class="fas fa-list fa-fw me-1"></i>Enrollment Form</h5>
@@ -431,7 +431,7 @@
 
     <!-- PAGE 6 -->
     <div class="modal fade" id="page5" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true" aria-hidden="true" aria-labelledby="page5Label" tabindex="-1">
-      <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
+      <div class="modal-dialog modal-dialog-centered modal-xl modal-dialog-scrollable">
         <div class="modal-content">
           <div class="modal-header bg-primary text-light">
             <h5 class="modal-title" id="page5Label"><i class="fas fa-list fa-fw me-1"></i>Enrollment Form</h5>

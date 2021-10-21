@@ -313,7 +313,6 @@ class Enrollment extends BaseController {
       $rules['firstname_'.$i]      = 'required';
       $rules['lastname_'.$i]       = 'required';
       $rules['middlename_'.$i]     = 'required';
-      $rules['contact_number_'.$i] = 'required';
     }
 
     if(!$this->validate($rules)) {

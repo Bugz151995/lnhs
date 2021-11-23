@@ -76,7 +76,7 @@
       <div class="modal-content">
         <div class="modal-header bg-primary text-light">
           <h5 class="modal-title" id="page0Label"><i class="fas fa-list fa-fw me-1"></i>Enrollment Request Token</h5>
-          <a href="<?= site_url()?>" class="btn-close"></a>
+          <a href="<?= site_url()?>" class="btn-close bg-light me-1"></a>
         </div>
         <div class="modal-body">
           <?= form_open_multipart('enrollment/request')?>

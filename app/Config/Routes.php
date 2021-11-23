@@ -176,7 +176,17 @@ $routes->group('/', function($routes) {
 	// enrollment
 	$routes->group('enrollment', function($routes) {	
 		$routes->get('/', 'Enrollment::index');
-		$routes->post('request', 'Enrollment::request');
+		$routes->group('request', function($routes){
+			$routes->group('new', function($routes){
+				$routes->get('/', 'Enrollment::typeNewEnrollment');
+				$routes->post('submit', 'Enrollment::typeNewRequest');
+			});
+			$routes->group('old', function($routes){
+				$routes->get('/', 'Enrollment::typeOldEnrollment');
+				$routes->post('submit', 'Enrollment::typeOldRequest');
+			});
+		});
+
 		$routes->post('submit', 'Enrollment::create');
 		$routes->post('success', 'Enrollment::success');
 	});
@@ -186,8 +196,7 @@ $routes->group('/', function($routes) {
 		$routes->get('/', 'VoucherManagement::index');	
 		$routes->post('auth', 'VoucherManagement::auth');
 		$routes->post('register', 'VoucherManagement::register');
-	});
-	
+	});	
 });
 
 /*

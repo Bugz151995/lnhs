@@ -66,18 +66,18 @@
     <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
       <div class="modal-content">
         <div class="modal-header bg-primary text-light">
-          <h5 class="modal-title" id="page0Label"><i class="fas fa-list fa-fw me-1"></i>Enrollment Request Token</h5>
+          <h5 class="modal-title" id="page0Label"><i class="fas fa-list fa-fw me-1"></i>Enrollment Request Token - New Student</h5>
           <a href="<?= site_url() ?>" class="btn-close bg-light me-1"></a>
         </div>
         <div class="modal-body">
-          <?= form_open_multipart('enrollment/request') ?>
+          <?= form_open_multipart('enrollment/request/new/submit') ?>
           <!-- learners information -->
           <div class="row g-3 row-cols-1 px-3">
             <!-- 2x2 -->
-            <div class="col align-self-center justify-self-center">
-              <div class="row row-cols-1 row-cols-lg-2 g-3 justify-content-center">
+            <div class="col">
+              <div class="row row-cols-1 row-cols-lg-2 g-3 justify-content-start">
                 <div class="col-auto">
-                  <img src="<?= site_url() ?>assets/images/user.jpg" alt="2by2 picture" id="img_preview" style="width: 150px; height: 150px; background-color: rgba(0,0,255,.1);" class="img-fluid img-thumbnail mx-4 rounded">
+                  <img src="<?= site_url() ?>assets/images/user.jpg" alt="2by2 picture" id="img_preview" style="width: 150px; height: 150px; background-color: rgba(0,0,255,.1);" class="img-fluid img-thumbnail me-4 rounded">
                 </div>
                 <div class="col d-flex flex-column justify-content-center">
                   <div class="">

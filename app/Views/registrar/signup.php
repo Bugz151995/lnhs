@@ -9,15 +9,16 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
 		<link rel="stylesheet" href="<?= site_url()?>css/main.css">
-    <title>Sign-in</title>
+    <link rel="icon" href="<?= site_url()?>assets/images/school_logo.png">
+    <title>Registrar - Lagonoy High School</title>
   </head>
-  <body class="bg-light">
+  <body class="bg-light" style="min-height: 100vh;">
 		<header class="bg-primary fixed-top">
 			<nav class="container navbar navbar-expand-lg navbar-dark">
 				<div class="container-fluid">
 					<a class="navbar-brand d-flex gap-2 align-items-center" href="<?= site_url()?>">
 						<img src="<?= site_url()?>assets/images/school_logo.png" alt="" width="40" class="img-fluid">
-						<span class="d-none d-sm-block">Lagonoy High School</span>
+						<span class="">Lagonoy High School</span>
 					</a>
 					
 					<div class="collapse navbar-collapse offset justify-content-end" id="navbarSupportedContent">
@@ -31,10 +32,11 @@
 				</div>
 			</nav>
 		</header>
+    
     <!-- MAIN CONTENT -->
-		<div  class="d-flex align-items-center" style="height: 100vh">
+		<main  class="d-flex align-items-center py-5 position-relative" style="top: 56px;">
 			<div class="container col-sm-12">
-				<div class="row shadow-lg" style="border-radius: 1rem">
+				<div class="row shadow" style="border-radius: 1rem">
 					<!-- school logo -->
 					<div class="col-12 text-center d-none d-sm-block py-5" style=" background-image: url('<?= site_url()?>assets/images/lagonoybg.jpg'); background-size: cover">
 						<img class="" src="<?= site_url()?>assets/images/school_logo.png" height="150" alt="School Logo">
@@ -44,11 +46,11 @@
 					</div>
 						
 					<!-- form -->
-					<div class="col-12 col-sm-12 p-3 bg-light">
+					<div class="col-12 col-sm-12 p-3 px-5 bg-light">
 						<h4 class="text-center bg-light shadow-sm rounded p-3">Registrar Sign-up</h4>
             
 						<?= form_open('r/auth/signup/submit') ?>
-              <div class="form-group row g-3 mt-3">
+              <div class="form-group row g-3 mt-3 mb-4 justify-content-center">
                 <div class="col-sm-4">
                   <label for="firstName" class="form-label"><span class="text-danger">*</span> First Name</label>
                   <input type="text" name="fname" class="form-control" id="firstName" placeholder="First Name here...">
@@ -64,9 +66,6 @@
                   <input type="text" name="lname" class="form-control" id="surname" placeholder="Last Name here...">
                   <span class="text-danger fst-italic"><?= (isset($validation)) ? $validation->getError('lname') : '' ?></span>
                 </div>
-              </div>
-              
-              <div class="form-group row g-3 mt-3">
                 <div class="col-sm-4">
                   <label for="email" class="form-label"><span class="text-danger">*</span> Email</label>
                   <input type="email" name="em" class="form-control" id="email" placeholder="Email here...">
@@ -79,8 +78,8 @@
                 </div>
               </div>
 
-							<hr>
-              <div class="form-group row g-3 mt-3">
+              <hr>
+              <div class="form-group row g-3 mt-3 mb-5">
                 <div class="col-sm-4">
                   <label for="username" class="form-label"><span class="text-danger">*</span> Username</label>
                   <input type="text" name="uname" class="form-control" id="username" placeholder="Username here...">
@@ -97,8 +96,9 @@
                   <span class="text-danger fst-italic"><?= (isset($validation)) ? $validation->getError('psc') : '' ?></span>
                 </div>
               </div>
-							
-							<div class="d-flex justify-content-between mt-5">
+							<hr>
+
+							<div class="d-flex justify-content-between">
                 <a href="<?= site_url()?>r">Already have Account? Sign-in</a>
 								<button type="submit" class="btn btn-primary">Sign up</button>
 							</div>
@@ -106,7 +106,7 @@
 					</div>
 				</div>
 			</div>
-		</div>
+    </main>
     
     
 		<!-- bootstrap bundle script -->

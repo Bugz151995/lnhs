@@ -18,7 +18,7 @@
 				<div class="container">
 					<a class="navbar-brand d-flex gap-2 align-items-center" href="<?= site_url()?>">
 						<img src="<?= site_url()?>assets/images/school_logo.png" alt="" width="40" class="img-fluid">
-						<span class="">Lagonoy High School</span>
+						<span class="brand-title">Lagonoy High School</span>
 					</a>
 					
 					<div class="collapse navbar-collapse offset justify-content-end" id="navbarSupportedContent">

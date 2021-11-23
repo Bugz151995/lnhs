@@ -683,3 +683,11 @@ body {
     padding: 0 4rem 1.25rem 3.5rem;
   }
 }
+
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@300&display=swap');
+
+.brand-title {
+  font-family: 'Ubuntu', sans-serif;
+  font-weight: bold;
+  text-transform: uppercase;
+}

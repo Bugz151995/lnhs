@@ -3,7 +3,7 @@
       <div class="container-fluid">
         <a class="navbar-brand d-flex gap-2 align-items-center" href="<?= site_url()?>">
           <img src="<?= site_url()?>assets/images/school_logo.png" alt="" width="40" class="img-fluid">
-          <span class="d-none d-sm-block">Lagonoy High School</span>
+          <span class="d-none d-sm-block brand-title">Lagonoy High School</span>
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>

@@ -1,4 +1,4 @@
-<main class="container">
+<main class="container" style="overflow: auto;">
   <section class="row py-5 my-5 py-sm-0 px-2">
     <div class="col-sm-7 text-center text-sm-start d-flex justify-content-center flex-column">
       <h4>Enrollment Made Easy</h4>

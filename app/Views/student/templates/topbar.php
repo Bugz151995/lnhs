@@ -1,4 +1,4 @@
-  <header class="bg-primary sticky-top shadow">
+  <header class="bg-primary sticky-top shadow" style="overflow: hidden;">
     <nav class="container navbar navbar-expand-lg navbar-dark">
       <div class="container-fluid">
         <a class="navbar-brand d-flex gap-2 align-items-center" href="<?= site_url()?>">

@@ -53,18 +53,19 @@
           <thead>
             <tr>
               <th></th>
-              <th scope="col">Date Submitted</th>
+              <th scope="col">Submitted at</th>
               <th scope="col">Image</th>
               <th scope="col">Enrollee's Name</th>
-              <th scope="col">Grade Level</th>
+              <th scope="col">Grade</th>
               <th scope="col">Class</th>
-              <th scope="col">Academic Year</th>
+              <th scope="col">Acad Year</th>
+              <th scope="col">Semester</th>
               <th scope="col">Assessment</th>
               <th scope="col">Schedule</th>
               <th scope="col">Action</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody class="small">
             <?php if(count($enrollments) > 0): ?>
             <?php foreach ($enrollments as $key => $enrollment): ?>
               <tr class="align-middle">
@@ -89,6 +90,7 @@
                 <td><?= $enrollment->grade_level ?></td>
                 <td class="text-nowrap"><?= $enrollment->class_name ?></td>
                 <td><?= $enrollment->acad_year ?></td>
+                <td><?= $enrollment->semester ?></td>
                 <td class="text-nowrap">
                   <?php if($enrollment->status == 'pending'): ?>
                     <span class="alert alert-warning p-1 mb-0"><i class="fas fa-exclamation-circle me-1"></i><?= $enrollment->status ?></span>
@@ -126,7 +128,7 @@
             <?php endforeach?>
             <?php else: ?>
                 <tr>
-                  <td colspan="8"><span class="text-danger fst-italic">No Records Found!</span></td>
+                  <td colspan="11"><span class="text-danger fst-italic">No Records Found!</span></td>
                 </tr>
             <?php endif ?>
           </tbody>

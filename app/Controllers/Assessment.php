@@ -17,6 +17,7 @@ use App\Models\TeacherModel;
 use \App\Models\CoursesModel;
 use \App\Models\RegistrarModel;
 use \App\Models\TransfereeReturneeModel;
+use CodeIgniter\I18n\Time;
 
 class Assessment extends BaseController {
   public function index() {
@@ -41,6 +42,7 @@ class Assessment extends BaseController {
 
   public function viewEnrollment($student_id) {
     helper(['form', 'url']);
+    $myTime = new Time('now', 'Asia/Manila', 'en_US');
 		$r                        = new RegistrarModel();
     $class_model              = new ClassModel();
     $course_model             = new CoursesModel();
@@ -80,6 +82,7 @@ class Assessment extends BaseController {
                         ->where(['status' => 'pending'])
                         ->orderBy('assessed_at', 'DESC')
                         ->get()->getRowArray(),
+      'now'     => $myTime
     ];
 
     echo view('registrar/templates/header');
@@ -93,6 +96,7 @@ class Assessment extends BaseController {
     helper(['form', 'url']);    
     
     $rules = [
+      'user_img'           => 'uploaded[user_img]|is_image[user_img]',
       'firstname'          => 'required',
       'middlename'         => 'required',
       'lastname'           => 'required',
@@ -107,6 +111,7 @@ class Assessment extends BaseController {
       'province'           => 'required',
       'modality'           => 'required',
       'semester'           => 'required',
+      'sy'                 => 'required',
       'gradelevel'         => 'required',
       'class'              => 'required',
       'course'             => 'required',
@@ -135,9 +140,16 @@ class Assessment extends BaseController {
       $class_model              = new ClassModel();
       $course_model             = new CoursesModel();
       $transfereereturnee_model = new TransfereeReturneeModel();
+
+      $file = $this->request->getFile('user_img');
+      $rand_name = $file->getRandomName();
+      $path = site_url().'assets/students/'.$rand_name;
+      $file->move('assets/students/', $rand_name);
+
       // GET STUDENT DATA AND UPDATE
       $student = [
         'student_id' => esc($this->request->getPost('s')),
+        'user_img'   => esc($path),
         'lrn'        => esc($this->request->getPost('lrn')),
         'firstname'  => esc($this->request->getPost('firstname')),
         'middlename' => esc($this->request->getPost('middlename')),
@@ -175,6 +187,7 @@ class Assessment extends BaseController {
       $enrollment = [
         'enrollment_id'      => esc($this->request->getPost('e')),
         'learning_modality'  => esc($this->request->getPost('modality')),
+        'acad_year'          => esc($this->request->getPost('sy')),
         'student_id'         => esc($this->request->getPost('s')),
         'course_id'          => esc($this->request->getPost('course')),
         'semester'           => esc($this->request->getPost('semester')),

@@ -56,10 +56,15 @@
           <script>
             function enrolledChart() {
               var data = google.visualization.arrayToDataTable([
-                ['Academic Year', 'Enrollees'],                
-                <?php foreach ($approved as $key => $a) :?>
-                ['<?= $a['acad_year']?>', <?= $a['approved']?>],
-                <?php endforeach ?>
+                <?php if (count($approved) != 0) :?>
+                  ['Academic Year', 'Enrollees'],
+                  <?php foreach ($approved as $key => $a) :?>
+                  ['<?= $a['acad_year']?>', <?= $a['approved']?>],
+                  <?php endforeach ?>
+                <?php else : ?>
+                  ['Academic Year', 'Enrollees'],
+                  ['0', 0]
+                <?php endif?>
               ]);
 
               var options = {
@@ -77,7 +82,7 @@
 
               var container = document.getElementById('curve_chart');
 
-              redraw(chart, data, 'Enrolled Students',container,'','Enrollees');
+              redraw(chart, data, 'Enrolled Students', container, '','Enrollees');
             }
 
             document.addEventListener("DOMContentLoaded", function() {
@@ -92,10 +97,14 @@
             
             function strandsChart() {
               var data = google.visualization.arrayToDataTable([
-                ['Task', 'Senior High Strand'],              
-                <?php foreach ($e_strand as $key => $a) :?>
-                ['<?= $a['strand_name']?>', <?= $a['approved']?>],
-                <?php endforeach ?>
+                <?php if (count($e_strand) > 0) :?>     
+                ['Task', 'Senior High Strand'],         
+                  <?php foreach ($e_strand as $key => $a) :?>
+                    ['<?= $a['strand_name']?>', <?= $a['approved']?>],
+                  <?php endforeach ?>
+                <?php else : ?>
+                  ['', '']
+                <?php endif ?>
               ]);
 
               var options = {
@@ -128,10 +137,15 @@
           <script>
             function drawBasic() {
               var data = google.visualization.arrayToDataTable([
-                ['Academic Year', 'Grantees'],                
-                <?php foreach ($esc_grant as $key => $a) :?>
-                ['<?= $a['acad_year']?>', <?= $a['approved']?>],
-                <?php endforeach ?>
+                <?php if (count($esc_grant) > 0) :?>   
+                  ['Academic Year', 'Grantees'],             
+                  <?php foreach ($esc_grant as $key => $a) :?>
+                  ['<?= $a['acad_year']?>', <?= $a['approved']?>],
+                  <?php endforeach ?>
+                <?php else:?>
+                  ['Academic Year', 'Enrollees'],
+                  ['0', 0]
+                <?php endif?>
               ]);
 
               var options = {

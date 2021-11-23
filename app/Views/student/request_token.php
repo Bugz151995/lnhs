@@ -91,7 +91,7 @@
                 <div class="col d-flex flex-column justify-content-center">
                   <div class="">
                   <label for="user_img" class="form-label"><span class="text-danger">*</span> ID Picture</label>
-                    <input type="file" name="user_img" value="<?= set_value('user_img')?>" id="user_img" class="form-control form-control-sm">
+                    <input type="file" name="user_img" id="user_img" class="form-control form-control-sm text-primary">
                   </div>
                   <p class="text-danger fst-italic">Please upload your student ID. and fill up the form to request for a unique token.</p>
                 </div>
@@ -104,28 +104,28 @@
             <div class="col mt-4">
               <div class="row row-cols-1 row-cols-lg-3 g-3 mb-3">
                 <div class="col">
-                  <label for="firstname" class="form-label"><span class="text-danger">*</span> First name</label>
-                  <input type="text" class="form-control form-control-sm" name="firstname" value="<?= set_value('firstname')?>" id="firstname" placeholder="First Name here...">
+                  <label for="firstname" class="form-label"><span class="text-danger">*</span> Firstname</label>
+                  <input type="text" class="form-control form-control-sm text-primary" name="firstname" value="<?= set_value('firstname')?>" id="firstname" placeholder="First Name here...">
                 </div>
                 <div class="col">
-                  <label for="middlename" class="form-label"><span class="text-danger">*</span> Middle name</label>
-                  <input type="text" id="middlename" name="middlename" value="<?= set_value('middlename')?>" class="form-control form-control-sm" placeholder="Middle Name here..."> 
+                  <label for="middlename" class="form-label"><span class="text-danger">*</span> Middlename</label>
+                  <input type="text" id="middlename" name="middlename" value="<?= set_value('middlename')?>" class="form-control form-control-sm text-primary" placeholder="Middle Name here..."> 
                 </div>
                 <div class="col">
-                  <label for="lastname" class="form-label"><span class="text-danger">*</span> Last Name</label>
-                  <input type="text" class="form-control form-control-sm " id="lastname" name="lastname" value="<?= set_value('lastname')?>" placeholder="Last Name here...">
+                  <label for="lastname" class="form-label"><span class="text-danger">*</span> Lastname</label>
+                  <input type="text" class="form-control form-control-sm text-primary " id="lastname" name="lastname" value="<?= set_value('lastname')?>" placeholder="Last Name here...">
                 </div>
                 <div class="col">
                   <label for="nameextension" class="form-label"> Name Extension</label>
-                  <input type="text" class="form-control form-control-sm " id="nameextension" name="suffix" value="<?= set_value('suffix')?>" placeholder="Name Extendsion here...">
+                  <input type="text" class="form-control form-control-sm text-primary " id="nameextension" name="suffix" value="<?= set_value('suffix')?>" placeholder="Name Extendsion here...">
                 </div>
                 <div class="col">
                   <label for="contact_num" class="form-label"><span class="text-danger">*</span> Contact Number</label>
-                  <input type="text" class="form-control form-control-sm " id="contact_num" name="contact_num" value="<?= set_value('contact_num')?>" placeholder="Contact Number here...">
+                  <input type="text" class="form-control form-control-sm text-primary " id="contact_num" name="contact_num" value="<?= set_value('contact_num')?>" placeholder="Contact Number here...">
                 </div>
                 <div class="col">
                   <label for="email" class="form-label"><span class="text-danger">*</span> Email</label>
-                  <input type="email" class="form-control form-control-sm " id="email" name="email" value="<?= set_value('email')?>" placeholder="Email here...">
+                  <input type="email" class="form-control form-control-sm text-primary " id="email" name="email" value="<?= set_value('email')?>" placeholder="Email here...">
                 </div>
               </div> 
             </div>
@@ -133,7 +133,7 @@
             <div class="row row-cols-1 row-cols-lg-3 g-3 mb-3">
               <div class="col">
                 <label for="class" class="form-label"><span class="text-danger">*</span> Class</label>
-                <select name="class" id="" class="form-select form-select-sm">
+                <select name="class" id="" class="form-select form-select-sm text-primary">
                   <option value="" selected disabled>Select a Class...</option>
                   <?php foreach($class as $key => $c) : ?>
                     <option value="<?= $c['class_id']?>" <?= (isset($enrollments)) ? set_select('class', $enrollments[0]->grade_level, TRUE) : set_select('class', $c['class_id']) ?>><?= $c['class_name']?></option>
@@ -142,7 +142,7 @@
               </div>
               <div class="col">
                 <label for="sy" class="form-label"><span class="text-danger">*</span> Academic Year</label>
-                <select name="sy" id="sy" class="form-select form-select-sm">
+                <select name="sy" id="sy" class="form-select form-select-sm text-primary">
                   <option value="" selected disabled>Select Academic Year...</option>
                   <?php for ($i=0; $i < 5; $i++) : ?>
                     <?php 
@@ -159,7 +159,7 @@
               </div>
               <div class="col">
                 <label for="sem" class="form-label"><span class="text-danger">*</span> Semester</label>
-                <select name="sem" id="" class="form-select form-select-sm">
+                <select name="sem" id="" class="form-select form-select-sm text-primary">
                   <option value="" selected disabled>Select a Semester...</option>
                   <option value="1">1st Semester</option>
                   <option value="2">2nd Semester</option>

@@ -78,7 +78,7 @@ class Teacher extends BaseController {
     echo view('registrar/templates/header');
     echo view('registrar/templates/sidebar', $data);
 		echo view('registrar/templates/topbar');
-		echo view('registrar/teacher/teacher_list');
+		echo view('registrar/teacher/add_teacher');
     echo view('registrar/templates/footer');
   }
 
@@ -327,7 +327,6 @@ class Teacher extends BaseController {
       ];
 
       $data = [		
-        'user'    => $r->find(session()->get('registrar')),
         'notif_e' => $en->select('*')
                         ->where(['status' => 'pending'])
                         ->orderBy('submitted_at', 'DESC')

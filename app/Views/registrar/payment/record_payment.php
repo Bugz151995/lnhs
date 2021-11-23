@@ -19,7 +19,7 @@
   <div class="d-flex gap-4 justify-content-end mb-5">
     <button class="btn btn-danger btn-sm" onclick="print('p_information', 'payment_summary_report_<?= date('now')?>', 'portrait')"><i class="fas fa-download"></i> Download</button>
 
-    <button type="button" <?= ($c_payment['amount'] <= $all_fees) ? 'disabled' : '' ?>  class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#receivePayment">
+    <button type="button" <?= (isset($c_payment) && $c_payment['balance'] <= 0) ? 'disabled' : '' ?>  class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#receivePayment">
       <i class="fas fa-cash-register me-1"></i> Receive Payment
     </button>
   </div>
@@ -80,21 +80,21 @@
             <th>Payment Status:</th>
             <td>
               <?php if(count($payment) > 0) : ?>
-                <?php if($c_payment['amount'] <= $all_fees): ?>
-                  <div class="alert alert-success p-1 mb-0">
-                    <strong>
-                      <i class="fas fa-check-circle me-1 fa-fw"></i> 
-                      <span class="text-capitalize">
-                        Fully Paid
-                      </span>
-                    </strong>
-                  </div>
-                <?php else: ?>
+                <?php if($c_payment['balance'] > 0): ?>
                   <div class="alert alert-warning p-1 mb-0">
                     <strong>
                       <i class="fas fa-exclamation-circle me-1 fa-fw"></i> 
                       <span class="text-capitalize">
                         Partially Paid
+                      </span>
+                    </strong>
+                  </div>
+                <?php else: ?>
+                  <div class="alert alert-success p-1 mb-0">
+                    <strong>
+                      <i class="fas fa-check-circle me-1 fa-fw"></i> 
+                      <span class="text-capitalize">
+                        Fully Paid
                       </span>
                     </strong>
                   </div>

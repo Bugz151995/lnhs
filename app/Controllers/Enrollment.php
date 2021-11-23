@@ -56,7 +56,7 @@ class Enrollment extends BaseController {
                                     ->join('class', 'class.class_id = students_class.class_id')
                                     ->join('students_address', 'students_address.student_id = students.student_id')
                                     ->join('address', 'address.address_id = students_address.address_id')
-                                    ->groupBy('students.student_id')
+                                    ->groupBy('enrollments.student_id, enrollments.acad_year')
                                     ->get()
                                     ->getResult();
 
@@ -306,6 +306,7 @@ class Enrollment extends BaseController {
       'semester'   => 'required',
       'gradelevel' => 'required',
       'course'     => 'required',
+      'sy'         => 'required',
       'class'      => 'required',
     ];
 
@@ -317,6 +318,7 @@ class Enrollment extends BaseController {
 
     if(!$this->validate($rules)) {
       $student_model = new StudentModel();
+      $myTime = new Time('now', 'Asia/Manila', 'en_US');
 
       $query = $student_model->select('*')
                              ->join('token_requests', 'token_requests.student_id = students.student_id')
@@ -328,7 +330,8 @@ class Enrollment extends BaseController {
         'validation' => $this->validator,
         'student'    => $query,
         'class'      => $class_model->findAll(),
-        'courses'    => $course_model->getCourses()
+        'courses'    => $course_model->getCourses(),
+        'now'        => $myTime
       ];
 
       session()->setTempData('error', 'Oops Something went wrong. Please don\'t leave an unanswered required field.', 3);
@@ -384,6 +387,7 @@ class Enrollment extends BaseController {
       $enrollment = [
         'learning_modality' => esc($this->request->getPost('modality')),
         'grade_level'       => esc($this->request->getPost('gradelevel')),
+        'acad_year'         => esc($this->request->getPost('sy')),
         'student_id'        => esc($student_id),
         'course_id'         => esc($this->request->getPost('course')),
         'semester'          => esc($this->request->getPost('semester')),
@@ -410,7 +414,15 @@ class Enrollment extends BaseController {
         $address_id = $address_model->insertID();
       }
 
+      $said = null;
+      // check if the student address exist
+      $student_add_record = $student_add_model->isDuplicate(['student_id' => esc($student_id)]);
+      if(count($student_add_record) != 0) {
+        $said = $student_add_record[0]->student_address_id;
+      }
+
       $student_address = [
+        'student_address_id' => $said,
         'address_id' => esc($address_id),
         'student_id' => esc($student_id)
       ];
@@ -502,7 +514,7 @@ class Enrollment extends BaseController {
           'email'       => esc($this->request->getPost('email'))
         ];
 
-        $student_data = [
+        $student_name = [
           'firstname'   => esc($this->request->getPost('firstname')),
           'middlename'  => esc($this->request->getPost('middlename')),
           'lastname'    => esc($this->request->getPost('lastname')),
@@ -510,7 +522,7 @@ class Enrollment extends BaseController {
         ];
 
         $student_record = $student_model->select('student_id')
-                                        ->getWhere($student_data)
+                                        ->getWhere($student_name)
                                         ->getRowArray();
 
         if(isset($student_record) && count($student_record) > 0) {
@@ -522,7 +534,7 @@ class Enrollment extends BaseController {
         $sid = (isset($student_record) && count($student_record) > 0) ? esc($student_record['student_id']) : $student_model->insertID();
         $sy = $request_model->select('student_id')
                             ->getWhere([
-                              'acad_year'  => esc($this->request->getPost('sy')), 
+                              'acad_year'  => esc($this->request->getPost('sy')),
                               'student_id' => esc($sid),
                               'semester'   => esc($this->request->getPost('sem'))])
                             ->getRowArray();
@@ -569,8 +581,22 @@ class Enrollment extends BaseController {
         }
       }
     } else {
+      helper(['form', 'url']);
+      $class_model = new ClassModel();
+      $course_model = new CoursesModel();
+      $myTime = new Time('now', 'Asia/Manila', 'en_US');
+  
+      $data = [
+        'class' => $class_model->findAll(),
+        'courses'  => $course_model->getCourses(),
+        'now'      => $myTime
+      ];
+  
       session()->setTempData('error', 'Please Don\'t leave a field with a red asterisk unanswered.', 3);
-      return redirect()->to('enrollment');
+      echo view('student/templates/header');
+      echo view('student/templates/topbar');
+      echo view('student/request_token', $data);
+      echo view('student/templates/footer');
     }
   }
 
@@ -594,11 +620,13 @@ class Enrollment extends BaseController {
       helper(['form', 'url']);
       $class_model = new ClassModel();
       $course_model = new CoursesModel();
+      $myTime = new Time('now', 'Asia/Manila', 'en_US');
 
       $data = [
         'class'    => $class_model->findAll(),
         'courses'  => $course_model->getCourses(),
         'student'  => $query,
+        'now'      => $myTime
       ];
         
       echo view('student/templates/header');

@@ -13,15 +13,15 @@
   <!-- sort and search tool -->
   <div class="d-flex justify-content-between py-5">
     <!-- Button trigger modal -->    
-    <a href="<?= site_url()?>r/teacher_list/add" class="btn btn-primary"><i class="fas fa-plus-square"></i> New Teacher</a>
+    <a href="<?= site_url()?>r/teacher_list/add" class="btn btn-sm btn-primary"><i class="fas fa-plus-square"></i> New Teacher</a>
     <div class="d-flex gap-3">
-      <a href="<?= site_url()?>r/teacher_list" class="btn btn-primary">Show All</a>
+      <a href="<?= site_url()?>r/teacher_list" class="btn btn-sm btn-primary">Show All</a>
       <?= form_open('r/teacher_list/search') ?>
         <?= csrf_field() ?>
         <div class="input-group">
           <div class="input-group-text bg-white border-0"><i class="fas fa-search"></i></div>
-          <input type="search" name="searchteacher" id="searchteacher" class="form-control border-0" placeholder="Search Teacher...">
-          <input type="button" value="Search" class="btn btn-primary">
+          <input type="search" name="searchteacher" id="searchteacher" class="form-control form-control-sm border-0" placeholder="Search Teacher...">
+          <input type="button" value="Search" class="btn btn-sm btn-primary">
         </div>
       <?= form_close() ?>
     </div>
@@ -38,7 +38,7 @@
           <th>Action</th>
         </tr>
       </thead>
-      <tbody>
+      <tbody class="small">
         <?php if(isset($teachers) && count($teachers) > 0): ?>
         <?php foreach ($teachers as $key => $t) :?>
           <tr>
@@ -153,6 +153,7 @@
     </div>
   </div>
 </div>
+
 <script>
   document.getElementById('img').onchange = evt => {
     const [file] = document.getElementById('img').files

@@ -65,7 +65,7 @@
             <th>Action</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody class="small">
           <?php if(isset($applications) && count($applications) > 0): ?>
           <?php foreach ($applications as $key => $a) :?>
             <tr>
@@ -97,11 +97,11 @@
                 <?php endif ?>
               </td>
               <td>
-                <?= form_open('r/esc_request/verify') ?>
+                <?= form_open('r/esc_approved/view') ?>
                   <?= csrf_field() ?>
                   <?= form_hidden('e', esc($a['esc_application_id'])) ?>
                   <?= form_hidden('s', esc($a['student_id'])) ?>
-                  <button type="submit" class="btn btn-sm btn-primary">Verify</button>
+                  <button type="submit" class="btn btn-sm btn-primary"><i class="fas fa-edit"></i></button>
                 <?= form_close() ?>
               </td>
             </tr>

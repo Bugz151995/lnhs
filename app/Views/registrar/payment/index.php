@@ -52,18 +52,18 @@
       <thead>
         <tr>
           <th></th>
-          <th scope="col">Date Submitted</th>
+          <th scope="col">Submitted at</th>
           <th scope="col">Image</th>
           <th scope="col">Enrollee's Name</th>
-          <th scope="col">Grade Level</th>
+          <th scope="col">Grade</th>
           <th scope="col">Class</th>
-          <th scope="col">Academic Year</th>
+          <th scope="col">Acad Year</th>
           <th scope="col">Balance</th>
           <th scope="col">Status</th>
           <th scope="col">Action</th>
         </tr>
       </thead>
-      <tbody>
+      <tbody class="small">
         <?php if(count($enrollments) > 0): ?>
         <?php foreach ($enrollments as $key => $enrollment): ?>
           <tr class="align-middle">

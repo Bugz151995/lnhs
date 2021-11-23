@@ -38,7 +38,7 @@
           <th>Action</th>
         </tr>
       </thead>
-      <tbody>
+      <tbody class="small">
         <?php if(isset($teachers) && count($teachers) > 0): ?>
         <?php foreach ($teachers as $key => $t) :?>
           <tr>

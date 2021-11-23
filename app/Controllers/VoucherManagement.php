@@ -322,7 +322,7 @@ class VoucherManagement extends BaseController {
 
     $esc->save($data);
     session()->setTempData('success','The ESC Application of the student was successfully approved!',3);
-    return redirect()->to('r/esc_request');
+    return redirect()->to('r/esc_approved');
   }
 
   public function denyesc() {
@@ -342,7 +342,7 @@ class VoucherManagement extends BaseController {
 
     $esc->save($data);
     session()->setTempData('warning','The ESC Application of the student was denied!',3);
-    return redirect()->to('r/esc_request');
+    return redirect()->to('r/esc_denied');
   }
 
   public function approved() {
@@ -655,7 +655,7 @@ class VoucherManagement extends BaseController {
 
   public function view() {
     helper(['form', 'url']);
-    $esc = new EscApplicationModel();
+    $esca = new EscApplicationModel();
     $re = new RelationModel();
 		$en = new EnrollmentModel();
 		$esc = new EscGrantModel();
@@ -681,7 +681,7 @@ class VoucherManagement extends BaseController {
 									     ->where(['status' => 'pending'])
 									     ->orderBy('assessed_at', 'DESC')
 									     ->get()->getRowArray(),
-      'application' => $esc->join('students', 'students.student_id = esc_applications.student_id')
+      'application' => $esca->join('students', 'students.student_id = esc_applications.student_id')
                            ->join('students_class', 'students_class.student_id = students.student_id')
                            ->join('students_address', 'students_address.student_id = students.student_id')
                            ->join('address', 'address.address_id = students_address.address_id')

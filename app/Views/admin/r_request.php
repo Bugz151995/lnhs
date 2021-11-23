@@ -59,7 +59,7 @@
         <th>Action</th>
       </tr>
     </thead>
-    <tbody>
+    <tbody class="small">
       <?php if(count($registrar) != 0) : ?>
         <?php foreach($registrar as $key => $r) : ?>
         <tr>

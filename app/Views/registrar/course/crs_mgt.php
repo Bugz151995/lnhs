@@ -34,7 +34,7 @@
         <div class="col-auto">
           <?= form_open('r/crs_mgt/search') ?>
           <?= csrf_field() ?>
-          <div class="input-group input-group-sm">
+          <div class="input-group input-group-sm text-uppercase">
             <select name="searchstrand" id="searchstrand" class="form-select">
               <option value="" selected disabled>Select a Strand</option>
               <?php foreach ($track_strands as $key => $strand):?>
@@ -188,7 +188,7 @@
           <th>Action</th>
         </tr>
       </thead>
-      <tbody class="align-middle text-center text-uppercase">
+      <tbody class="align-middle text-center text-uppercase small">
         <?php if(count($course) > 0): ?>
           <?php for ($i=0; $i < count($course); $i++) :?>
             <tr>

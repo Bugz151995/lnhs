@@ -222,7 +222,7 @@
           <th>Action</th>
         </tr>
       </thead>
-      <tbody class="text-center align-middle">
+      <tbody class="text-center align-middle small">
         <?php if(isset($schedules) && count($schedules) > 0) : ?>
           <?php $row_num = count($schedules) ?>
           <?php for($i=0; $i < $row_num; $i++) :?>

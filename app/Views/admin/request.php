@@ -84,7 +84,7 @@
           <th>Action</th>
         </tr>
       </thead>
-      <tbody>
+    <tbody class="small">
         <?php if(count($students) != 0) : ?>
           <?php foreach($students as $key => $student) : ?>
           <tr>

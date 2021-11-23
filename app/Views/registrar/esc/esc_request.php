@@ -46,6 +46,7 @@
       <?= form_close() ?>
     </div>
   </section>
+
   <section class="mb-5">
     <div class="table-responsive">
       <table class="table table-bordered table-striped align-middle text-center">
@@ -61,7 +62,7 @@
             <th>Action</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody class="small">
           <?php if(isset($applications) && count($applications) > 0): ?>
           <?php foreach ($applications as $key => $a) :?>
             <tr>

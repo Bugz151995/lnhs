@@ -125,7 +125,7 @@
           </div>
           <div class="card-body p-0 shadow">
             <button type="button" class="w-100 btn btn-lg btn-outline-primary p-3"><i class="fas fa-chevron-right"></i> Harmony in Diversity</button>
-          </div>1
+          </div>
         </div>
       </div>
       <div class="col">

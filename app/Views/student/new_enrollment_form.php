@@ -448,13 +448,13 @@
               <div class="form-control  form-control-sm text-primary ps-4">
                 <div class="row">
                   <div class="form-check col-auto mb-0">
-                    <input class="form-check-input" type="radio" name="semester" value="1" id="firstsem" <?= set_radio('semester', '1') ?>>
+                    <input class="form-check-input" type="radio" name="semester" value="1" id="firstsem" <?= ($student[0]->semester == '1') ? set_radio('semester', '1', TRUE) : set_radio('semester', '1') ?>>
                     <label class="form-check-label" for="firstsem">
                       1st Sem
                     </label>
                   </div>
                   <div class="form-check col-auto mb-0">
-                    <input class="form-check-input" type="radio" name="semester" value="2" id="secondsem" <?= set_radio('semester', '2') ?>>
+                    <input class="form-check-input" type="radio" name="semester" value="2" id="secondsem" <?= ($student[0]->semester == '2') ? set_radio('semester', '2', TRUE) : set_radio('semester', '2') ?>>
                     <label class="form-check-label" for="secondsem">
                       2nd Sem
                     </label>

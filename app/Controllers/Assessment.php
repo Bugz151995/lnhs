@@ -96,7 +96,7 @@ class Assessment extends BaseController {
     helper(['form', 'url']);    
     
     $rules = [
-      'user_img'           => 'uploaded[user_img]|is_image[user_img]',
+      'user_img'           => 'permit_empty|is_image[user_img]',
       'firstname'          => 'required',
       'middlename'         => 'required',
       'lastname'           => 'required',
@@ -142,14 +142,10 @@ class Assessment extends BaseController {
       $transfereereturnee_model = new TransfereeReturneeModel();
 
       $file = $this->request->getFile('user_img');
-      $rand_name = $file->getRandomName();
-      $path = site_url().'assets/students/'.$rand_name;
-      $file->move('assets/students/', $rand_name);
 
       // GET STUDENT DATA AND UPDATE
       $student = [
         'student_id' => esc($this->request->getPost('s')),
-        'user_img'   => esc($path),
         'lrn'        => esc($this->request->getPost('lrn')),
         'firstname'  => esc($this->request->getPost('firstname')),
         'middlename' => esc($this->request->getPost('middlename')),
@@ -160,6 +156,13 @@ class Assessment extends BaseController {
         'age'        => esc($this->request->getPost('age')),
         'religion'   => esc($this->request->getPost('religion')),
       ];
+
+      if ($file->isValid()) {
+        $rand_name = $file->getRandomName();
+        $path = site_url().'assets/students/'.$rand_name;
+        $file->move('assets/students/', $rand_name);
+        $student['user_img'] = $path;
+      }      
 
       $student_model->save($student);
 

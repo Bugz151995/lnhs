@@ -62,11 +62,6 @@
                 <?= form_hidden('teacher_id', esc($t['teacher_id'])) ?>
                 <button type="submit" class="btn btn-sm btn-primary"><i class="fas fa-edit"></i></button>
               <?= form_close() ?>
-              <?= form_open('r/teacher_list/confirm_delete') ?>
-                <?= csrf_field() ?>
-                <?= form_hidden('teacher_id', esc($t['teacher_id'])) ?>
-                <button type="submit" class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i></button>
-              <?= form_close() ?>
               </div>
             </td>
           </tr>

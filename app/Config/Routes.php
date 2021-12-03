@@ -125,8 +125,6 @@ $routes->group('r', function($routes) {
 		$routes->get('add', 'Teacher::viewnewteacher');
 		$routes->post('edit', 'Teacher::vieweditteacher');
 		$routes->post('save', 'Teacher::edit');
-		$routes->post('confirm_delete', 'Teacher::viewdeleteteacher');
-		$routes->post('delete', 'Teacher::delete');
 		$routes->post('create', 'Teacher::create');
 		$routes->post('search', 'Teacher::search');
 	});

@@ -120,43 +120,6 @@ class Teacher extends BaseController {
     echo view('registrar/templates/footer');
   }
 
-  public function viewdeleteteacher() {    
-		helper('form');		
-    $t = new TeacherModel();
-		$r = new RegistrarModel();
-		$en = new EnrollmentModel();
-		$esc = new EscGrantModel();
-
-    $data = [
-      'user'       => $r->find(session()->get('registrar')),
-			'notif_e' => $en->select('*')
-									    ->where(['status' => 'pending'])
-											->orderBy('submitted_at', 'DESC')
-											->limit(5)
-									    ->get()->getResultArray(),					 
-			'notif_g' => $esc->select('*')
-											 ->orderBy('assessed_at', 'DESC')
-											 ->limit(5)
-											 ->where(['status' => 'pending'])
-											 ->get()->getResultArray(),	
-			'e_n'     => $en->selectCount('enrollment_id', 'e')
-									    ->where(['status' => 'pending'])
-									    ->orderBy('submitted_at', 'DESC')
-									    ->get()->getRowArray(),											 
-			'g_n'     => $esc->selectCount('esc_grant_id', 'g')
-									     ->where(['status' => 'pending'])
-									     ->orderBy('assessed_at', 'DESC')
-									     ->get()->getRowArray(),
-      'teacher_id' => esc($this->request->getPost('teacher_id')),
-      'teachers'   => $t->findAll()
-    ];
-    echo view('registrar/templates/header');
-    echo view('registrar/templates/sidebar', $data);
-		echo view('registrar/templates/topbar');
-		echo view('registrar/teacher/delete_teacher');
-    echo view('registrar/templates/footer');
-  }
-
   public function create() {
     helper('form');		
     $t = new TeacherModel();
@@ -213,16 +176,7 @@ class Teacher extends BaseController {
 
       session()->setTempData('success', 'New Teacher has been successfully added!', 7);
       return redirect()->to('r/teacher_list');
-    }
-    
-  }
-
-  public function delete() {
-    $t = new TeacherModel();
-    $data['teacher_id'] = esc($this->request->getPost('teacher_id'));
-    $t->delete($data);
-    session()->setTempData('success', 'The Teacher has been successfully deleted!', 7);
-    return redirect()->to('r/teacher_list');
+    }    
   }
 
   public function edit() {

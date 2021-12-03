@@ -56,23 +56,23 @@ class VoucherManagement extends BaseController {
 
       $student = $s->select('*')
                    ->getWhere($data)
-                   ->getRowArray();
+                   ->getRowArray();      
 
-      $relatives = $r->select('*')
+      if(isset($student) && count($student) > 0) {
+        $relatives = $r->select('*')
                      ->join('persons', 'persons.person_id = relations.person_id')
                      ->getWhere(['student_id' => $student["student_id"]])
                      ->getResult();
-      $data = [
-        'student'   => $student,
-        'relatives' => $relatives
-      ];
+        $data = [
+          'student'   => $student,
+          'relatives' => $relatives
+        ];
 
-      $res = $esc->select('*')
-                            ->getWhere(['student_id' => $student["student_id"]])
-                            ->getResult();
-      $is_esc_applied = (count($res) > 0) ? TRUE : FALSE ;
+        $res = $esc->select('*')
+                   ->getWhere(['student_id' => $student["student_id"]])
+                   ->getResult();
+        $is_esc_applied = (count($res) > 0) ? TRUE : FALSE;
 
-      if(count($student) > 0) {
         if($is_esc_applied) {
           session()->setTempData('error', 'You have already applied for ESC!', 2);
           return redirect()->to('esc');

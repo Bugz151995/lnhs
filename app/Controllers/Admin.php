@@ -66,13 +66,14 @@ class Admin extends BaseController {
 
 			$email->setTo($useremail);
 			$email->setSubject('Enrollment Form Access Token');
-			$email->setMessage(site_url().'auth/enrollment/'.$token);//your message here			
-			if($email->send()) {
-				session()->setTempData('success', 'Student Token request has been successfully approved! Email was sent', 3);
-				$request_model->save($data);
-			} else {
-				session()->setTempData('error', 'Oops! The token was not approved, the application might be blocked by google.', 3);
-			}
+			$email->setMessage(site_url().'auth/enrollment/'.$token);//your message here	
+				$sent = $email->send();
+				if($sent) {
+					session()->setTempData('success', 'Student Token request has been successfully approved! Email was sent', 3);
+					$request_model->save($data);
+				} else {
+					session()->setTempData('error', 'Oops! The Student was not approved and the Email was not sent.', 3);
+				}
 			return redirect()->to('a/request');
 		} else {
 			$registrar_model = new RegistrarModel();

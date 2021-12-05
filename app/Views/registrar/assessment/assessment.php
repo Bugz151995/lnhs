@@ -38,7 +38,7 @@
         <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-3 g-lg-4 g-2 px-3 pt-3">
           <div class="col">
             <label for="lrn" class="form-label">LRN</label>
-            <input type="text" class="form-control form-control-sm text-primary" name="lrn" value="<?= set_value('firstname') ?>" id="lrn" placeholder="LRN here...">
+            <input type="text" class="form-control form-control-sm text-primary" name="lrn" value="<?= (isset($enrollments)) ? $enrollments[0]->lrn : set_value('lrn') ?>" id="lrn" placeholder="LRN here...">
           </div>
           <div class="col">
             <label for="firstname" class="form-label"><span class="text-danger">*</span> First name</label>

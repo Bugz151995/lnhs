@@ -17,6 +17,8 @@
     <div class="bg-primary p-3 text-light text-center border-top border-white h5">Learners Information</div>
     <!-- learners information -->
     <div class="row g-0">
+      <?= form_hidden('prev_stat', $enrollments[0]->status) ?>
+      <?= form_hidden('email', $enrollments[0]->email) ?>
       <input type="hidden" name="s" value="<?= $enrollments[0]->student_id ?>">
       <input type="hidden" name="e" value="<?= $enrollments[0]->enrollment_id ?>">
       <input type="hidden" name="rt" value="<?= (count($returnee_transferee) > 0) ? $returnee_transferee[0]->transferee_returnee_id : '' ?>">

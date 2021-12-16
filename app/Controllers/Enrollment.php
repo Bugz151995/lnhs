@@ -202,7 +202,7 @@ class Enrollment extends BaseController
       session()->setTempData('error', 'Please Don\'t leave a field with a red asterisk unanswered.', 3);
       echo view('student/templates/header');
       echo view('student/templates/topbar');
-      echo view('student/request_token', $data);
+      echo view('student/new_request_token', $data);
       echo view('student/templates/footer');
     }
   }
@@ -303,7 +303,7 @@ class Enrollment extends BaseController
       session()->setTempData('error', 'Please Don\'t leave a field with a red asterisk unanswered.', 3);
       echo view('student/templates/header');
       echo view('student/templates/topbar');
-      echo view('student/request_token', $data);
+      echo view('student/old_request_token', $data);
       echo view('student/templates/footer');
     }
   }

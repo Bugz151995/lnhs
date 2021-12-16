@@ -29,21 +29,25 @@
     <!-- TOAST SCRIPT -->
     <script type="text/javascript">
       document.addEventListener('DOMContentLoaded', () => {
-        <?php if(session()->getTempData('success')){ ?>
+        <?php if(session()->getTempData('success')) : ?>
             toastr.success("<?= session()->getTempData('success'); ?>");
-        <?php }else if(session()->getTempData('error')){  ?>
+        <?php endif ?>
+        <?php if(session()->getTempData('error')) : ?>
             toastr.error("<?= session()->getTempData('error'); ?>");
-        <?php }else if(session()->getTempData('warning')){  ?>
+        <?php endif ?>
+        <?php if(session()->getTempData('warning')) : ?>
             toastr.warning("<?= session()->getTempData('warning'); ?>");
-        <?php }else if(session()->getTempData('info')){  ?>
+        <?php endif ?>
+        <?php if(session()->getTempData('info')) : ?>
             toastr.info("<?= session()->getTempData('info'); ?>");
-        <?php }else if(session()->getTempData('validation')){  ?>
+        <?php endif ?>
+        <?php if(session()->getTempData('validation')) :  ?>
             <?php $validation = session()->getTempData('validation');?>
             <?php $errors = $validation->getErrors(); ?>
             <?php foreach ($errors as $key => $error) :?>
             toastr.error("<?= $error; ?>");
             <?php endforeach?>
-        <?php } ?>
+        <?php endif ?>
       });
     </script>
 </html>

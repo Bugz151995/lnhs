@@ -67,7 +67,7 @@
   </div>
 
   <!-- enrolment form -->
-  <?= form_open_multipart('enrollment/submit') ?>
+  <?= form_open_multipart('enrollment/submit', ['id' => 'enrollmentForm']) ?>
   <?= csrf_field() ?>
   <?= form_hidden('s', esc($student[0]->student_id)) ?>
   <!-- trigger -->
@@ -82,13 +82,52 @@
         </div>
         <div class="modal-body">
           <h1 class="h4">Instruction:</h1>
-          <p><i class="fas fa-check-circle me-2 text-success"></i>Answer the form accurately.</p>
-          <p><i class="fas fa-check-circle me-2 text-success"></i>Please don't leave the required fields with a red astrisk( <span class="text-danger">*</span> ) unanswered.</p>
-          <p><i class="fas fa-check-circle me-2 text-success"></i>The form is scrollable, which means in small devices. the modal will have a scroll bar.</p>
-          <p><i class="fas fa-check-circle me-2 text-success"></i>Don't press next when you have not answered all the required fields, as this will produce an error on the submission of the form.</p>
+          <div class="card border-0">
+            <div class="row">
+              <div class="col-1">
+                <img src="<?= site_url() ?>assets/images/4213.jpg" alt="" class="rounded-start img-fluid d-none d-sm-block">
+                <i class="fas fa-check-circle text-success d-sm-none d-block"></i>
+              </div>
+              <div class="col-11 d-flex align-items-center">
+                <span>Answer the form accurately.</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card border-0">
+            <div class="row">
+              <div class="col-1">
+                <img src="<?= site_url() ?>assets/images/5219070.jpg" alt="" class="rounded-start img-fluid d-none d-sm-block">
+                <i class="fas fa-check-circle text-success d-sm-none d-block"></i>
+              </div>
+              <div class="col-11 d-flex align-items-center">
+                <span>Please don't leave the required fields with a red astrisk( <span class="text-danger">*</span> ) unanswered.</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card border-0">
+            <div class="row">
+              <div class="col-1">
+                <img src="<?= site_url() ?>assets/images/245.jpg" alt="" class="rounded-start img-fluid d-none d-sm-block">
+                <i class="fas fa-check-circle text-success d-sm-none d-block"></i>
+              </div>
+              <div class="col-11 d-flex align-items-center">
+                <span>The form is responsive, which means in small devices. the modal will have a scroll bar and adjust to your device viewport.</span>
+              </div>
+            </div>
+          </div>
         </div>
+
+        <script>
+          const pages = {
+            current: 'page',
+            next: 'page0'
+          }
+        </script>
+
         <div class="modal-footer">
-          <a class="btn btn-sm btn-primary" data-bs-target="#page0" data-bs-toggle="modal" data-bs-dismiss="modal">Next<i class="fas fa-arrow-right ms-1"></i></a>
+          <a class="btn btn-sm btn-primary" onclick="nextPage(pages)">Next<i class="fas fa-arrow-right ms-1"></i></a>
         </div>
       </div>
     </div>
@@ -107,23 +146,36 @@
             <div class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
           </div>
           <!-- 2x2 -->
-          <div class="row g-3">
+          <div class="row row-cols-1 row-cols-lg-2 g-3">
             <div class="col">
               <div class="d-flex justify-content-center">
                 <img src="<?= site_url() ?>assets/images/user.jpg" alt="2by2 picture" id="img_preview" style="width: 200px; height: 200px; background-color: rgba(0,0,255,.1);" class="img-fluid img-thumbnail mx-4 rounded-circle">
               </div>
-
-
+            </div>
+            <div class="col">
               <div class="px-3 pt-2">
                 <label for="" class="form-label"><span class="text-danger">*</span> 2x2 Picture</label>
-                <input type="file" name="user_img" value="<?= set_value('user_img') ?>" id="user_img" class="form-control  form-control-sm text-primary">
+                <input type="file" name="user_img" value="<?= set_value('user_img') ?>" id="user_img" class="form-control form-control-sm text-primary">
               </div>
             </div>
           </div>
         </div>
+
+        <script>
+          const fields_1 = [
+            'user_img'
+          ];
+
+          const pages_1 = {
+            prev: 'page',
+            current: 'page0',
+            next: 'page1'
+          }
+        </script>
+
         <div class="modal-footer d-flex justify-content-between">
           <a class="btn btn-sm btn-secondary" data-bs-target="#page" data-bs-toggle="modal" data-bs-dismiss="modal"><i class="fas fa-arrow-left me-1"></i>Prev</a>
-          <a class="btn btn-sm btn-primary" data-bs-target="#page1" data-bs-toggle="modal" data-bs-dismiss="modal">Next<i class="fas fa-arrow-right ms-1"></i></a>
+          <a class="btn btn-sm btn-primary" onclick="validate(pages_1, fields_1)">Next<i class="fas fa-arrow-right ms-1"></i></a>
         </div>
       </div>
     </div>
@@ -146,23 +198,23 @@
           <div id="aboutme" class="row row-cols-1 row-cols-lg-3 g-3">
             <div class="col">
               <label for="firstname" class="form-label"><span class="text-danger">*</span> First name</label>
-              <input type="text" class="form-control  form-control-sm text-primary" name="firstname" value="<?= (isset($student)) ? $student[0]->firstname : set_value('firstname') ?>" id="firstname" placeholder="First Name here...">
+              <input type="text" class="form-control form-control-sm text-primary" name="firstname" value="<?= (isset($student)) ? $student[0]->firstname : set_value('firstname') ?>" id="firstname" placeholder="First Name here...">
             </div>
             <div class="col">
               <label for="middlename" class="form-label"><span class="text-danger">*</span> Middle name</label>
-              <input type="text" id="middlename" name="middlename" value="<?= (isset($student)) ? $student[0]->middlename : set_value('middlename') ?>" class="form-control  form-control-sm text-primary" placeholder="Middle Name here...">
+              <input type="text" id="middlename" name="middlename" value="<?= (isset($student)) ? $student[0]->middlename : set_value('middlename') ?>" class="form-control form-control-sm text-primary" placeholder="Middle Name here...">
             </div>
             <div class="col">
               <label for="lastname" class="form-label"><span class="text-danger">*</span> Last Name</label>
-              <input type="text" class="form-control  form-control-sm text-primary " id="lastname" name="lastname" value="<?= (isset($student)) ? $student[0]->lastname : set_value('lastname') ?>" placeholder="Last Name here...">
+              <input type="text" class="form-control form-control-sm text-primary " id="lastname" name="lastname" value="<?= (isset($student)) ? $student[0]->lastname : set_value('lastname') ?>" placeholder="Last Name here...">
             </div>
             <div class="col">
               <label for="nameextension" class="form-label">Name Extension</label>
-              <input type="text" class="form-control  form-control-sm text-primary " id="nameextension" name="suffix" value="<?= set_value('suffix') ?>" placeholder="Name Extension here...">
+              <input type="text" class="form-control form-control-sm text-primary " id="nameextension" name="suffix" value="<?= set_value('suffix') ?>" placeholder="Name Extension here...">
             </div>
             <div class="col">
               <label for="bday" class="form-label"><span class="text-danger">*</span> Birth Date</label>
-              <input type="date" id="bday" name="bday" value="<?= set_value('bday') ?>" class="form-control  form-control-sm text-primary">
+              <input type="date" id="bday" name="bday" onfocusout="calculateAge()" value="<?= set_value('bday') ?>" class="form-control form-control-sm text-primary">
             </div>
             <div class="col">
               <label for="bplace" class="form-label"><span class="text-danger">*</span> Birth Place</label>
@@ -170,7 +222,7 @@
             </div>
             <div class="col">
               <label for="age" class="form-label"><span class="text-danger">*</span> Age</label>
-              <input type="number" min="6" max="130" id="age" name="age" value="<?= set_value('age') ?>" class="form-control  form-control-sm text-primary" placeholder="Age here...">
+              <input type="number" min="6" max="130" id="age" name="age" value="<?= set_value('age') ?>" class="form-control form-control-sm text-primary" placeholder="Age here...">
             </div>
             <div class="col">
               <label for="sex" class="form-label"><span class="text-danger">*</span> Sex</label>
@@ -182,18 +234,29 @@
             </div>
             <div class="col">
               <label for="religion" class="form-label"><span class="text-danger">*</span> Religious Affiliation</label>
-              <input type="text" id="religion" name="religion" value="<?= set_value('religion') ?>" class="form-control  form-control-sm text-primary" placeholder="Religious Affiliation here...">
+              <input type="text" id="religion" name="religion" value="<?= set_value('religion') ?>" class="form-control form-control-sm text-primary" placeholder="Religious Affiliation here...">
             </div>
             <div class="col">
               <label for="natl" class="form-label"><span class="text-danger">*</span> Nationality</label>
-              <input type="text" id="natl" name="natl" value="<?= set_value('natl') ?>" class="form-control  form-control-sm text-primary" placeholder="Nationality here...">
+              <input type="text" id="natl" name="natl" value="<?= set_value('natl') ?>" class="form-control form-control-sm text-primary" placeholder="Nationality here...">
             </div>
           </div>
-
         </div>
+
+        <script>
+          const fields_2 = [
+            'firstname', 'middlename', 'lastname', 'bday', 'bplace', 'sex', 'religion', 'natl'
+          ];
+
+          const pages_2 = {
+            current: 'page1',
+            next: 'page2'
+          }
+        </script>
+
         <div class="modal-footer d-flex justify-content-between">
           <a class="btn btn-sm btn-secondary" data-bs-target="#page0" data-bs-toggle="modal" data-bs-dismiss="modal"><i class="fas fa-arrow-left me-1"></i>Prev</a>
-          <a class="btn btn-sm btn-sm btn-primary" data-bs-target="#page2" data-bs-toggle="modal" data-bs-dismiss="modal">Next<i class="fas fa-arrow-right ms-1"></i></a>
+          <a class="btn btn-sm btn-sm btn-primary" onclick="validate(pages_2, fields_2)">Next<i class="fas fa-arrow-right ms-1"></i></a>
         </div>
       </div>
     </div>
@@ -216,33 +279,45 @@
           <div class="row row-cols-1 row-cols-lg-3 g-3">
             <div class="col">
               <label for="street" class="form-label"><span class="text-danger">*</span> House #/Street/Sitio/Purok</label>
-              <input type="text" id="street" name="street" value="<?= set_value('street') ?>" class="form-control  form-control-sm text-primary " placeholder="House #/Street/Sitio/Purok here...">
+              <input type="text" id="street" name="street" value="<?= set_value('street') ?>" class="form-control form-control-sm text-primary " placeholder="House #/Street/Sitio/Purok here...">
             </div>
 
             <div class="col">
               <label for="barangay" class="form-label"><span class="text-danger">*</span> Barangay</label>
-              <input type="text" id="barangay" name="barangay" value="<?= set_value('barangay') ?>" class="form-control  form-control-sm text-primary" placeholder="Barangay here...">
+              <input type="text" id="barangay" name="barangay" value="<?= set_value('barangay') ?>" class="form-control form-control-sm text-primary" placeholder="Barangay here...">
             </div>
 
             <div class="col">
               <label for="mun_city" class="form-label"><span class="text-danger">*</span> Municipality/City</label>
-              <input type="text" id="mun_city" name="mun_city" value="<?= set_value('mun_city') ?>" class="form-control  form-control-sm text-primary" placeholder="Municipality/City here...">
+              <input type="text" id="mun_city" name="mun_city" value="<?= set_value('mun_city') ?>" class="form-control form-control-sm text-primary" placeholder="Municipality/City here...">
             </div>
 
             <div class="col">
               <label for="province" class="form-label"><span class="text-danger">*</span> Province</label>
-              <input type="text" id="province" name="province" value="<?= set_value('province') ?>" class="form-control  form-control-sm text-primary " placeholder="Province here...">
+              <input type="text" id="province" name="province" value="<?= set_value('province') ?>" class="form-control form-control-sm text-primary " placeholder="Province here...">
             </div>
 
             <div class="col">
               <label for="zip" class="form-label"><span class="text-danger">*</span> Zip Code</label>
-              <input type="number" id="zip" name="zip" value="<?= set_value('zip') ?>" class="form-control  form-control-sm text-primary " placeholder="Zip Code here...">
+              <input type="number" id="zip" name="zip" value="<?= set_value('zip') ?>" class="form-control form-control-sm text-primary " placeholder="Zip Code here...">
             </div>
           </div>
         </div>
+
+        <script>
+          const fields_3 = [
+            'street', 'barangay', 'mun_city', 'province', 'zip'
+          ];
+
+          const pages_3 = {
+            current: 'page2',
+            next: 'page3'
+          }
+        </script>
+
         <div class="modal-footer d-flex justify-content-between">
           <a class="btn btn-sm btn-secondary" data-bs-target="#page1" data-bs-toggle="modal" data-bs-dismiss="modal"><i class="fas fa-arrow-left me-1"></i>Prev</a>
-          <a class="btn btn-sm btn-primary" data-bs-target="#page3" data-bs-toggle="modal" data-bs-dismiss="modal">Next<i class="fas fa-arrow-right ms-1"></i></a>
+          <a class="btn btn-sm btn-primary" onclick="validate(pages_3, fields_3)">Next<i class="fas fa-arrow-right ms-1"></i></a>
         </div>
       </div>
     </div>
@@ -268,21 +343,21 @@
                   <label for="fathersname" class="form-label"><span class="text-danger">*</span> Fathers name</label>
                   <div class="row row-cols-1 row-cols-md-3 g-3" id="fathersname">
                     <div class="col">
-                      <input type="text" name="firstname_0" value="<?= set_value('firstname_0') ?>" id="firstname_0" class="form-control  form-control-sm text-primary" placeholder="First Name here...">
+                      <input type="text" name="firstname_0" value="<?= set_value('firstname_0') ?>" id="firstname_0" class="form-control form-control-sm text-primary" placeholder="First Name here...">
                     </div>
                     <div class="col">
-                      <input type="text" name="middlename_0" value="<?= set_value('middlename_0') ?>" id="middlename_0" class="form-control  form-control-sm text-primary" placeholder="Middle Name here...">
+                      <input type="text" name="middlename_0" value="<?= set_value('middlename_0') ?>" id="middlename_0" class="form-control form-control-sm text-primary" placeholder="Middle Name here...">
                     </div>
                     <div class="col">
-                      <input type="text" name="lastname_0" value="<?= set_value('lastname_0') ?>" id="lastname_0" class="form-control  form-control-sm text-primary" placeholder="Last Name here...">
+                      <input type="text" name="lastname_0" value="<?= set_value('lastname_0') ?>" id="lastname_0" class="form-control form-control-sm text-primary" placeholder="Last Name here...">
                     </div>
                     <input type="hidden" name="relationship_0" value="father">
                   </div>
                 </div>
                 <div class="col-lg-3">
-                  <label for="contact_number" class="form-label">Contact Number (Father)</label>
+                  <label for="contact_number" class="form-label">Contact Number (Father) <span class="text-muted small fst-italic">[Optional]</span></label>
                   <div class="col">
-                    <input type="text" class="form-control  form-control-sm text-primary " name="contact_number_0" value="<?= set_value('contact_number_0') ?>" id="contact_number_0" placeholder="Father's Contact Number here...">
+                    <input type="text" class="form-control form-control-sm text-primary " name="contact_number_0" value="<?= set_value('contact_number_0') ?>" id="contact_number_0" placeholder="Father's Contact Number here...">
                   </div>
                 </div>
               </div>
@@ -294,20 +369,20 @@
                   <label for="mothersname" class="form-label"><span class="text-danger">*</span> Mothers Maiden name</label>
                   <div class="row row-cols-1 row-cols-md-3 g-3" id="mothersname">
                     <div class="col">
-                      <input type="text" name="firstname_1" id="firstname_1" value="<?= set_value('firstname_1') ?>" class="form-control  form-control-sm text-primary" placeholder="First Name here...">
+                      <input type="text" name="firstname_1" id="firstname_1" value="<?= set_value('firstname_1') ?>" class="form-control form-control-sm text-primary" placeholder="First Name here...">
                     </div>
                     <div class="col">
-                      <input type="text" name="middlename_1" id="middlename_1" value="<?= set_value('middlename_1') ?>" class="form-control  form-control-sm text-primary" placeholder="Middle Name here...">
+                      <input type="text" name="middlename_1" id="middlename_1" value="<?= set_value('middlename_1') ?>" class="form-control form-control-sm text-primary" placeholder="Middle Name here...">
                     </div>
                     <div class="col">
-                      <input type="text" name="lastname_1" id="lastname_1" value="<?= set_value('lastname_1') ?>" class="form-control  form-control-sm text-primary" placeholder="Last Name here...">
+                      <input type="text" name="lastname_1" id="lastname_1" value="<?= set_value('lastname_1') ?>" class="form-control form-control-sm text-primary" placeholder="Last Name here...">
                     </div>
                     <input type="hidden" name="relationship_1" value="mother">
                   </div>
                 </div>
                 <div class="col-lg-3">
-                  <label for="contact_number" class="form-label">Contact Number (Mother)</label>
-                  <input type="text" class="form-control  form-control-sm text-primary " name="contact_number_1" id="contact_number_1" value="<?= set_value('contact_number_1') ?>" placeholder="Mother's Contact Number here...">
+                  <label for="contact_number" class="form-label">Contact Number (Mother) <span class="text-muted small fst-italic">[Optional]</span></label>
+                  <input type="text" class="form-control form-control-sm text-primary " name="contact_number_1" id="contact_number_1" value="<?= set_value('contact_number_1') ?>" placeholder="Mother's Contact Number here...">
                 </div>
               </div>
             </div>
@@ -317,7 +392,7 @@
           <div class="fst-italic mt-4 text-danger">Specify Guardian if you are not living with your parent.</div>
 
           <label for="liveswithguardianorparent" class="form-label">Are you living with your parent?</label>
-          <div class="form-control  form-control-sm text-primary ps-4">
+          <div class="form-control form-control-sm text-primary ps-4 mb-3">
             <div class="row">
               <div class="form-check col-auto mb-0">
                 <input class="form-check-input" type="radio" name="liveswithguardianorparent" checked id="liveswithparent">
@@ -339,29 +414,41 @@
               <label for="guardian" class="form-label">Guardian </label>
               <div class="row row-cols-1 row-cols-lg-3 g-3" id="guardian">
                 <div class="col">
-                  <input type="text" name="firstname_2" id="firstname_2" value="<?= set_value('firstname_2') ?>" class="form-control  form-control-sm text-primary" disabled placeholder="First Name here...">
+                  <input type="text" name="firstname_2" id="firstname_2" value="<?= set_value('firstname_2') ?>" class="form-control form-control-sm text-primary" disabled placeholder="First Name here...">
                 </div>
                 <div class="col">
-                  <input type="text" name="middlename_2" id="middlename_2" value="<?= set_value('middlename_2') ?>" class="form-control  form-control-sm text-primary" disabled placeholder="Middle Name here...">
+                  <input type="text" name="middlename_2" id="middlename_2" value="<?= set_value('middlename_2') ?>" class="form-control form-control-sm text-primary" disabled placeholder="Middle Name here...">
                 </div>
                 <div class="col">
-                  <input type="text" name="lastname_2" id="lastname_2" value="<?= set_value('lastname_2') ?>" class="form-control  form-control-sm text-primary" disabled placeholder="Last Name here...">
+                  <input type="text" name="lastname_2" id="lastname_2" value="<?= set_value('lastname_2') ?>" class="form-control form-control-sm text-primary" disabled placeholder="Last Name here...">
                 </div>
               </div>
             </div>
             <div class="col-12 col-lg-3">
               <label for="relationship" class="form-label">Relationship</label>
-              <input type="text" name="relationship_2" id="relationship_2" value="<?= set_value('relationship_2') ?>" class="form-control  form-control-sm text-primary" disabled placeholder="Relationship here...">
+              <input type="text" name="relationship_2" id="relationship_2" value="<?= set_value('relationship_2') ?>" class="form-control form-control-sm text-primary" disabled placeholder="Relationship here...">
             </div>
             <div class="col-12 col-lg-3">
               <label for="contact_number" class="form-label">Contact Number</label>
-              <input type="text" class="form-control  form-control-sm text-primary " name="contact_number_2" value="<?= set_value('contact_number_2') ?>" id="contact_number_2" disabled placeholder="Guardian's Contact Number here...">
+              <input type="text" class="form-control form-control-sm text-primary " name="contact_number_2" value="<?= set_value('contact_number_2') ?>" id="contact_number_2" disabled placeholder="Guardian's Contact Number here...">
             </div>
           </div>
         </div>
+
+        <script>
+          const fields_4 = [
+            'firstname_0', 'middlename_0', 'lastname_0', 'firstname_1', 'middlename_1', 'lastname_1'
+          ];
+
+          const pages_4 = {
+            current: 'page3',
+            next: 'page4'
+          }
+        </script>
+
         <div class="modal-footer d-flex justify-content-between">
           <a class="btn btn-sm btn-secondary" data-bs-target="#page2" data-bs-toggle="modal" data-bs-dismiss="modal"><i class="fas fa-arrow-left me-1"></i>Prev</a>
-          <a class="btn btn-sm btn-primary" data-bs-target="#page4" data-bs-toggle="modal" data-bs-dismiss="modal">Next<i class="fas fa-arrow-right ms-1"></i></a>
+          <a class="btn btn-sm btn-primary" onclick="validate(pages_4, fields_4)">Next<i class="fas fa-arrow-right ms-1"></i></a>
         </div>
       </div>
     </div>
@@ -385,7 +472,7 @@
 
           <div class="col-12 col-4 mb-3">
             <label for="returneeortransferee" class="form-label">Are you a transferee or Returnee?</label>
-            <div class="form-control  form-control-sm text-primary ps-4">
+            <div class="form-control form-control-sm text-primary ps-4">
               <div class="row">
                 <div class="form-check col-auto mb-0">
                   <input class="form-check-input" type="radio" name="returneeortransferee" id="isreturneeortransferee">
@@ -405,22 +492,23 @@
           <div id="returneeTransferee" class="row g-3 row-cols-1 row-cols-lg-2">
             <div class="col">
               <label for="hea" class="form-label">Last Grade Level Completed</label>
-              <input type="number" name="hea" id="hea" class="form-control  form-control-sm text-primary" value="<?= set_value('hea') ?>" disabled placeholder="Last Grade Level Completed here...">
+              <input type="number" name="hea" id="hea" class="form-control form-control-sm text-primary" value="<?= set_value('hea') ?>" disabled placeholder="Last Grade Level Completed here...">
             </div>
             <div class="col">
               <label for="hea_ay" class="form-label">Last School Year Completed</label>
-              <input type="number" name="hea_ay" id="hea_ay" class="form-control  form-control-sm text-primary" value="<?= set_value('hea_ay') ?>" disabled placeholder="Last School Year Completed here...">
+              <input type="number" name="hea_ay" id="hea_ay" class="form-control form-control-sm text-primary" value="<?= set_value('hea_ay') ?>" disabled placeholder="Last School Year Completed here...">
             </div>
             <div class="col">
               <label for="prev_school" class="form-label">School Name</label>
-              <input type="text" name="prev_school" id="prev_school" class="form-control  form-control-sm text-primary" value="<?= set_value('prev_school') ?>" disabled placeholder="School Name here...">
+              <input type="text" name="prev_school" id="prev_school" class="form-control form-control-sm text-primary" value="<?= set_value('prev_school') ?>" disabled placeholder="School Name here...">
             </div>
             <div class="col">
               <label for="prev_school_address" class="form-label">School Address</label>
-              <input type="text" name="prev_school_address" id="prev_school_address" value="<?= set_value('prev_school_address') ?>" class="form-control  form-control-sm text-primary" disabled placeholder="School Address here...">
+              <input type="text" name="prev_school_address" id="prev_school_address" value="<?= set_value('prev_school_address') ?>" class="form-control form-control-sm text-primary" disabled placeholder="School Address here...">
             </div>
           </div>
         </div>
+
         <div class="modal-footer d-flex justify-content-between">
           <a class="btn btn-sm btn-secondary" data-bs-target="#page3" data-bs-toggle="modal" data-bs-dismiss="modal"><i class="fas fa-arrow-left me-1"></i>Prev</a>
           <a class="btn btn-sm btn-primary" data-bs-target="#page5" data-bs-toggle="modal" data-bs-dismiss="modal">Next<i class="fas fa-arrow-right ms-1"></i></a>
@@ -445,8 +533,8 @@
           <div id="seniorhighstudent" class="row g-3 row-cols-1 align-items-center mb-3">
             <div class="col-md-3">
               <label for="semester" class="form-label"><span class="text-danger">*</span> Semester</label>
-              <div class="form-control  form-control-sm text-primary ps-4">
-                <div class="row">
+              <div class="form-control form-control-sm text-primary ps-4">
+                <div class="row" id="semester">
                   <div class="form-check col-auto mb-0">
                     <input class="form-check-input" type="radio" name="semester" value="1" id="firstsem" <?= ($student[0]->semester == '1') ? set_radio('semester', '1', TRUE) : set_radio('semester', '1') ?>>
                     <label class="form-check-label" for="firstsem">
@@ -518,9 +606,20 @@
             </div>
           </div>
         </div>
+
+        <script>
+          const fields_5 = [
+            'semester', 'sy', 'gradelevel', 'class', 'course', 'learningmodality'
+          ];
+
+          const pages_5 = {
+            current: 'page5'
+          }
+        </script>
+
         <div class="modal-footer d-flex justify-content-between">
           <a class="btn btn-sm btn-secondary" data-bs-target="#page4" data-bs-toggle="modal" data-bs-dismiss="modal"><i class="fas fa-arrow-left me-1"></i>Prev</a>
-          <button type="submit" class="btn btn-sm btn-primary">Submit</button>
+          <a role="button" onclick="validate(pages_5, fields_5, true)" class="btn btn-sm btn-primary">Submit</a>
         </div>
       </div>
     </div>
@@ -531,6 +630,8 @@
 <script src="<?= site_url() ?>js/returneeform_toggle.js"></script>
 <script src="<?= site_url() ?>js/guardianfield_toggle.js"></script>
 <script src="<?= site_url() ?>js/preview_image.js"></script>
+<script src="<?= site_url() ?>js/age_calculate.js"></script>
+<script src="<?= site_url() ?>js/validation_enrollment.js"></script>
 <script>
   document.addEventListener('DOMContentLoaded', () => {
     const trigger = document.getElementById('enrollmentBtn');

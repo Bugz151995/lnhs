@@ -67,7 +67,7 @@
   </div>
 
   <!-- enrolment form -->
-  <?= form_open('enrollment/submit') ?>
+  <?= form_open('enrollment/submit', ['id' => 'enrollmentForm']) ?>
   <?= csrf_field() ?>
   <?= form_hidden('s', esc($student[0]->student_id)) ?>
   <!-- trigger -->
@@ -82,10 +82,41 @@
         </div>
         <div class="modal-body">
           <h1 class="h4">Instruction:</h1>
-          <p><i class="fas fa-check-circle me-2 text-success"></i>Answer the form accurately.</p>
-          <p><i class="fas fa-check-circle me-2 text-success"></i>Please don't leave the required fields with a red astrisk( <span class="text-danger">*</span> ) unanswered.</p>
-          <p><i class="fas fa-check-circle me-2 text-success"></i>The form is scrollable, which means in small devices. the modal will have a scroll bar.</p>
-          <p><i class="fas fa-check-circle me-2 text-success"></i>Don't press next when you have not answered all the required fields, as this will produce an error on the submission of the form.</p>
+          <div class="card border-0">
+            <div class="row">
+              <div class="col-1">
+                <img src="<?= site_url() ?>assets/images/4213.jpg" alt="" class="rounded-start img-fluid d-none d-sm-block">
+                <i class="fas fa-check-circle text-success d-sm-none d-block"></i>
+              </div>
+              <div class="col-11 d-flex align-items-center">
+                <span>Answer the form accurately.</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="card border-0">
+            <div class="row">
+              <div class="col-1">
+                <img src="<?= site_url() ?>assets/images/5219070.jpg" alt="" class="rounded-start img-fluid d-none d-sm-block">
+                <i class="fas fa-check-circle text-success d-sm-none d-block"></i>
+              </div>
+              <div class="col-11 d-flex align-items-center">
+                <span>Please don't leave the required fields with a red astrisk( <span class="text-danger">*</span> ) unanswered.</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card border-0">
+            <div class="row">
+              <div class="col-1">
+                <img src="<?= site_url() ?>assets/images/245.jpg" alt="" class="rounded-start img-fluid d-none d-sm-block">
+                <i class="fas fa-check-circle text-success d-sm-none d-block"></i>
+              </div>
+              <div class="col-11 d-flex align-items-center">
+                <span>The form is responsive, which means in small devices. the modal will have a scroll bar and adjust to your device viewport.</span>
+              </div>
+            </div>
+          </div>
         </div>
         <div class="modal-footer">
           <a class="btn btn-sm btn-primary" data-bs-target="#page0" data-bs-toggle="modal" data-bs-dismiss="modal">Next<i class="fas fa-arrow-right ms-1"></i></a>
@@ -110,7 +141,7 @@
             <div class="col-md-3">
               <label for="semester" class="form-label"><span class="text-danger">*</span> Semester</label>
               <div class="form-control  form-control-sm text-primary ps-4">
-                <div class="row">
+                <div class="row" id="semester">
                   <div class="form-check col-auto mb-0">
                     <input class="form-check-input" type="radio" name="semester" value="1" id="firstsem" <?= ($student[0]->semester == '1') ? set_radio('semester', '1', TRUE) : set_radio('semester', '1') ?>>
                     <label class="form-check-label" for="firstsem">
@@ -182,9 +213,20 @@
             </div>
           </div>
         </div>
+
+        <script>
+          const fields = [
+            'semester', 'sy', 'gradelevel', 'class', 'course', 'learningmodality'
+          ];
+
+          const pages = {
+            current: 'page0'
+          }
+        </script>
+
         <div class="modal-footer d-flex justify-content-between">
           <a class="btn btn-sm btn-secondary" data-bs-target="#page" data-bs-toggle="modal" data-bs-dismiss="modal"><i class="fas fa-arrow-left me-1"></i>Prev</a>
-          <button type="submit" class="btn btn-sm btn-primary">Submit</button>
+          <a role="submit" onclick="validate(pages, fields, true)" class="btn btn-sm btn-primary">Submit</a>
         </div>
       </div>
     </div>
@@ -192,9 +234,7 @@
   <?= form_close() ?>
 </main>
 
-<script src="<?= site_url() ?>js/returneeform_toggle.js"></script>
-<script src="<?= site_url() ?>js/guardianfield_toggle.js"></script>
-<script src="<?= site_url() ?>js/preview_image.js"></script>
+<script src="<?= site_url() ?>js/validation_enrollment.js"></script>
 <script>
   document.addEventListener('DOMContentLoaded', () => {
     const trigger = document.getElementById('enrollmentBtn');

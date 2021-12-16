@@ -200,6 +200,21 @@ class Assessment extends BaseController {
 
       $enrollment_model->save($enrollment);
 
+      // send email here if the status is "approved"   
+      $status = $this->request->getPost('status');
+      $prev_status = $this->request->getPost('prev_stat');
+      if ($status == 'approved' && $prev_status == 'pending') {
+        $useremail = $this->request->getPost('email'); 
+        $email = \Config\Services::email();
+        $email->setTo($useremail);
+        $email->setSubject('Enrollment Status');
+        $email->setMessage('Your Enrollment has been assessed and is hereby approved. Thank you for enrolling this semester.');//your message here	
+        $email_sent = $email->send();
+        if(!$email_sent) {
+          session()->setTempdata('info', $email->printDebugger(['headers', 'subject', 'body']), 5);
+        } else session()->setTempData('info', 'Email Confirmation Successfully sent', 3); 
+      }
+      
       // GET ADDRESS, CHECK IF IT EXIST, IF YES THEN GET ID AND SAVE, IF NO THEN SAVE.
       $address = [
         'address_id'        => esc($this->request->getPost('a')),
@@ -294,6 +309,7 @@ class Assessment extends BaseController {
       }
 
       session()->setTempData('success', 'Update Successful!', 3);
+
       // display success message
       return redirect()->to('r/assessment/'.esc($this->request->getPost('s')));
     }
